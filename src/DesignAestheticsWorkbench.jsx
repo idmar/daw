@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo, useCallback } from "react";
+import { useState, useEffect, useMemo, useCallback, useRef } from "react";
 
 /* ============================================================
    设计审美启蒙工作台 · Aesthetic Atelier
@@ -20,6 +20,12 @@ const CSS = `
   --gold:#9A7B2E;        /* 徽章金 */
   --gold-soft:#F6EFDD;
   --shadow:0 1px 2px rgba(23,22,15,.05), 0 10px 30px -18px rgba(23,22,15,.25);
+  --dur:.28s;
+  --ease:cubic-bezier(.22,1,.36,1);
+}
+/* 尊重系统的减弱动态偏好：统一豁免全部动效 */
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}
 }
 *{box-sizing:border-box;margin:0;padding:0}
 .atelier{
@@ -51,7 +57,16 @@ const CSS = `
 .masthead-meta .streak b{color:var(--blue);font-weight:700}
 
 /* ---------- 页签 ---------- */
-.tabs{display:flex;gap:4px;margin:22px 0 26px;border-bottom:1px solid var(--line)}
+.tabs{display:flex;gap:4px;align-items:center;margin:22px 0 26px;border-bottom:1px solid var(--line);
+  position:sticky;top:0;z-index:20;background:var(--wall);
+  box-shadow:0 8px 16px -14px rgba(23,22,15,.35)}
+.tabs-progress{margin-left:auto;display:flex;align-items:center;gap:8px;padding-right:4px;
+  font-family:'Archivo',sans-serif;font-size:12px;font-weight:700;color:var(--muted)}
+.tabs-progress b{color:var(--gold)}
+.dot-row{display:flex;gap:4px}
+.dot-row i{width:7px;height:7px;border-radius:50%;background:var(--line);
+  transition:background var(--dur) var(--ease),transform var(--dur) var(--ease)}
+.dot-row i.f{background:var(--blue);transform:scale(1.15)}
 .tab{
   appearance:none;border:none;background:none;cursor:pointer;
   font-family:'Noto Sans SC',sans-serif;font-size:14px;font-weight:500;color:var(--muted);
@@ -100,6 +115,10 @@ const CSS = `
   font-family:inherit;color:inherit;
 }
 .case-row:focus-visible{outline:2px solid var(--blue);outline-offset:-2px}
+.case-row:hover{background:#FAFAF6}
+.case-row:hover .info h3{color:var(--blue)}
+.case-row .info h3{transition:color .15s}
+.case.done .case-row .meta{color:var(--gold)}
 .thumb{
   width:64px;height:64px;flex-shrink:0;border:1px solid var(--line);background:#fff;
   display:flex;align-items:center;justify-content:center;overflow:hidden;
@@ -126,7 +145,12 @@ const CSS = `
 @media (prefers-reduced-motion:reduce){.chev{transition:none}}
 
 /* 展开正文 */
+.case-wrap{display:grid;grid-template-rows:0fr;transition:grid-template-rows var(--dur) var(--ease)}
+.case.open .case-wrap{grid-template-rows:1fr}
+.case-wrap>.case-body{overflow:hidden;visibility:hidden;transition:visibility 0s linear var(--dur)}
+.case.open .case-wrap>.case-body{visibility:visible;transition-delay:0s}
 .case-body{border-top:1px solid var(--line);padding:26px 26px 30px}
+.case.open .case-body>*{animation:rise .3s var(--ease) both;animation-delay:.06s}
 .artwork{
   background:var(--wall);border:1px solid var(--line);padding:clamp(18px,4vw,44px);
   display:flex;justify-content:center;margin-bottom:8px;
@@ -225,7 +249,17 @@ const CSS = `
 }
 .day-item .cells{display:flex;gap:5px;flex-shrink:0;padding-top:4px;align-items:center}
 .cell-extra{font-family:Archivo,sans-serif;font-size:11px;font-weight:700;color:var(--gold);margin-left:2px}
-.encore{border-top:1px dashed var(--line);margin-top:8px}
+.encore{border-top:1px dashed var(--line);margin-top:8px;scroll-margin-top:64px}
+.closed-inline{display:flex;align-items:center;gap:16px;margin-top:20px;padding:18px 22px;
+  background:var(--gold-soft);border:1px solid #E3D3A8;border-left:6px solid var(--gold);
+  animation:rise .45s var(--ease) both;scroll-margin-top:64px}
+.closed-inline .seal{font-size:22px;color:var(--gold);flex-shrink:0}
+.closed-inline .txt{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px}
+.closed-inline .txt b{font-family:'Noto Serif SC',serif;font-weight:900;font-size:15px}
+.closed-inline .txt span{font-size:12.5px;color:var(--muted)}
+.btn.gold{border-color:var(--gold);color:var(--gold);flex-shrink:0}
+.btn.gold:hover{background:var(--gold);color:#fff}
+.case{scroll-margin-top:64px}
 .more-btn{display:block;margin:18px auto 4px;padding:10px 22px}
 .cell{width:14px;height:14px;border:1px solid var(--line);background:#fff}
 .cell.f{background:var(--blue);border-color:var(--blue)}
@@ -237,6 +271,162 @@ const CSS = `
   text-decoration:underline dotted;text-underline-offset:3px}
 .name-link:hover{color:var(--blue);text-decoration:underline solid}
 .back-btn{margin-bottom:18px}
+
+/* —— P1 视图切换 —— */
+.view{animation:viewIn var(--dur) var(--ease) both}
+@keyframes viewIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+/* —— P1 列表交错入场 —— */
+.case-list .case{animation:rise .34s var(--ease) both;animation-delay:calc(var(--i,0)*45ms)}
+
+/* —— P1 进度环 —— */
+.ring-seg{transition:stroke var(--dur) var(--ease)}
+.ring-seg.on{animation:segPop .34s var(--ease) both}
+@keyframes segPop{0%{stroke-width:7}45%{stroke-width:10}100%{stroke-width:7}}
+.ring-num{animation:numFlip .22s var(--ease) both}
+@keyframes numFlip{from{opacity:0;transform:translateY(-3px)}to{opacity:1;transform:none}}
+.ring-sweep{animation:sweep .9s var(--ease) both}
+@keyframes sweep{from{stroke-dashoffset:188.5;opacity:.9}to{stroke-dashoffset:0;opacity:0}}
+
+/* —— P1 复习定位高亮 —— */
+.case.spotlight{animation:spot 1.5s var(--ease) both}
+@keyframes spot{
+  0%{box-shadow:0 0 0 0 rgba(154,123,46,0)}
+  18%{box-shadow:0 0 0 5px rgba(154,123,46,.34)}
+  100%{box-shadow:var(--shadow)}
+}
+
+/* —— P1 链接即时校验 —— */
+.link-check{margin-top:8px;font-size:12px;animation:rise .24s var(--ease) both}
+.link-check.ok{color:#1F6B4A}
+.link-check.warn{color:#A0341F}
+
+/* —— P1 撤销 toast —— */
+.toast.undo{border-left-color:#A0341F}
+.toast .badge-ico.r{background:#FBF1EE;color:#A0341F}
+.undo-btn{pointer-events:auto;flex-shrink:0;background:none;border:1px solid var(--line);cursor:pointer;
+  font-family:'Archivo',sans-serif;font-size:11.5px;font-weight:700;letter-spacing:.06em;
+  color:var(--ink);padding:6px 12px;transition:background .15s,color .15s}
+.undo-btn:hover{background:var(--ink);color:#fff}
+
+/* —— P2 馆藏总览 —— */
+.arch-bar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:22px}
+.arch-search{flex:1;min-width:200px;font-family:inherit;font-size:13px;padding:10px 12px;
+  border:1px solid var(--line);background:var(--panel);color:var(--ink)}
+.arch-search:focus{outline:2px solid var(--blue);outline-offset:-1px}
+.arch-bar select{font-family:inherit;font-size:13px;padding:10px 12px;border:1px solid var(--line);
+  background:var(--panel);color:var(--ink);cursor:pointer;max-width:220px}
+.seg{display:flex;border:1px solid var(--line);background:var(--panel)}
+.seg button{background:none;border:none;cursor:pointer;font-family:inherit;font-size:12.5px;
+  color:var(--muted);padding:10px 14px;transition:background .15s,color .15s}
+.seg button+button{border-left:1px solid var(--line)}
+.seg button.on{background:var(--ink);color:#fff}
+.queue-note{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:20px;padding:12px 16px;
+  background:var(--blue-soft);border-left:4px solid var(--blue);font-size:12.5px;color:var(--ink);
+  animation:rise .3s var(--ease) both}
+.queue-note .undo-btn{margin-left:auto}
+.arch-group{margin-bottom:30px}
+.sec-title .cnt{font-family:'Archivo',sans-serif;font-size:11.5px;font-weight:700;color:var(--muted)}
+.arch-grid{display:grid;gap:10px;grid-template-columns:repeat(auto-fill,minmax(178px,1fr))}
+.arch-card{display:flex;align-items:center;gap:10px;padding:10px;text-align:left;cursor:pointer;
+  background:var(--panel);border:1px solid var(--line);font-family:inherit;color:inherit;
+  animation:rise .3s var(--ease) both;animation-delay:calc(var(--i,0)*22ms);
+  transition:border-color .15s,transform .15s var(--ease),box-shadow .15s}
+.arch-card:hover{border-color:var(--blue);transform:translateY(-2px);box-shadow:var(--shadow)}
+.arch-card:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+.arch-card.done{border-left:4px solid var(--gold)}
+.ac-thumb{width:46px;height:46px;flex-shrink:0;border:1px solid var(--line);background:#fff;overflow:hidden}
+.ac-thumb svg{width:100%;height:100%;display:block}
+.ac-tx{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+.ac-title{font-family:'Noto Serif SC',serif;font-weight:900;font-size:13px;line-height:1.25;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ac-sub{font-size:11px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ac-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;background:var(--line)}
+.arch-card.done .ac-dot{background:var(--gold)}
+
+/* —— P2 馆藏预览浮层 —— */
+.sheet-mask{position:fixed;inset:0;z-index:70;background:rgba(23,22,15,.42);
+  display:flex;align-items:center;justify-content:center;padding:20px;
+  animation:fadeIn .2s var(--ease) both}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.sheet{position:relative;background:var(--panel);border:1px solid var(--line);max-width:460px;width:100%;
+  max-height:86vh;overflow:auto;padding:26px;box-shadow:0 30px 70px -30px rgba(23,22,15,.6);
+  animation:sheetIn .3s var(--ease) both}
+@keyframes sheetIn{from{opacity:0;transform:translateY(14px) scale(.98)}to{opacity:1;transform:none}}
+.sheet-x{position:absolute;top:12px;right:12px;background:none;border:none;cursor:pointer;
+  font-size:14px;color:var(--muted);padding:6px}
+.sheet-x:hover{color:var(--ink)}
+.sheet h3{font-family:'Noto Serif SC',serif;font-weight:900;font-size:21px;margin:6px 0 4px}
+.sheet-sub{font-size:12.5px;color:var(--muted);margin-bottom:16px}
+.sheet-art{border:1px solid var(--line);background:var(--wall);padding:14px;margin-bottom:16px}
+.sheet-art svg{width:100%;height:auto;display:block;background:#fff;border:1px solid var(--line)}
+.sheet-intro{font-size:13.5px;line-height:1.85;color:var(--ink);margin-bottom:18px}
+.sheet-acts{display:flex;justify-content:flex-end}
+
+/* —— P2 夜场加映：入夜反色 —— */
+.encore{margin-top:34px;border-top:none;background:#1D1C16;padding:30px clamp(16px,3vw,30px);
+  scroll-margin-top:64px;animation:duskIn .5s var(--ease) both}
+@keyframes duskIn{from{opacity:0;background:#F2F1EC}to{opacity:1;background:#1D1C16}}
+.encore .eyebrow{color:var(--gold)}
+.encore h2{color:#F4F2EA}
+.encore .hall-head{border-bottom-color:#3A382E}
+.encore .hall-head p{color:#A8A497}
+.encore .case{background:#26251E;border-color:#3A382E}
+.encore .case-row:hover{background:#2E2D24}
+.encore .case-row .info h3{color:#F4F2EA}
+.encore .case-row:hover .info h3{color:#E8C877}
+.encore .case-row .sub,.encore .case-row .meta{color:#A8A497}
+.encore .case-body{border-top-color:#3A382E;background:#FFFFFF}
+.encore .empty{background:#26251E;border-color:#3A382E;color:#A8A497}
+.encore .more-btn{border-color:#5A5748;color:#E8C877}
+.encore .more-btn:hover{background:var(--gold);border-color:var(--gold);color:#1D1C16}
+.encore .pill.todo{background:#33322A;color:#A8A497;border-color:#4A4839}
+
+/* —— P2 展签装裱 —— */
+.artwork{flex-direction:column;align-items:center;margin:0 0 8px}
+.plate{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;justify-content:center;
+  width:100%;max-width:560px;margin-top:12px;padding-top:9px;border-top:1px solid var(--line)}
+.plate .cat-no,.plate .cat-yr{font-family:'Archivo',sans-serif;font-size:10px;font-weight:700;
+  letter-spacing:.14em;color:var(--muted)}
+.plate .plate-t{font-family:'Noto Serif SC',serif;font-weight:900;font-size:12.5px;color:var(--ink)}
+
+/* —— P2 正文排版 —— */
+.lede{font-family:'Noto Serif SC',serif;font-size:15px;line-height:1.95;color:#2A2920;
+  border-left:2px solid var(--blue);padding-left:16px;margin-bottom:6px}
+.lede b{display:block;font-family:'Archivo',sans-serif;font-size:10px;font-weight:700;
+  letter-spacing:.2em;text-transform:uppercase;color:var(--blue);margin-bottom:5px}
+.exercise{background:var(--gold-soft);border:1px solid #E9DCBB;border-left:4px solid var(--gold)}
+.exercise b{color:var(--gold)}
+
+/* —— P2 视频骨架屏 —— */
+.video-frame{background:#EFEEE8}
+.video-frame::before{content:"";position:absolute;inset:0;background:
+  linear-gradient(90deg,#EFEEE8 0%,#F7F6F1 50%,#EFEEE8 100%);background-size:200% 100%;
+  animation:shimmer 1.3s linear infinite}
+.video-frame.ready::before{display:none}
+@keyframes shimmer{from{background-position:200% 0}to{background-position:-200% 0}}
+.video-frame iframe{opacity:0;transition:opacity .35s var(--ease)}
+.video-frame.ready iframe{opacity:1}
+
+/* —— P1 微交互压感 —— */
+.btn:active,.tab:active,.case-row:active{transform:scale(.985)}
+.btn,.tab{transition:background .15s,color .15s,border-color .15s,transform .09s var(--ease)}
+.case-row{transition:background .15s,transform .09s var(--ease)}
+.day-item{transition:transform .15s var(--ease),border-color .15s}
+.day-item:hover{transform:translateX(2px);border-color:var(--blue)}
+.toasts{position:fixed;right:20px;bottom:20px;z-index:60;display:flex;flex-direction:column;gap:10px;
+  pointer-events:none;max-width:calc(100vw - 40px)}
+.toast{pointer-events:auto;display:flex;align-items:center;gap:12px;padding:12px 16px;background:var(--panel);
+  border:1px solid #E3D3A8;border-left:4px solid var(--gold);box-shadow:0 12px 34px -16px rgba(23,22,15,.4);
+  animation:toastIn .38s var(--ease) both}
+.toast .badge-ico{width:34px;height:34px;flex-shrink:0;display:flex;align-items:center;justify-content:center;
+  border-radius:50%;background:var(--gold-soft);color:var(--gold);font-size:16px}
+.toast .badge-ico.b{background:var(--blue-soft);color:var(--blue)}
+.toast .tx{display:flex;flex-direction:column;gap:2px;min-width:0}
+.toast .tx b{font-family:'Noto Serif SC',serif;font-weight:900;font-size:14px}
+.toast .tx span{font-size:11.5px;color:var(--muted)}
+@keyframes toastIn{from{opacity:0;transform:translateX(24px) scale(.96)}to{opacity:1;transform:none}}
+@media (max-width:640px){.toasts{left:16px;right:16px;bottom:16px}}
 .day-item .full-tag{font-size:11px;font-weight:700;color:var(--gold);flex-shrink:0;padding-top:3px}
 .empty{
   text-align:center;color:var(--muted);padding:56px 20px;border:1px dashed var(--line);background:var(--panel);
@@ -256,6 +446,11 @@ const CSS = `
   .ring-label{text-align:left}
   .case-row{padding:14px}
   .case-body{padding:18px 16px 24px}
+  .tabs{gap:0}
+  .tab{padding:10px 10px;font-size:13px}
+  .tabs-progress{font-size:11px;gap:6px}
+  .dot-row{display:none}
+  .closed-inline{flex-wrap:wrap;padding:16px}
   .case-row .info h3{white-space:normal}
   .status .pill{display:none}
 }
@@ -270,6 +465,292 @@ const CSS = `
 const P = { blue: "#002FA7", red: "#D0361F", yellow: "#E8B50C", ink: "#17160F", gray: "#C9C7BE" };
 
 const VISUALS = {
+  /* ===== 主题日 10 · 交通工具：形态与布局研究图 ===== */
+  beetleCurve: (
+    <svg viewBox="0 0 320 220" role="img" aria-label="一笔连续曲线的车身侧影研究：前盖、车顶与尾部贯通为单一轮廓">
+      <rect width="320" height="220" fill="#fff" />
+      {/* 车身体量 */}
+      <path d="M36 152 C 40 122 66 110 94 106 C 118 66 202 66 228 106 C 256 112 282 124 286 152 Z"
+        fill="#EFEEE8" stroke={P.gray} strokeWidth="1.5" />
+      {/* 舱室与分件线（次要信息，弱化） */}
+      <path d="M118 102 C 140 74 188 74 210 102" fill="#fff" stroke={P.gray} strokeWidth="1.5" />
+      <line x1="164" y1="76" x2="164" y2="102" stroke={P.gray} strokeWidth="1.5" />
+      {/* 关键：一条不间断的轮廓线贯穿全车 */}
+      <path d="M36 152 C 40 122 66 110 94 106 C 118 66 202 66 228 106 C 256 112 282 124 286 152"
+        fill="none" stroke={P.blue} strokeWidth="4.5" strokeLinecap="round" />
+      <circle cx="36" cy="152" r="4" fill={P.blue} />
+      <circle cx="286" cy="152" r="4" fill={P.blue} />
+      {/* 车轮与地面 */}
+      <circle cx="96" cy="154" r="24" fill="#fff" stroke={P.ink} strokeWidth="3" />
+      <circle cx="228" cy="154" r="24" fill="#fff" stroke={P.ink} strokeWidth="3" />
+      <circle cx="96" cy="154" r="9" fill={P.ink} />
+      <circle cx="228" cy="154" r="9" fill={P.ink} />
+      <line x1="20" y1="178" x2="300" y2="178" stroke={P.ink} strokeWidth="1.5" />
+      {/* 无腰线断裂的标注 */}
+      <line x1="150" y1="118" x2="150" y2="136" stroke={P.red} strokeWidth="1" strokeDasharray="3 3" />
+      <text x="26" y="200" fontFamily="Archivo,sans-serif" fontSize="9" letterSpacing="1.5" fill={P.blue}>ONE UNBROKEN LINE</text>
+      <text x="212" y="200" fontFamily="Archivo,sans-serif" fontSize="9" letterSpacing="1.5" fill={P.gray}>NO BELT BREAK</text>
+    </svg>
+  ),
+  vespaShell: (
+    <svg viewBox="0 0 320 220" role="img" aria-label="单体壳与跨入式空间研究：全包裹钢壳与前后分离的踏入区">
+      <rect width="320" height="220" fill="#fff" />
+      {/* 前护腿板：单体壳的前段 */}
+      <path d="M44 156 C 38 116 46 82 70 70 L96 62 L106 84 L82 94 C 68 108 66 130 70 156 Z"
+        fill={P.blue} />
+      {/* 踏板 */}
+      <rect x="66" y="144" width="120" height="13" fill={P.blue} />
+      {/* 后车身：包覆发动机与后轮的壳体 */}
+      <path d="M180 158 C 172 122 190 96 220 92 L264 94 C 288 98 294 132 284 158 Z" fill={P.blue} />
+      {/* 座垫 */}
+      <path d="M196 88 L272 90 C 280 90 280 78 270 76 L206 74 C 194 74 190 88 196 88 Z" fill={P.ink} />
+      {/* 车把 */}
+      <line x1="98" y1="64" x2="120" y2="52" stroke={P.ink} strokeWidth="5" strokeLinecap="round" />
+      <circle cx="94" cy="66" r="9" fill={P.ink} />
+      {/* 跨入空间：传统摩托被横梁占据，此处为空 */}
+      <rect x="74" y="86" width="104" height="56" fill="none" stroke={P.red} strokeWidth="1.5" strokeDasharray="5 4" />
+      <line x1="126" y1="86" x2="126" y2="142" stroke={P.red} strokeWidth="1" strokeDasharray="2 4" />
+      {/* 车轮与地面 */}
+      <circle cx="72" cy="160" r="20" fill="#fff" stroke={P.ink} strokeWidth="3" />
+      <circle cx="252" cy="160" r="20" fill="#fff" stroke={P.ink} strokeWidth="3" />
+      <circle cx="72" cy="160" r="7" fill={P.ink} />
+      <circle cx="252" cy="160" r="7" fill={P.ink} />
+      <line x1="20" y1="180" x2="300" y2="180" stroke={P.ink} strokeWidth="1.5" />
+      <text x="74" y="200" fontFamily="Archivo,sans-serif" fontSize="9" letterSpacing="1.5" fill={P.red}>STEP-THROUGH VOID</text>
+      <text x="228" y="200" fontFamily="Archivo,sans-serif" fontSize="9" letterSpacing="1.5" fill={P.blue}>MONOCOQUE</text>
+    </svg>
+  ),
+  dsFloat: (
+    <svg viewBox="0 0 320 220" role="img" aria-label="俯冲姿态与液气悬挂研究：前低后高的车身线与可变车高">
+      <rect width="320" height="220" fill="#fff" />
+      {/* 车身：前低后高，一滴将落未落的水 */}
+      <path d="M26 132 C 58 118 104 104 152 96 C 200 88 252 90 288 104 C 300 108 302 124 296 138 L26 138 Z"
+        fill="#EFEEE8" stroke={P.gray} strokeWidth="1.5" />
+      {/* 舱室 */}
+      <path d="M118 98 C 148 66 216 66 250 92" fill="#fff" stroke={P.gray} strokeWidth="1.5" />
+      {/* 关键线：一条持续下俯的上缘 */}
+      <path d="M26 132 C 58 118 104 104 152 96 C 200 88 252 90 288 104"
+        fill="none" stroke={P.blue} strokeWidth="4" strokeLinecap="round" />
+      {/* 随动前灯 */}
+      <circle cx="44" cy="126" r="7" fill={P.yellow} stroke={P.ink} strokeWidth="1.5" />
+      <line x1="44" y1="126" x2="18" y2="116" stroke={P.yellow} strokeWidth="2" strokeDasharray="3 3" />
+      {/* 车轮：后轮内收 */}
+      <circle cx="84" cy="150" r="21" fill="#fff" stroke={P.ink} strokeWidth="3" />
+      <circle cx="246" cy="150" r="21" fill="#fff" stroke={P.ink} strokeWidth="3" />
+      {/* 液气悬挂：可变车高的双向标注 */}
+      <line x1="300" y1="126" x2="300" y2="172" stroke={P.red} strokeWidth="1.5" />
+      <path d="M300 122 L296 132 L304 132 Z" fill={P.red} />
+      <path d="M300 176 L296 166 L304 166 Z" fill={P.red} />
+      <line x1="272" y1="140" x2="308" y2="140" stroke={P.red} strokeWidth="1" strokeDasharray="4 3" />
+      <line x1="272" y1="158" x2="308" y2="158" stroke={P.red} strokeWidth="1" strokeDasharray="4 3" />
+      {/* 地面与「浮起」的气垫感 */}
+      <line x1="20" y1="172" x2="300" y2="172" stroke={P.ink} strokeWidth="1.5" />
+      <line x1="60" y1="180" x2="270" y2="180" stroke={P.gray} strokeWidth="1" strokeDasharray="2 6" />
+      <text x="26" y="200" fontFamily="Archivo,sans-serif" fontSize="9" letterSpacing="1.5" fill={P.blue}>NOSE-DOWN STANCE</text>
+      <text x="204" y="200" fontFamily="Archivo,sans-serif" fontSize="9" letterSpacing="1.5" fill={P.red}>VARIABLE HEIGHT</text>
+    </svg>
+  ),
+  miniLayout: (
+    <svg viewBox="0 0 320 220" role="img" aria-label="平面布局研究：横置发动机、四轮四角与乘员空间占比">
+      <rect width="320" height="220" fill="#fff" />
+      {/* 车体外廓（俯视） */}
+      <rect x="72" y="30" width="176" height="152" rx="14" fill="#EFEEE8" stroke={P.ink} strokeWidth="2" />
+      {/* 四轮推至四角 */}
+      {[[58, 46], [58, 140], [238, 46], [238, 140]].map(([x, y], i) => (
+        <rect key={i} x={x} y={y} width="24" height="34" rx="4" fill={P.ink} />
+      ))}
+      {/* 横置动力总成：占据最短的纵向长度 */}
+      <rect x="84" y="38" width="152" height="30" fill={P.red} />
+      {[0, 1, 2, 3].map(i => (
+        <line key={i} x1={100 + i * 36} y1="38" x2={100 + i * 36} y2="68" stroke="#fff" strokeWidth="2" />
+      ))}
+      {/* 乘员空间：车长的绝大部分 */}
+      <rect x="84" y="76" width="152" height="98" fill={P.blue} opacity=".16" stroke={P.blue} strokeWidth="1.5" strokeDasharray="5 4" />
+      {[[110, 100], [210, 100], [110, 150], [210, 150]].map(([x, y], i) => (
+        <circle key={i} cx={x} cy={y} r="13" fill="none" stroke={P.blue} strokeWidth="2" />
+      ))}
+      <text x="146" y="132" fontFamily="Archivo,sans-serif" fontSize="17" fontWeight="700" fill={P.blue}>80%</text>
+      {/* 车长尺寸线 */}
+      <line x1="72" y1="196" x2="248" y2="196" stroke={P.ink} strokeWidth="1.5" />
+      <line x1="72" y1="190" x2="72" y2="202" stroke={P.ink} strokeWidth="1.5" />
+      <line x1="248" y1="190" x2="248" y2="202" stroke={P.ink} strokeWidth="1.5" />
+      <text x="128" y="212" fontFamily="Archivo,sans-serif" fontSize="9" letterSpacing="1.5" fill={P.ink}>3.05 m</text>
+      <text x="252" y="56" fontFamily="Archivo,sans-serif" fontSize="9" letterSpacing="1.2" fill={P.red}>TRANSVERSE</text>
+      <text x="252" y="164" fontFamily="Archivo,sans-serif" fontSize="9" letterSpacing="1.2" fill={P.gray}>CORNERS</text>
+    </svg>
+  ),
+  shinkansenNose: (
+    <svg viewBox="0 0 320 220" role="img" aria-label="流线头型与系统工程研究：气流轨迹、涂装分层与专用线路信号">
+      <rect width="320" height="220" fill="#fff" />
+      {/* 气流：贴附头型而不分离 */}
+      {[0, 1, 2].map(i => (
+        <path key={i} d={`M12 ${54 - i * 12} C 70 ${54 - i * 12} 96 ${68 + i * 4} 150 ${66 + i * 3} L300 ${64 + i * 3}`}
+          fill="none" stroke={P.gray} strokeWidth="1.5" strokeDasharray="6 5" />
+      ))}
+      {/* 车身：圆润子弹头 */}
+      <path d="M24 136 C 32 104 66 84 118 82 L296 82 L296 136 Z" fill="#fff" stroke={P.ink} strokeWidth="2.5" />
+      {/* 蓝色腰带涂装：速度的温和表达 */}
+      <path d="M26 124 C 34 118 54 112 76 110 L296 110 L296 124 Z" fill={P.blue} />
+      {/* 圆窗 */}
+      <circle cx="96" cy="97" r="8" fill="#DCE4F5" stroke={P.ink} strokeWidth="1.5" />
+      {[150, 196, 242, 284].map((x, i) => (
+        <rect key={i} x={x} y="90" width="26" height="14" rx="3" fill="#DCE4F5" stroke={P.ink} strokeWidth="1.5" />
+      ))}
+      {/* 转向架与轨道 */}
+      <circle cx="86" cy="142" r="8" fill={P.ink} />
+      <circle cx="122" cy="142" r="8" fill={P.ink} />
+      <circle cx="232" cy="142" r="8" fill={P.ink} />
+      <circle cx="268" cy="142" r="8" fill={P.ink} />
+      <line x1="10" y1="152" x2="310" y2="152" stroke={P.ink} strokeWidth="3" />
+      {[0,1,2,3,4,5,6,7,8].map(i => (
+        <line key={i} x1={24 + i * 34} y1="152" x2={24 + i * 34} y2="162" stroke={P.gray} strokeWidth="3" />
+      ))}
+      {/* 系统：专用线路上的信号节点 */}
+      {[70, 150, 230].map((x, i) => (
+        <g key={i}>
+          <line x1={x} y1="178" x2={x} y2="164" stroke={P.red} strokeWidth="1.5" />
+          <circle cx={x} cy="180" r="4" fill={P.red} />
+        </g>
+      ))}
+      <line x1="40" y1="180" x2="280" y2="180" stroke={P.red} strokeWidth="1" strokeDasharray="4 4" />
+      <text x="24" y="204" fontFamily="Archivo,sans-serif" fontSize="9" letterSpacing="1.5" fill={P.red}>DEDICATED TRACK · SIGNAL SYSTEM</text>
+      <text x="238" y="48" fontFamily="Archivo,sans-serif" fontSize="9" letterSpacing="1.5" fill={P.gray}>AIRFLOW</text>
+    </svg>
+  ),
+  /* ===== 主题日 06 · 标志与品牌：几何构造研究图 ===== */
+  nikeSwoosh: (
+    <svg viewBox="0 0 320 220" role="img" aria-label="速度轨迹的几何构造研究：一笔加速弧线的生成">
+      <rect width="320" height="220" fill="#fff" />
+      {/* 构造圆：大小两圆的相切关系决定弧线的加速感 */}
+      <circle cx="120" cy="10" r="132" fill="none" stroke={P.gray} strokeWidth="1" strokeDasharray="4 5" />
+      <circle cx="150" cy="-38" r="168" fill="none" stroke={P.gray} strokeWidth="1" strokeDasharray="4 5" />
+      {/* 轨迹本体：尾端细、头端展开，形成方向性 */}
+      <path d="M268 62 C 208 112 132 150 62 142 C 126 178 220 134 278 52 Z" fill={P.ink} />
+      {/* 速度线：视线被推向右上 */}
+      <line x1="40" y1="160" x2="104" y2="160" stroke={P.red} strokeWidth="3" />
+      <line x1="52" y1="172" x2="128" y2="172" stroke={P.red} strokeWidth="2" opacity=".6" />
+      <line x1="66" y1="182" x2="150" y2="182" stroke={P.red} strokeWidth="1.5" opacity=".35" />
+      {/* 方向箭头 */}
+      <path d="M282 46 L296 40 L290 56 Z" fill={P.red} />
+      {/* 基线与端点标记 */}
+      <line x1="30" y1="198" x2="290" y2="198" stroke={P.ink} strokeWidth="1" />
+      <circle cx="62" cy="142" r="3.5" fill={P.blue} />
+      <circle cx="272" cy="57" r="3.5" fill={P.blue} />
+      <text x="30" y="214" fontFamily="Archivo,sans-serif" fontSize="9" letterSpacing="1.5" fill={P.gray}>TAIL — THIN</text>
+      <text x="216" y="214" fontFamily="Archivo,sans-serif" fontSize="9" letterSpacing="1.5" fill={P.gray}>HEAD — OPEN</text>
+    </svg>
+  ),
+  ibmStripes: (
+    <svg viewBox="0 0 320 220" role="img" aria-label="条纹切分的减重原理：实心字块与八线条纹字块的对照研究">
+      <rect width="320" height="220" fill="#fff" />
+      <defs>
+        <mask id="m-stripe">
+          <rect x="0" y="0" width="320" height="220" fill="#fff" />
+          {[0, 1, 2, 3, 4, 5, 6].map(i => (
+            <rect key={i} x="166" y={62 + i * 15.4} width="128" height="5.6" fill="#000" />
+          ))}
+        </mask>
+      </defs>
+      {/* 左：实心字块——厚重、静止 */}
+      <g fill={P.ink}>
+        <rect x="34" y="58" width="16" height="104" />
+        <rect x="60" y="58" width="40" height="104" />
+        <rect x="108" y="58" width="16" height="104" />
+        <rect x="124" y="58" width="16" height="52" />
+      </g>
+      <rect x="72" y="74" width="16" height="22" fill="#fff" />
+      <rect x="72" y="122" width="16" height="24" fill="#fff" />
+      {/* 右：同一字块经八线切分——减重、生成扫描线的动态 */}
+      <g mask="url(#m-stripe)">
+        <g fill={P.blue}>
+          <rect x="166" y="58" width="16" height="104" />
+          <rect x="192" y="58" width="40" height="104" />
+          <rect x="240" y="58" width="16" height="104" />
+          <rect x="256" y="58" width="16" height="52" />
+        </g>
+        <rect x="204" y="74" width="16" height="22" fill="#fff" />
+        <rect x="204" y="122" width="16" height="24" fill="#fff" />
+      </g>
+      {/* 八线计数标尺 */}
+      <line x1="300" y1="58" x2="300" y2="162" stroke={P.gray} strokeWidth="1" />
+      {[0, 1, 2, 3, 4, 5, 6, 7].map(i => (
+        <line key={i} x1="296" y1={62 + i * 14.6} x2="304" y2={62 + i * 14.6} stroke={P.red} strokeWidth="2" />
+      ))}
+      <text x="286" y="180" fontFamily="Archivo,sans-serif" fontSize="10" fontWeight="700" fill={P.red}>8</text>
+      <text x="34" y="182" fontFamily="Archivo,sans-serif" fontSize="9" letterSpacing="1.5" fill={P.gray}>SOLID — HEAVY</text>
+      <text x="166" y="182" fontFamily="Archivo,sans-serif" fontSize="9" letterSpacing="1.5" fill={P.gray}>STRIPED — LIGHT</text>
+      <line x1="146" y1="52" x2="146" y2="168" stroke={P.gray} strokeWidth="1" strokeDasharray="3 4" />
+    </svg>
+  ),
+  appleBite: (
+    <svg viewBox="0 0 320 220" role="img" aria-label="缺口作为尺度标尺：圆的相减构造与六色带研究">
+      <rect width="320" height="220" fill="#fff" />
+      <defs>
+        <clipPath id="cp-body">
+          <path d="M160 34 C 214 34 246 76 246 118 C 246 160 212 192 160 192 C 108 192 74 160 74 118 C 74 76 106 34 160 34 Z" />
+        </clipPath>
+      </defs>
+      {/* 主体：六色带填充，色彩即产品能力的宣示 */}
+      <g clipPath="url(#cp-body)">
+        {["#4CA64C", "#E8B50C", "#E88A0C", "#D0361F", "#8E3B8E", "#2E6FD0"].map((c, i) => (
+          <rect key={i} x="60" y={30 + i * 27.5} width="200" height="27.5" fill={c} />
+        ))}
+      </g>
+      {/* 缺口：以同源小圆相减，缺口尺寸即整体的尺度参照 */}
+      <circle cx="250" cy="106" r="26" fill="#fff" />
+      <circle cx="250" cy="106" r="26" fill="none" stroke={P.ink} strokeWidth="1.5" strokeDasharray="4 4" />
+      {/* 构造网格 */}
+      <circle cx="160" cy="113" r="86" fill="none" stroke={P.gray} strokeWidth="1" strokeDasharray="4 5" />
+      <line x1="160" y1="20" x2="160" y2="206" stroke={P.gray} strokeWidth="1" strokeDasharray="3 4" />
+      <line x1="56" y1="113" x2="284" y2="113" stroke={P.gray} strokeWidth="1" strokeDasharray="3 4" />
+      {/* 尺度标注：缺口直径 = 整体的参照单位 */}
+      <line x1="224" y1="196" x2="276" y2="196" stroke={P.blue} strokeWidth="2" />
+      <line x1="224" y1="191" x2="224" y2="201" stroke={P.blue} strokeWidth="2" />
+      <line x1="276" y1="191" x2="276" y2="201" stroke={P.blue} strokeWidth="2" />
+      <text x="228" y="212" fontFamily="Archivo,sans-serif" fontSize="9" letterSpacing="1" fill={P.blue}>SCALE UNIT</text>
+      <text x="34" y="212" fontFamily="Archivo,sans-serif" fontSize="9" letterSpacing="1.5" fill={P.gray}>CIRCLE − CIRCLE</text>
+    </svg>
+  ),
+  cbsEye: (
+    <svg viewBox="0 0 320 220" role="img" aria-label="视觉之眼的纯几何构造：双圆相交生成的透镜形与同心瞳孔">
+      <rect width="320" height="220" fill="#fff" />
+      {/* 两个等大圆相交，交叠区即透镜形（vesica）——眼形的几何来源 */}
+      <circle cx="160" cy="46" r="92" fill="none" stroke={P.gray} strokeWidth="1" strokeDasharray="4 5" />
+      <circle cx="160" cy="174" r="92" fill="none" stroke={P.gray} strokeWidth="1" strokeDasharray="4 5" />
+      {/* 透镜形本体 */}
+      <path d="M81 110 A 92 92 0 0 1 239 110 A 92 92 0 0 1 81 110 Z" fill={P.ink} />
+      {/* 瞳孔：以同心圆自白色反挖，纯正圆保证任意尺寸下的清晰 */}
+      <circle cx="160" cy="110" r="34" fill="#fff" />
+      <circle cx="160" cy="110" r="17" fill={P.ink} />
+      {/* 半径与中心轴标注 */}
+      <line x1="160" y1="110" x2="194" y2="110" stroke={P.red} strokeWidth="2" />
+      <circle cx="160" cy="110" r="2.5" fill={P.red} />
+      <line x1="40" y1="110" x2="280" y2="110" stroke={P.gray} strokeWidth="1" strokeDasharray="3 4" />
+      <line x1="160" y1="14" x2="160" y2="206" stroke={P.gray} strokeWidth="1" strokeDasharray="3 4" />
+      <text x="34" y="30" fontFamily="Archivo,sans-serif" fontSize="9" letterSpacing="1.5" fill={P.gray}>TWO ARCS → ONE LENS</text>
+      <text x="196" y="102" fontFamily="Archivo,sans-serif" fontSize="9" fontWeight="700" fill={P.red}>r</text>
+    </svg>
+  ),
+  bocCoin: (
+    <svg viewBox="0 0 320 220" role="img" aria-label="外圆内方的同构构造：古钱形制与「中」字笔画的共用研究">
+      <rect width="320" height="220" fill="#fff" />
+      {/* 外圆：古钱轮廓 */}
+      <circle cx="160" cy="110" r="72" fill="none" stroke={P.red} strokeWidth="11" />
+      {/* 内方：方孔 */}
+      <rect x="132" y="82" width="56" height="56" fill="none" stroke={P.red} strokeWidth="11" />
+      {/* 竖笔：贯穿全形，同时完成「中」字与穿钱红绳的双重语义 */}
+      <line x1="160" y1="20" x2="160" y2="200" stroke={P.red} strokeWidth="11" />
+      {/* 构造辅助：外接方与中心轴，说明外圆内方的比例推导 */}
+      <rect x="88" y="38" width="144" height="144" fill="none" stroke={P.gray} strokeWidth="1" strokeDasharray="4 5" />
+      <line x1="40" y1="110" x2="280" y2="110" stroke={P.gray} strokeWidth="1" strokeDasharray="3 4" />
+      <circle cx="160" cy="110" r="28" fill="none" stroke={P.gray} strokeWidth="1" strokeDasharray="3 4" />
+      {/* 笔画共用标记：竖笔同时属于「钱绳」与「中」 */}
+      <circle cx="160" cy="82" r="3.5" fill={P.blue} />
+      <circle cx="160" cy="138" r="3.5" fill={P.blue} />
+      <text x="34" y="30" fontFamily="Archivo,sans-serif" fontSize="9" letterSpacing="1.5" fill={P.gray}>ROUND OUT · SQUARE IN</text>
+      <text x="34" y="206" fontFamily="Archivo,sans-serif" fontSize="9" letterSpacing="1.5" fill={P.blue}>SHARED STROKE</text>
+    </svg>
+  ),
   bauhaus: (
     <svg viewBox="0 0 320 220" role="img" aria-label="包豪斯校舍构成示意">
       <rect width="320" height="220" fill="#fff" />
@@ -428,10 +909,25 @@ const genVisual = c => {
   if (cat === "type") {
     const ch = (c.title.match(/[A-Za-z]/) || ["A"])[0].toUpperCase();
     el.push(<rect key="b" x="0" y="0" width="200" height="150" fill={paper} />);
-    el.push(<text key="g" x="76" y="112" fontFamily="Georgia,serif" fontWeight="900" fontSize="110" fill={ink}>{ch}</text>);
-    el.push(<text key="g2" x="128" y="112" fontFamily="Archivo,sans-serif" fontWeight="700" fontSize="72" fill={A}>{ch.toLowerCase()}</text>);
-    el.push(<line key="l1" x1="20" y1="112" x2="180" y2="112" stroke={ink} strokeWidth="1.5" />);
-    el.push(<line key="l2" x1="20" y1="42" x2="180" y2="42" stroke={ink} strokeDasharray="3 4" strokeWidth="1" />);
+    const v = h % 3;
+    if (v === 0) { /* 大小写并置 + 基线网格 */
+      el.push(<text key="g" x="72" y="112" fontFamily="Georgia,serif" fontWeight="900" fontSize="110" fill={ink}>{ch}</text>);
+      el.push(<text key="g2" x="126" y="112" fontFamily="Archivo,sans-serif" fontWeight="700" fontSize="72" fill={A}>{ch.toLowerCase()}</text>);
+      el.push(<line key="l1" x1="20" y1="112" x2="180" y2="112" stroke={ink} strokeWidth="1.5" />);
+      el.push(<line key="l2" x1="20" y1="42" x2="180" y2="42" stroke={ink} strokeDasharray="3 4" strokeWidth="1" />);
+    } else if (v === 1) { /* 单字满版 + 计量线 */
+      el.push(<text key="g" x="100" y="122" textAnchor="middle" fontFamily="Georgia,serif" fontWeight="900" fontSize="140" fill={A}>{ch}</text>);
+      el.push(<line key="x1" x1="10" y1="122" x2="190" y2="122" stroke={ink} strokeWidth="1" />);
+      el.push(<line key="x2" x1="10" y1="50" x2="190" y2="50" stroke={ink} strokeDasharray="2 5" strokeWidth="1" />);
+      el.push(<rect key="m" x="8" y="50" width="5" height="72" fill={B} />);
+    } else { /* 字符矩阵 */
+      const seq = [ch, ch.toLowerCase(), "a", "g", "R", "e", "n", "2"];
+      seq.forEach((t, i) => el.push(
+        <text key={"m" + i} x={30 + (i % 4) * 44} y={62 + Math.floor(i / 4) * 54}
+          textAnchor="middle" fontFamily={i % 2 ? "Archivo,sans-serif" : "Georgia,serif"}
+          fontWeight="700" fontSize="40" fill={i === (h % 8) ? A : ink}>{t}</text>));
+      el.push(<line key="l" x1="16" y1="82" x2="184" y2="82" stroke={ink} strokeDasharray="3 4" strokeWidth="1" />);
+    }
   } else if (cat === "logo") {
     el.push(<rect key="b" x="0" y="0" width="200" height="150" fill={paper} />);
     el.push(<circle key="r" cx="100" cy="75" r="46" fill="none" stroke={ink} strokeWidth="2.5" />);
@@ -490,19 +986,50 @@ const genVisual = c => {
   } else { /* poster / product 及其余 */
     el.push(<rect key="b" x="0" y="0" width="200" height="150" fill={cat === "poster" ? A : paper} />);
     if (cat === "poster") {
-      el.push(<rect key="band" x="0" y={92 + (h % 14)} width="200" height="20" fill={paper} />);
-      el.push(<circle key="c" cx={60 + (h % 70)} cy={46 + (h % 20)} r={22 + (h % 10)} fill={B} />);
-      el.push(<rect key="t1" x="16" y={98 + (h % 14)} width="74" height="7" fill={ink} />);
+      const v = h % 3;
+      if (v === 0) { /* 色带 + 圆 */
+        el.push(<rect key="band" x="0" y={92 + (h % 14)} width="200" height="20" fill={paper} />);
+        el.push(<circle key="c" cx={60 + (h % 70)} cy={46 + (h % 20)} r={22 + (h % 10)} fill={B} />);
+        el.push(<rect key="t1" x="16" y={98 + (h % 14)} width="74" height="7" fill={ink} />);
+      } else if (v === 1) { /* 对角分割 + 剪影 */
+        el.push(<path key="d" d={`M0 ${40 + (h % 30)} L200 0 L200 150 L0 150 Z`} fill={paper} opacity=".92" />);
+        el.push(<path key="f" d={`M${70 + (h % 30)} 122 Q${86 + (h % 20)} ${60 + (h % 20)} ${118 + (h % 16)} 122 Z`} fill={ink} />);
+        el.push(<rect key="t" x="18" y="18" width={54 + (h % 26)} height="8" fill={B} />);
+      } else { /* 网格分块 */
+        for (let i = 0; i < 9; i++) {
+          const on = ((h >> i) & 1) === 1;
+          el.push(<rect key={"g" + i} x={22 + (i % 3) * 52} y={16 + Math.floor(i / 3) * 40}
+            width="48" height="36" fill={on ? paper : (i === (h % 9) ? B : "none")}
+            stroke={paper} strokeWidth="1" opacity={on ? 1 : .85} />);
+        }
+      }
     } else {
-      el.push(<rect key="body" x="46" y="34" width="108" height="82" rx={h % 2 ? 14 : 4} fill="#FFFFFF" stroke={ink} strokeWidth="2.5" />);
-      el.push(<circle key="k" cx={78 + (h % 40)} cy="92" r="11" fill={A} />);
-      for (let i = 0; i < 3; i++) el.push(<line key={"v" + i} x1={62 + i * 12} y1="48" x2={62 + i * 12} y2="64" stroke={ink} strokeWidth="2.5" />);
-      el.push(<rect key="s" x="112" y="46" width="30" height="20" fill={B} />);
+      if (h % 3 === 2) { /* 分解层叠视图 */
+        for (let i = 0; i < 3; i++) el.push(
+          <rect key={"L" + i} x={50 + i * 12} y={30 + i * 26} width="88" height="30" rx="3"
+            fill={i === 1 ? A : "#FFFFFF"} stroke={ink} strokeWidth="2" />);
+        el.push(<line key="ax" x1="150" y1="30" x2="150" y2="116" stroke={ink} strokeDasharray="3 4" strokeWidth="1" />);
+        el.push(<circle key="d" cx="168" cy="40" r="6" fill={B} />);
+      } else { /* 正视图 + 操控件 */
+        el.push(<rect key="body" x="46" y="34" width="108" height="82" rx={h % 2 ? 14 : 4} fill="#FFFFFF" stroke={ink} strokeWidth="2.5" />);
+        el.push(<circle key="k" cx={78 + (h % 40)} cy="92" r="11" fill={A} />);
+        for (let i = 0; i < 3; i++) el.push(<line key={"v" + i} x1={62 + i * 12} y1="48" x2={62 + i * 12} y2="64" stroke={ink} strokeWidth="2.5" />);
+        el.push(<rect key="s" x="112" y="46" width="30" height="20" fill={B} />);
+      }
     }
   }
+  const fid = "grain-" + c.id;
   return (
     <svg viewBox="0 0 200 150" role="img" aria-label={`${c.title} 示意研究图`} preserveAspectRatio="xMidYMid meet">
+      <defs>
+        <filter id={fid} x="0" y="0" width="100%" height="100%">
+          <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" stitchTiles="stitch" />
+          <feColorMatrix type="saturate" values="0" />
+        </filter>
+      </defs>
       {el}
+      {/* 极淡纸纹，消解程序图形的光滑感 */}
+      <rect x="0" y="0" width="200" height="150" filter={`url(#${fid})`} opacity="0.055" style={{ mixBlendMode: "multiply" }} />
     </svg>
   );
 };
@@ -861,7 +1388,7 @@ const CASES = [
     searchQuery: "田中一光 日本舞踊 海报 解析", searchQueryEn: "Ikko Tanaka Nihon Buyo poster design" },
 
   /* ---- 主题日 D06 · 标志与品牌 ---- */
-  { id: "nike-swoosh", day: 5, cat: "logo", title: "Nike Swoosh 标志", designer: "卡罗琳·戴维森 Carolyn Davidson", year: 1971,
+  { id: "nike-swoosh", day: 5, cat: "logo", visual: "nikeSwoosh", title: "Nike Swoosh 标志", designer: "卡罗琳·戴维森 Carolyn Davidson", year: 1971,
     field: "标志 · 品牌设计", movement: "美国品牌设计",
     intro: "设计系学生以35美元交付的一道弧线，最终成为无需署名也能被全球识别的「运动」本身。",
     points: [
@@ -872,7 +1399,7 @@ const CASES = [
     exercise: "用一笔画出「快」这个概念的三种抽象形，让同学盲测哪种最有速度感。",
     videoOutline: ["Swoosh诞生的35美元故事", "抽象标志与具象标志的效率对比", "品牌行为如何为符号注入意义"],
     searchQuery: "耐克标志 Swoosh 设计故事", searchQueryEn: "Nike Swoosh logo Carolyn Davidson story" },
-  { id: "ibm-rand", day: 5, cat: "logo", title: "IBM 八线条纹标志", designer: "保罗·兰德 Paul Rand", year: 1972,
+  { id: "ibm-rand", day: 5, cat: "logo", visual: "ibmStripes", title: "IBM 八线条纹标志", designer: "保罗·兰德 Paul Rand", year: 1972,
     field: "标志 · 品牌设计", movement: "美国企业识别",
     intro: "把厚重字母切成八道水平条纹——扫描线的隐喻让一家硬件公司看起来像「速度与数据」本身。",
     points: [
@@ -883,7 +1410,7 @@ const CASES = [
     exercise: "把你名字的首字母加粗后切成条纹，比较5条、8条、12条时轻重感的变化。",
     videoOutline: ["保罗·兰德的企业识别方法论", "IBM条纹标的演变过程", "设计规范手册的意义与实践"],
     searchQuery: "保罗兰德 IBM 标志 企业识别", searchQueryEn: "Paul Rand IBM logo corporate identity" },
-  { id: "apple-logo", day: 5, cat: "logo", title: "Apple 苹果标志", designer: "罗布·雅诺夫 Rob Janoff", year: 1977,
+  { id: "apple-logo", day: 5, cat: "logo", visual: "appleBite", title: "Apple 苹果标志", designer: "罗布·雅诺夫 Rob Janoff", year: 1977,
     field: "标志 · 品牌设计", movement: "科技品牌设计",
     intro: "缺一口的苹果加六色彩虹条：把冰冷的计算机变成了「友好、创造、人人可用」的许诺。",
     points: [
@@ -894,7 +1421,7 @@ const CASES = [
     exercise: "找三个经历过多次改版的标志，描出它们「从未变过」的轮廓部分。",
     videoOutline: ["苹果标志的诞生与传说辨析", "彩虹条纹与产品策略的关系", "标志随品牌成熟的减法演变"],
     searchQuery: "苹果标志 设计演变 解析", searchQueryEn: "Apple logo Rob Janoff design evolution" },
-  { id: "cbs-eye", day: 5, cat: "logo", title: "CBS 眼睛标志", designer: "威廉·戈尔登 William Golden", year: 1951,
+  { id: "cbs-eye", day: 5, cat: "logo", visual: "cbsEye", title: "CBS 眼睛标志", designer: "威廉·戈尔登 William Golden", year: 1951,
     field: "标志 · 品牌设计", movement: "美国企业识别",
     intro: "电视时代的第一只「眼睛」：七十余年不曾改版，被誉为史上最完美的标志之一。",
     points: [
@@ -905,7 +1432,7 @@ const CASES = [
     exercise: "为「广播电台」设计一个同样自我指涉的图形符号，只允许使用正圆与直线。",
     videoOutline: ["电视黄金时代与CBS设计部", "眼睛标志的几何构造分析", "长寿标志的共同特质"],
     searchQuery: "CBS 眼睛标志 设计 解析", searchQueryEn: "CBS Eye logo William Golden design" },
-  { id: "bank-of-china", day: 5, cat: "logo", title: "中国银行标志", designer: "靳埭强", year: 1980,
+  { id: "bank-of-china", day: 5, cat: "logo", visual: "bocCoin", title: "中国银行标志", designer: "靳埭强", year: 1980,
     field: "标志 · 品牌设计", movement: "华人现代设计",
     intro: "古钱方孔与「中」字的同构：一个图形同时说出「中国」与「银行」，东西方设计语法在此握手。",
     points: [
@@ -1089,7 +1616,7 @@ const CASES = [
     searchQuery: "OXO 削皮器 通用设计 解析", searchQueryEn: "OXO Good Grips universal design story" },
 
   /* ---- 主题日 D10 · 交通工具 ---- */
-  { id: "beetle", day: 9, cat: "vehicle", title: "大众甲壳虫", designer: "费迪南德·保时捷 Ferdinand Porsche", year: 1938,
+  { id: "beetle", day: 9, cat: "vehicle", visual: "beetleCurve", title: "大众甲壳虫", designer: "费迪南德·保时捷 Ferdinand Porsche", year: 1938,
     field: "交通工具 · 工业设计", movement: "流线型 / 国民设计",
     intro: "「人民之车」的连续曲面剪影跨越半个世纪几乎未变，成为全球辨识度最高的汽车形态。",
     points: [
@@ -1100,7 +1627,7 @@ const CASES = [
     exercise: "只用一条不间断的曲线画出三款你熟悉的车的侧影，看哪款「一笔」最完整。",
     videoOutline: ["国民车计划的历史背景", "连续曲面造型的空气动力考量", "甲壳虫的文化形象变迁"],
     searchQuery: "大众甲壳虫 设计 历史 解析", searchQueryEn: "VW Beetle design history icon" },
-  { id: "vespa", day: 9, cat: "vehicle", title: "Vespa 踏板摩托车", designer: "科拉迪诺·达斯卡尼奥 Corradino D'Ascanio", year: 1946,
+  { id: "vespa", day: 9, cat: "vehicle", visual: "vespaShell", title: "Vespa 踏板摩托车", designer: "科拉迪诺·达斯卡尼奥 Corradino D'Ascanio", year: 1946,
     field: "交通工具 · 工业设计", movement: "意大利战后设计",
     intro: "讨厌摩托车的直升机工程师重新发明了摩托车：全包裹钢制车身、跨坐改为坐入，优雅从此可以上路。",
     points: [
@@ -1111,7 +1638,7 @@ const CASES = [
     exercise: "选一类你从未使用过的工具，以「彻底外行」身份写下它最不合理的三个地方。",
     videoOutline: ["航空工程师的摩托车革命", "单体壳车身的结构分析", "Vespa与战后意大利生活美学"],
     searchQuery: "Vespa 踏板车 设计 历史", searchQueryEn: "Vespa scooter D'Ascanio design history" },
-  { id: "citroen-ds", day: 9, cat: "vehicle", title: "雪铁龙 DS「女神」", designer: "弗拉米尼奥·贝尔托尼 Flaminio Bertoni", year: 1955,
+  { id: "citroen-ds", day: 9, cat: "vehicle", visual: "dsFloat", title: "雪铁龙 DS「女神」", designer: "弗拉米尼奥·贝尔托尼 Flaminio Bertoni", year: 1955,
     field: "交通工具 · 工业设计", movement: "法国未来主义",
     intro: "巴黎车展首日订单破万：液气悬挂让车身如气垫般浮起，罗兰·巴特称它为「从天而降的物体」。",
     points: [
@@ -1122,7 +1649,7 @@ const CASES = [
     exercise: "读罗兰·巴特《新雪铁龙》短文，摘出三句你认为最适用于当下新产品发布的句子。",
     videoOutline: ["DS的空气动力与液气悬挂", "贝尔托尼的雕塑造型方法", "罗兰·巴特与设计的神话分析"],
     searchQuery: "雪铁龙DS 女神 设计解析", searchQueryEn: "Citroen DS design Flaminio Bertoni" },
-  { id: "mini", day: 9, cat: "vehicle", title: "Mini 微型轿车", designer: "亚历克·伊西戈尼斯 Alec Issigonis", year: 1959,
+  { id: "mini", day: 9, cat: "vehicle", visual: "miniLayout", title: "Mini 微型轿车", designer: "亚历克·伊西戈尼斯 Alec Issigonis", year: 1959,
     field: "交通工具 · 工业设计", movement: "英国工程设计",
     intro: "石油危机催生的空间魔术：发动机横置、四轮四角，3米车长里挤出80%的乘员空间。",
     points: [
@@ -1133,7 +1660,7 @@ const CASES = [
     exercise: "测量你房间里使用率最低的一平方米，构想一个「布局革命」让它承担新功能。",
     videoOutline: ["苏伊士危机与微型车需求", "横置前驱布局的空间革命", "Mini的赛车传奇与文化形象"],
     searchQuery: "Mini 汽车 伊西戈尼斯 设计", searchQueryEn: "Mini car Alec Issigonis design revolution" },
-  { id: "shinkansen", day: 9, cat: "vehicle", title: "新干线0系列车", designer: "三木忠直（团队）", year: 1964,
+  { id: "shinkansen", day: 9, cat: "vehicle", visual: "shinkansenNose", title: "新干线0系列车", designer: "三木忠直（团队）", year: 1964,
     field: "交通工具 · 工业设计", movement: "日本战后工业设计",
     intro: "世界第一条高速铁路的首发车：轰炸机工程师转向和平事业，圆润「子弹头」成为战后日本复兴的国家肖像。",
     points: [
@@ -1814,12 +2341,17 @@ function ProgressRing({ done, total }) {
   return (
     <svg width="76" height="76" viewBox="0 0 76 76" role="img" aria-label={`今日进度 ${done}/${total}`}>
       {Array.from({ length: total }).map((_, i) => (
-        <circle key={i} cx="38" cy="38" r={R} fill="none"
+        <circle key={i} className={`ring-seg ${i < done ? "on" : ""}`} cx="38" cy="38" r={R} fill="none"
           stroke={i < done ? "var(--blue)" : "var(--line)"} strokeWidth="7"
           strokeDasharray={`${seg - gap} ${C - seg + gap}`}
-          strokeDashoffset={-i * seg + C / 4} strokeLinecap="butt" />
+          strokeDashoffset={-i * seg + C / 4} strokeLinecap="butt"
+          style={{ transitionDelay: `${i * 40}ms` }} />
       ))}
-      <text x="38" y="43" textAnchor="middle" fontFamily="Archivo,sans-serif" fontWeight="700" fontSize="15" fill="var(--ink)">
+      {done >= total && (
+        <circle className="ring-sweep" cx="38" cy="38" r={R} fill="none" stroke="var(--gold)" strokeWidth="7"
+          strokeDasharray={C} strokeDashoffset={C} transform="rotate(-90 38 38)" strokeLinecap="butt" />
+      )}
+      <text key={done} className="ring-num" x="38" y="43" textAnchor="middle" fontFamily="Archivo,sans-serif" fontWeight="700" fontSize="15" fill="var(--ink)">
         {done}/{total}
       </text>
     </svg>
@@ -1830,14 +2362,25 @@ function ProgressRing({ done, total }) {
 function CaseCard({ c, i, done, open, onToggle, onFinish, onReset, resetNote, savedLink, onSaveLink }) {
   const [draft, setDraft] = useState(savedLink || "");
   const [confirmReset, setConfirmReset] = useState(false);
+  const [frameReady, setFrameReady] = useState(false);
   useEffect(() => setDraft(savedLink || ""), [savedLink]);
+  useEffect(() => { setFrameReady(false); }, [savedLink]); // 换片时重新显示骨架屏
   useEffect(() => { setConfirmReset(false); }, [open, done]); // 折叠或状态变化时退出确认态
   const embed = savedLink ? toEmbed(savedLink) : null;
+  /* 输入框内容的即时可嵌入性校验（不影响已保存内容） */
+  const draftCheck = useMemo(() => {
+    const v = draft.trim();
+    if (!v || v === (savedLink || "")) return null;
+    const r = toEmbed(v);
+    if (r && r.src) return { tone: "ok", text: `✓ 可嵌入 · ${r.site === "bilibili" ? "B 站播放器" : "YouTube"}，回车或点「保存链接」即可` };
+    if (r && r.short) return { tone: "warn", text: "⚠ b23.tv 短链无法嵌入：请在浏览器打开后复制带 BV 号的完整链接" };
+    return { tone: "warn", text: "⚠ 暂不支持自动嵌入：保存后将以普通链接形式呈现" };
+  }, [draft, savedLink]);
   const q = encodeURIComponent(c.searchQuery);          // 中文 → B 站
   const qEn = encodeURIComponent(c.searchQueryEn || c.searchQuery); // 英文 → YouTube
 
   return (
-    <article className={`case ${done ? "done" : ""} ${open ? "open" : ""}`}>
+    <article id={`case-${c.id}`} className={`case ${done ? "done" : ""} ${open ? "open" : ""}`} style={{ "--i": i }}>
       <button className="case-row" onClick={onToggle} aria-expanded={open}>
         <div className="thumb" aria-hidden="true">{getVisual(c)}</div>
         <div className="info">
@@ -1851,15 +2394,22 @@ function CaseCard({ c, i, done, open, onToggle, onFinish, onReset, resetNote, sa
         </div>
       </button>
 
-      {open && (
-        <div className="case-body">
-          <div className="artwork">{getVisual(c)}</div>
+      <div className="case-wrap">
+        <div className="case-body" aria-hidden={!open}>
+          <figure className="artwork">
+            {getVisual(c)}
+            <figcaption className="plate">
+              <span className="cat-no">Cat. No.{String(CASES.indexOf(c) + 1).padStart(3, "0")}</span>
+              <span className="plate-t">{c.title}</span>
+              <span className="cat-yr">{c.year}</span>
+            </figcaption>
+          </figure>
           <p className="artwork-note">
             上图为原创几何示意研究图。建议同时检索原作高清图对照观看：
             <a href={`https://www.google.com/search?tbm=isch&q=${q}`} target="_blank" rel="noreferrer"> 搜索原作图片 ↗</a>
           </p>
 
-          <p style={{ fontSize: 14.5, marginBottom: 4 }}><b style={{ color: "var(--blue)" }}>导览 · </b>{c.intro}</p>
+          <p className="lede"><b>导览</b>{c.intro}</p>
 
           <div className="sec-title"><span className="idx">01 图文研习</span>设计要点解析</div>
           <div className="points">
@@ -1879,15 +2429,28 @@ function CaseCard({ c, i, done, open, onToggle, onFinish, onReset, resetNote, sa
               <a className="btn" href={`https://www.youtube.com/results?search_query=${qEn}`} target="_blank" rel="noreferrer">在 YouTube 搜索（English）↗</a>
             </div>
             <div className="link-row">
-              <input value={draft} onChange={e => setDraft(e.target.value)}
-                placeholder="粘贴 B 站或 YouTube 视频链接，保存后自动转换为可嵌入格式并在此播放"
+              <input value={draft}
+                onChange={e => setDraft(e.target.value)}
+                onKeyDown={e => { if (e.key === "Enter") { e.preventDefault(); onSaveLink(draft.trim()); } }}
+                onPaste={e => {
+                  const text = (e.clipboardData || window.clipboardData).getData("text").trim();
+                  if (!text) return;
+                  const r = toEmbed(text);
+                  setDraft(text);
+                  if (r && r.src) { e.preventDefault(); onSaveLink(text); } // 可嵌入链接：粘贴即保存
+                }}
+                placeholder="粘贴 B 站或 YouTube 视频链接，可嵌入的链接将自动保存并在此播放"
                 aria-label="视频链接" />
               <button className="btn" onClick={() => onSaveLink(draft.trim())}>保存链接</button>
             </div>
+            {draftCheck && (
+              <p className={`link-check ${draftCheck.tone}`} role="status">{draftCheck.text}</p>
+            )}
             {savedLink && embed && embed.src && (
               <>
-                <div className="video-frame">
+                <div className={`video-frame ${frameReady ? "ready" : ""}`}>
                   <iframe
+                    onLoad={() => setFrameReady(true)}
                     src={embed.src}
                     title={`${c.title} 讲解视频`}
                     scrolling="no"
@@ -1939,7 +2502,7 @@ function CaseCard({ c, i, done, open, onToggle, onFinish, onReset, resetNote, sa
             )}
           </div>
         </div>
-      )}
+      </div>
     </article>
   );
 }
@@ -1952,6 +2515,14 @@ export default function AestheticAtelier() {
   const [openId, setOpenId] = useState(null);
   const [extraShown, setExtraShown] = useState(5);
   const [reviewDay, setReviewDay] = useState(null); // 学习足迹 → 点击进入的复习日期
+  const [toasts, setToasts] = useState([]);          // 徽章解锁提示队列
+  const [focusId, setFocusId] = useState(null);      // 复习页需定位并高亮的案例
+  const [archTheme, setArchTheme] = useState("all"); // 馆藏总览：主题筛选
+  const [archStatus, setArchStatus] = useState("all"); // 馆藏总览：状态筛选
+  const [archQuery, setArchQuery] = useState("");    // 馆藏总览：关键词
+  const [queued, setQueued] = useState([]);          // 手动加入今晚加映队列的案例 id
+  const [preview, setPreview] = useState(null);      // 馆藏总览中预览的案例
+  const prevUnlockedRef = useRef(null);
   const tKey = todayKey();
 
   /* 读档 */
@@ -1990,8 +2561,11 @@ export default function AestheticAtelier() {
     Object.keys(state.completed).forEach(k => {
       if (k !== tKey) state.completed[k].forEach(id => before.add(id));
     });
-    return CASES.filter(c => !todayIds.has(c.id) && !before.has(c.id));
-  }, [state, tKey, todayCases]);
+    const pool = CASES.filter(c => !todayIds.has(c.id) && !before.has(c.id));
+    /* 用户在馆藏总览中主动排队的案例优先陈列 */
+    const q = queued.filter(id => pool.some(c => c.id === id));
+    return [...q.map(id => pool.find(c => c.id === id)), ...pool.filter(c => !q.includes(c.id))];
+  }, [state, tKey, todayCases, queued]);
   const extraDoneToday = doneToday.filter(id => !todayCases.some(c => c.id === id)).length;
 
   /* 统计 */
@@ -2017,6 +2591,18 @@ export default function AestheticAtelier() {
     if (doneToday.includes(id)) return;
     persist({ ...state, completed: { ...state.completed, [tKey]: [...doneToday, id] } });
   };
+  /* 完成后自动折叠当前卡，展开并滚动到列表中的下一件待研习案例 */
+  const finishAndNext = (id, list) => {
+    if (doneToday.includes(id)) return;
+    finishCase(id);
+    const doneNow = [...doneToday, id];
+    const next = list.find(c => c.id !== id && !doneNow.includes(c.id));
+    setOpenId(next ? next.id : null);
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      const el = document.getElementById(next ? `case-${next.id}` : "closed-inline");
+      el && el.scrollIntoView({ behavior: "smooth", block: "start" });
+    }));
+  };
   const saveLink = (id, url) => {
     persist({ ...state, videoLinks: { ...state.videoLinks, [id]: url } });
   };
@@ -2027,7 +2613,15 @@ export default function AestheticAtelier() {
     const completed = { ...state.completed };
     if (nextList.length === 0) delete completed[dayKey];
     else completed[dayKey] = nextList;
+    const snapshot = state;                       // 撤销所需的快照
     persist({ ...state, completed });
+    const title = (CASES.find(c => c.id === id) || {}).title || "该案例";
+    const key = "undo-" + id + "-" + Date.now();
+    setToasts(t => [...t, {
+      key, undo: true, title,
+      onUndo: () => { persist(snapshot); setToasts(x => x.filter(i => i.key !== key)); },
+    }]);
+    setTimeout(() => setToasts(t => t.filter(x => x.key !== key)), 5200);
   };
 
   if (!loaded) {
@@ -2041,6 +2635,37 @@ export default function AestheticAtelier() {
   }
 
   const historyDays = [...stats.days].reverse();
+
+  /* 复习页：滚动定位到指定案例并短暂高亮 */
+  useEffect(() => {
+    if (!focusId) return;
+    const t = requestAnimationFrame(() => requestAnimationFrame(() => {
+      const el = document.getElementById(`case-${focusId}`);
+      if (el) { el.scrollIntoView({ behavior: "smooth", block: "start" }); el.classList.add("spotlight"); }
+    }));
+    const clear = setTimeout(() => {
+      const el = document.getElementById(`case-${focusId}`);
+      el && el.classList.remove("spotlight");
+      setFocusId(null);
+    }, 1600);
+    return () => { cancelAnimationFrame(t); clearTimeout(clear); };
+  }, [focusId, reviewDay]);
+
+  /* 徽章解锁侦测：与上一次解锁集合做差集，新徽章推入 toast 队列 */
+  const unlockedIds = useMemo(() => BADGES.filter(b => b.test(stats)).map(b => b.id), [stats]);
+  useEffect(() => {
+    if (!loaded) return;
+    if (prevUnlockedRef.current === null) { prevUnlockedRef.current = unlockedIds; return; }
+    const fresh = unlockedIds.filter(id => !prevUnlockedRef.current.includes(id));
+    prevUnlockedRef.current = unlockedIds;
+    if (!fresh.length) return;
+    fresh.forEach((id, i) => {
+      const badge = BADGES.find(b => b.id === id);
+      const key = id + "-" + Date.now();
+      setTimeout(() => setToasts(t => [...t, { key, badge }]), i * 350);
+      setTimeout(() => setToasts(t => t.filter(x => x.key !== key)), 3800 + i * 350);
+    });
+  }, [unlockedIds, loaded]);
 
   return (
     <div className="atelier">
@@ -2059,14 +2684,20 @@ export default function AestheticAtelier() {
         </header>
 
         <nav className="tabs" aria-label="主导航">
-          {[["today", "今日展厅"], ["badges", "成就徽章"], ["history", "学习足迹"]].map(([k, t]) => (
-            <button key={k} className={`tab ${tab === k ? "on" : ""}`} onClick={() => { setTab(k); setReviewDay(null); setOpenId(null); }}>{t}</button>
+          {[["today", "今日展厅"], ["archive", "馆藏总览"], ["badges", "成就徽章"], ["history", "学习足迹"]].map(([k, t]) => (
+            <button key={k} className={`tab ${tab === k ? "on" : ""}`} onClick={() => { setTab(k); setReviewDay(null); setOpenId(null); setPreview(null); }}>{t}</button>
           ))}
+          <div className="tabs-progress" aria-label="今日进度">
+            <span className="dot-row" aria-hidden="true">
+              {Array.from({ length: 5 }).map((_, i) => <i key={i} className={i < Math.min(doneToday.length, 5) ? "f" : ""} />)}
+            </span>
+            {Math.min(doneToday.length, 5)}/5{extraDoneToday > 0 && <b> +{extraDoneToday}</b>}
+          </div>
         </nav>
 
         {/* ============ 今日展厅 ============ */}
         {tab === "today" && (
-          <section>
+          <section className="view" key="today">
             <div className="hall-head">
               <div>
                 <div className="eyebrow">今日主题 · Theme {String(dayIndexOf(tKey) + 1).padStart(2, "0")} / {DAY_THEMES.length}</div>
@@ -2088,7 +2719,7 @@ export default function AestheticAtelier() {
             {dayClosed && (
               <div className="closed-banner">
                 <span style={{ fontSize: 20 }}>◉</span>
-                <span><b>今日闭馆。</b>五件经典已全部研习完毕，「今日闭馆」记录已点亮。意犹未尽？下方「夜场加映」已开放，可继续研习馆藏中的新案例。</span>
+                <span><b>今日闭馆。</b>本日五件经典均已研习，记录已存入学习足迹。</span>
               </div>
             )}
 
@@ -2098,7 +2729,7 @@ export default function AestheticAtelier() {
                   done={doneToday.includes(c.id)}
                   open={openId === c.id}
                   onToggle={() => setOpenId(openId === c.id ? null : c.id)}
-                  onFinish={() => finishCase(c.id)}
+                  onFinish={() => finishAndNext(c.id, todayCases)}
                   onReset={() => resetCase(c.id, tKey)}
                   resetNote="将从今日记录中移除，可重新学习。"
                   savedLink={state.videoLinks[c.id]}
@@ -2106,9 +2737,24 @@ export default function AestheticAtelier() {
               ))}
             </div>
 
+            {/* ---- 闭馆就地确认：出现在第五件完成的位置附近 ---- */}
+            {dayClosed && (
+              <div id="closed-inline" className="closed-inline" role="status">
+                <span className="seal" aria-hidden="true">✦</span>
+                <div className="txt">
+                  <b>今日闭馆 · 五件经典研习完毕</b>
+                  <span>「闭馆」记录已点亮，连续研习 {stats.streak} 天。意犹未尽的话，夜场已经开灯。</span>
+                </div>
+                <button className="btn gold" onClick={() => {
+                  const el = document.getElementById("encore-sec");
+                  el && el.scrollIntoView({ behavior: "smooth", block: "start" });
+                }}>前往夜场加映 ↓</button>
+              </div>
+            )}
+
             {/* ---- 夜场加映：闭馆后继续学习新的案例 ---- */}
             {dayClosed && (
-              <div className="encore">
+              <div id="encore-sec" className="encore">
                 <div className="hall-head" style={{ marginTop: 34 }}>
                   <div>
                     <div className="eyebrow">Encore · 夜场加映</div>
@@ -2126,7 +2772,7 @@ export default function AestheticAtelier() {
                           done={doneToday.includes(c.id)}
                           open={openId === c.id}
                           onToggle={() => setOpenId(openId === c.id ? null : c.id)}
-                          onFinish={() => finishCase(c.id)}
+                          onFinish={() => finishAndNext(c.id, extraPool.slice(0, extraShown))}
                           onReset={() => resetCase(c.id, tKey)}
                           resetNote="将从今日记录中移除，可重新学习。"
                           savedLink={state.videoLinks[c.id]}
@@ -2146,8 +2792,121 @@ export default function AestheticAtelier() {
         )}
 
         {/* ============ 成就徽章 ============ */}
+        {/* ============ 馆藏总览 ============ */}
+        {tab === "archive" && (() => {
+          const learned = new Set();
+          Object.values(state.completed).forEach(list => list.forEach(id => learned.add(id)));
+          const kw = archQuery.trim().toLowerCase();
+          const list = CASES.filter(c => {
+            if (archTheme !== "all" && String(c.day) !== archTheme) return false;
+            if (archStatus === "done" && !learned.has(c.id)) return false;
+            if (archStatus === "todo" && learned.has(c.id)) return false;
+            if (kw && ![c.title, c.designer, c.movement, c.field, String(c.year)]
+              .join(" ").toLowerCase().includes(kw)) return false;
+            return true;
+          });
+          const groups = [];
+          list.forEach(c => {
+            const g = groups.find(x => x.day === c.day);
+            if (g) g.items.push(c); else groups.push({ day: c.day, items: [c] });
+          });
+          return (
+            <section className="view" key="archive">
+              <div className="hall-head">
+                <div>
+                  <div className="eyebrow">Collection · 馆藏总览</div>
+                  <h2>全部 {CASES.length} 件馆藏</h2>
+                  <p>按二十个主题日分组陈列。已研习 <b style={{ color: "var(--blue)" }}>{learned.size}</b> 件，尚余 {CASES.length - learned.size} 件待发现——可将感兴趣的案例加入今晚的夜场加映。</p>
+                </div>
+                <div className="ring-box">
+                  <div className="ring-label">
+                    <div className="n">{Math.round(learned.size / CASES.length * 100)}<span style={{ fontSize: 14, color: "var(--muted)" }}>%</span></div>
+                    <div className="t">馆藏研习度</div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="arch-bar">
+                <input className="arch-search" value={archQuery} onChange={e => setArchQuery(e.target.value)}
+                  placeholder="搜索作品、设计师、流派或年份…" aria-label="搜索馆藏" />
+                <select value={archTheme} onChange={e => setArchTheme(e.target.value)} aria-label="按主题筛选">
+                  <option value="all">全部主题日</option>
+                  {DAY_THEMES.map((t, i) => <option key={i} value={String(i)}>{String(i + 1).padStart(2, "0")} · {t.name}</option>)}
+                </select>
+                <div className="seg" role="group" aria-label="按状态筛选">
+                  {[["all", "全部"], ["done", "已研习"], ["todo", "待研习"]].map(([k, t]) => (
+                    <button key={k} className={archStatus === k ? "on" : ""} onClick={() => setArchStatus(k)}>{t}</button>
+                  ))}
+                </div>
+              </div>
+
+              {queued.length > 0 && (
+                <div className="queue-note" role="status">
+                  已加入今晚加映队列 <b>{queued.length}</b> 件：{queued.map(id => (CASES.find(c => c.id === id) || {}).title).join(" · ")}
+                  <button className="undo-btn" onClick={() => setQueued([])}>清空</button>
+                </div>
+              )}
+
+              {list.length === 0 ? (
+                <div className="empty">没有符合条件的馆藏。试试更换主题或清空搜索词。</div>
+              ) : groups.map(g => (
+                <div className="arch-group" key={g.day}>
+                  <div className="sec-title">
+                    <span className="num">{String(g.day + 1).padStart(2, "0")}</span>
+                    <h4>{DAY_THEMES[g.day].name}</h4>
+                    <span className="rule" />
+                    <span className="cnt">{g.items.filter(c => learned.has(c.id)).length}/{g.items.length}</span>
+                  </div>
+                  <div className="arch-grid">
+                    {g.items.map((c, i) => (
+                      <button key={c.id} className={`arch-card ${learned.has(c.id) ? "done" : ""}`}
+                        style={{ "--i": i }} onClick={() => setPreview(c)}>
+                        <span className="ac-thumb">{getVisual(c)}</span>
+                        <span className="ac-tx">
+                          <span className="ac-title">{c.title}</span>
+                          <span className="ac-sub">{c.designer.split(" ")[0]} · {c.year}</span>
+                        </span>
+                        <span className="ac-dot" aria-label={learned.has(c.id) ? "已研习" : "待研习"} />
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </section>
+          );
+        })()}
+
+        {/* ============ 馆藏预览浮层 ============ */}
+        {preview && (() => {
+          const learned = Object.values(state.completed).some(l => l.includes(preview.id));
+          const inQueue = queued.includes(preview.id);
+          return (
+            <div className="sheet-mask" onClick={() => setPreview(null)}>
+              <div className="sheet" role="dialog" aria-label={preview.title} onClick={e => e.stopPropagation()}>
+                <button className="sheet-x" onClick={() => setPreview(null)} aria-label="关闭">✕</button>
+                <div className="eyebrow">Cat. No.{String(CASES.indexOf(preview) + 1).padStart(3, "0")} · {DAY_THEMES[preview.day].name}</div>
+                <h3>{preview.title}</h3>
+                <div className="sheet-sub">{preview.designer} · {preview.year} · {preview.movement}</div>
+                <div className="sheet-art">{getVisual(preview)}</div>
+                <p className="sheet-intro">{preview.intro}</p>
+                <div className="sheet-acts">
+                  {learned ? (
+                    <span className="pill ok">已研习 · 可在学习足迹中复习</span>
+                  ) : inQueue ? (
+                    <button className="btn" onClick={() => setQueued(q => q.filter(x => x !== preview.id))}>已加入加映队列 · 移除</button>
+                  ) : (
+                    <button className="btn primary" onClick={() => { setQueued(q => [...q, preview.id]); setPreview(null); }}>
+                      加入今晚夜场加映
+                    </button>
+                  )}
+                </div>
+              </div>
+            </div>
+          );
+        })()}
+
         {tab === "badges" && (
-          <section>
+          <section className="view" key="badges">
             <div className="stats-row">
               <div className="stat"><div className="n">{stats.streak}</div><div className="t">连续研习天数</div></div>
               <div className="stat"><div className="n">{stats.total}</div><div className="t">累计完成案例次数</div></div>
@@ -2175,7 +2934,7 @@ export default function AestheticAtelier() {
           const dayCases = ids.map(id => CASES.find(c => c.id === id)).filter(Boolean);
           const dayTheme = DAY_THEMES[dayIndexOf(reviewDay)];
           return (
-            <section>
+            <section className="view" key={"review-" + reviewDay}>
               <button className="btn back-btn" onClick={() => { setReviewDay(null); setOpenId(null); }}>← 返回学习足迹</button>
               <div className="hall-head">
                 <div>
@@ -2212,7 +2971,7 @@ export default function AestheticAtelier() {
 
         {/* ============ 学习足迹 ============ */}
         {tab === "history" && !reviewDay && (
-          <section>
+          <section className="view" key="history">
             <div className="stats-row">
               <div className="stat"><div className="n">{stats.days.length}</div><div className="t">有学习记录的天数</div></div>
               <div className="stat"><div className="n">{stats.fullDays}</div><div className="t">「今日闭馆」达成天数</div></div>
@@ -2244,7 +3003,7 @@ export default function AestheticAtelier() {
                         {dayCases.map((c, i) => (
                           <span key={c.id}>
                             {i > 0 && " · "}
-                            <button className="name-link" onClick={() => { setReviewDay(k); setOpenId(c.id); }}
+                            <button className="name-link" onClick={() => { setReviewDay(k); setOpenId(c.id); setFocusId(c.id); }}
                               title={`复习「${c.title}」`}>{c.title}</button>
                           </span>
                         ))}
@@ -2262,6 +3021,28 @@ export default function AestheticAtelier() {
           <span>案例库 {CASES.length} 件 · 按二十大主题日循环推送 · 闭馆后可夜场加映 · 进度自动保存</span>
           <span>Aesthetic Atelier · For First-Year Design Graduates</span>
         </footer>
+      </div>
+
+      {/* 徽章解锁提示 */}
+      <div className="toasts" aria-live="polite">
+        {toasts.map(t => (t.undo ? (
+          <div className="toast undo" key={t.key}>
+            <span className="badge-ico r" aria-hidden="true">↺</span>
+            <div className="tx">
+              <b>已重置「{t.title}」</b>
+              <span>该案例已恢复为待研习</span>
+            </div>
+            <button className="undo-btn" onClick={t.onUndo}>撤销</button>
+          </div>
+        ) : (
+          <div className="toast" key={t.key}>
+            <span className={`badge-ico ${t.badge.blue ? "b" : ""}`} aria-hidden="true">{t.badge.icon}</span>
+            <div className="tx">
+              <b>{t.badge.name}</b>
+              <span>成就已解锁 · {t.badge.desc}</span>
+            </div>
+          </div>
+        )))}
       </div>
     </div>
   );
