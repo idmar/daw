@@ -2624,18 +2624,6 @@ export default function AestheticAtelier() {
     setTimeout(() => setToasts(t => t.filter(x => x.key !== key)), 5200);
   };
 
-  if (!loaded) {
-    return (
-      <div className="atelier"><style>{CSS}</style>
-        <div className="wrap" style={{ paddingTop: 80, textAlign: "center", color: "var(--muted)" }}>
-          正在开馆，载入你的学习档案…
-        </div>
-      </div>
-    );
-  }
-
-  const historyDays = [...stats.days].reverse();
-
   /* 复习页：滚动定位到指定案例并短暂高亮 */
   useEffect(() => {
     if (!focusId) return;
@@ -2666,6 +2654,18 @@ export default function AestheticAtelier() {
       setTimeout(() => setToasts(t => t.filter(x => x.key !== key)), 3800 + i * 350);
     });
   }, [unlockedIds, loaded]);
+
+  if (!loaded) {
+    return (
+      <div className="atelier"><style>{CSS}</style>
+        <div className="wrap" style={{ paddingTop: 80, textAlign: "center", color: "var(--muted)" }}>
+          正在开馆，载入你的学习档案…
+        </div>
+      </div>
+    );
+  }
+
+  const historyDays = [...stats.days].reverse();
 
   return (
     <div className="atelier">
