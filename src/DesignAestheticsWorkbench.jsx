@@ -465,6 +465,1318 @@ const CSS = `
 const P = { blue: "#002FA7", red: "#D0361F", yellow: "#E8B50C", ink: "#17160F", gray: "#C9C7BE" };
 
 const VISUALS = {
+  /* ===== 主题日 04 · 字体的世纪：字形解剖研究图 ===== */
+  futuraGeometry: (
+    <svg viewBox="0 0 320 220" role="img" aria-label="几何字形与光学修正研究：正圆骨架与交接处的削细补偿">
+      <rect width="320" height="220" fill="#fff" />
+      {/* 构造：圆、三角、方 */}
+      <circle cx="78" cy="110" r="52" fill="none" stroke={P.gray} strokeWidth="1.5" strokeDasharray="4 5" />
+      <path d="M150 162 L192 58 L234 162 Z" fill="none" stroke={P.gray} strokeWidth="1.5" strokeDasharray="4 5" />
+      <rect x="252" y="58" width="52" height="104" fill="none" stroke={P.gray} strokeWidth="1.5" strokeDasharray="4 5" />
+      {/* 字形本体 */}
+      <circle cx="78" cy="110" r="44" fill="none" stroke={P.ink} strokeWidth="13" />
+      <path d="M152 162 L192 64 L232 162" fill="none" stroke={P.ink} strokeWidth="13" strokeLinecap="butt" />
+      <line x1="170" y1="122" x2="214" y2="122" stroke={P.ink} strokeWidth="13" />
+      <line x1="262" y1="58" x2="262" y2="162" stroke={P.ink} strokeWidth="13" />
+      <line x1="262" y1="110" x2="300" y2="110" stroke={P.ink} strokeWidth="13" />
+      {/* 光学修正：交接处削细、尖角出格 */}
+      <circle cx="78" cy="66" r="9" fill="none" stroke={P.red} strokeWidth="2" />
+      <circle cx="192" cy="60" r="9" fill="none" stroke={P.red} strokeWidth="2" />
+      <line x1="78" y1="57" x2="78" y2="44" stroke={P.red} strokeWidth="1.5" />
+      <line x1="192" y1="51" x2="192" y2="38" stroke={P.red} strokeWidth="1.5" />
+      <text x="20" y="38" fontFamily="Archivo,sans-serif" fontSize="9" letterSpacing="1.5" fill={P.red}>OPTICAL CORRECTION</text>
+      <line x1="20" y1="162" x2="308" y2="162" stroke={P.ink} strokeWidth="1" />
+      <line x1="20" y1="58" x2="308" y2="58" stroke={P.gray} strokeWidth="1" strokeDasharray="3 4" />
+      <text x="20" y="196" fontFamily="Archivo,sans-serif" fontSize="9" letterSpacing="1.5" fill={P.gray}>CIRCLE · TRIANGLE · SQUARE</text>
+      <text x="228" y="196" fontFamily="Archivo,sans-serif" fontSize="9" letterSpacing="1.5" fill={P.ink}>1927</text>
+    </svg>
+  ),
+  garamondStroke: (
+    <svg viewBox="0 0 320 220" role="img" aria-label="人文主义衬线的书写轴线研究：平头笔的粗细变化与倾斜轴">
+      <rect width="320" height="220" fill="#fff" />
+      {/* 平头笔的书写轨迹 */}
+      <path d="M92 168 C 62 140 66 92 96 68 C 126 44 166 52 178 82"
+        fill="none" stroke={P.ink} strokeWidth="17" strokeLinecap="round" />
+      <path d="M92 168 C 62 140 66 92 96 68 C 126 44 166 52 178 82"
+        fill="none" stroke="#fff" strokeWidth="7" strokeDasharray="1 0" opacity="0" />
+      {/* 倾斜轴：书写留下的应力方向 */}
+      <line x1="60" y1="150" x2="126" y2="70" stroke={P.red} strokeWidth="1.5" strokeDasharray="4 3" />
+      <line x1="118" y1="176" x2="184" y2="96" stroke={P.red} strokeWidth="1.5" strokeDasharray="4 3" />
+      <text x="24" y="66" fontFamily="Archivo,sans-serif" fontSize="9" letterSpacing="1.5" fill={P.red}>STRESS AXIS</text>
+      {/* 平头笔截面示意 */}
+      <g transform="translate(196,54) rotate(-30)">
+        <rect x="0" y="0" width="30" height="8" fill={P.blue} />
+        <line x1="0" y1="12" x2="30" y2="12" stroke={P.blue} strokeWidth="1.5" />
+      </g>
+      <text x="196" y="44" fontFamily="Archivo,sans-serif" fontSize="8" letterSpacing="1.2" fill={P.blue}>BROAD NIB</text>
+      {/* 衬线细部：与笔画自然过渡 */}
+      <g transform="translate(206,108)">
+        <line x1="20" y1="0" x2="20" y2="52" stroke={P.ink} strokeWidth="9" />
+        <path d="M4 52 C 14 52 16 46 20 44 C 24 46 26 52 36 52" fill="none" stroke={P.ink} strokeWidth="6" />
+        <circle cx="20" cy="46" r="8" fill="none" stroke={P.red} strokeWidth="1.5" />
+        <text x="46" y="50" fontFamily="Archivo,sans-serif" fontSize="8" letterSpacing="1" fill={P.gray}>BRACKET</text>
+      </g>
+      {/* 正文色泽：均匀的灰度 */}
+      {[0, 1, 2, 3, 4, 5].map(i => (
+        <line key={i} x1="206" y1={178 + i * 6} x2={i === 5 ? 268 : 300} y2={178 + i * 6} stroke="#9A988F" strokeWidth="3" />
+      ))}
+      <text x="24" y="196" fontFamily="Archivo,sans-serif" fontSize="9" letterSpacing="1.5" fill={P.ink}>WRITTEN, NOT DRAWN</text>
+      <text x="206" y="170" fontFamily="Archivo,sans-serif" fontSize="8" letterSpacing="1.2" fill={P.gray}>EVEN COLOUR</text>
+    </svg>
+  ),
+  baskervilleContrast: (
+    <svg viewBox="0 0 320 220" role="img" aria-label="过渡期衬线研究：对比度抬升、轴线趋垂直与整条生产链的升级">
+      <rect width="320" height="220" fill="#fff" />
+      {/* 左：旧体——低对比、倾斜轴 */}
+      <g transform="translate(34,52)">
+        <ellipse cx="34" cy="52" rx="30" ry="34" fill="none" stroke={P.gray} strokeWidth="13" />
+        <ellipse cx="34" cy="52" rx="30" ry="34" fill="none" stroke="#fff" strokeWidth="5" opacity="0" />
+        <line x1="8" y1="82" x2="60" y2="22" stroke={P.gray} strokeWidth="1.5" strokeDasharray="4 3" />
+        <text x="-6" y="112" fontFamily="Archivo,sans-serif" fontSize="8" letterSpacing="1.2" fill={P.gray}>OLD STYLE</text>
+      </g>
+      {/* 右：过渡期——高对比、垂直轴、细锐衬线 */}
+      <g transform="translate(150,52)">
+        <path d="M34 18 C 52 18 64 34 64 52 C 64 70 52 86 34 86 C 16 86 4 70 4 52 C 4 34 16 18 34 18 Z"
+          fill="none" stroke={P.ink} strokeWidth="4" />
+        <path d="M34 20 C 46 26 50 38 50 52 C 50 66 46 78 34 84 C 22 78 18 66 18 52 C 18 38 22 26 34 20 Z"
+          fill={P.ink} />
+        <line x1="34" y1="8" x2="34" y2="96" stroke={P.red} strokeWidth="1.5" strokeDasharray="4 3" />
+        <text x="-6" y="112" fontFamily="Archivo,sans-serif" fontSize="8" letterSpacing="1.2" fill={P.ink}>TRANSITIONAL</text>
+      </g>
+      <text x="152" y="34" fontFamily="Archivo,sans-serif" fontSize="8" letterSpacing="1.2" fill={P.red}>VERTICAL AXIS</text>
+      {/* 生产链升级：墨、纸、机 */}
+      <g transform="translate(244,56)">
+        <circle cx="14" cy="14" r="12" fill={P.ink} />
+        <text x="-2" y="40" fontFamily="Archivo,sans-serif" fontSize="8" letterSpacing="1" fill={P.gray}>INK</text>
+        <rect x="2" y="56" width="26" height="20" fill="#F2F0E8" stroke={P.gray} strokeWidth="1.5" />
+        <text x="-4" y="92" fontFamily="Archivo,sans-serif" fontSize="8" letterSpacing="1" fill={P.gray}>PAPER</text>
+        <rect x="2" y="106" width="26" height="22" fill="none" stroke={P.gray} strokeWidth="2" />
+        <line x1="8" y1="112" x2="22" y2="112" stroke={P.gray} strokeWidth="2" />
+        <text x="-8" y="144" fontFamily="Archivo,sans-serif" fontSize="8" letterSpacing="1" fill={P.gray}>PRESS</text>
+      </g>
+      <line x1="236" y1="46" x2="236" y2="204" stroke={P.gray} strokeWidth="1" strokeDasharray="3 4" />
+      <text x="20" y="30" fontFamily="Archivo,sans-serif" fontSize="9" letterSpacing="1.5" fill={P.ink}>CONTRAST RISES</text>
+      <text x="20" y="206" fontFamily="Archivo,sans-serif" fontSize="9" letterSpacing="1.5" fill={P.gray}>WHOLE CHAIN UPGRADED</text>
+    </svg>
+  ),
+  universMatrix: (
+    <svg viewBox="0 0 320 220" role="img" aria-label="字体家族矩阵研究：以字重与字宽为坐标的编号系统">
+      <rect width="320" height="220" fill="#fff" />
+      {/* 坐标轴 */}
+      <line x1="58" y1="40" x2="58" y2="182" stroke={P.ink} strokeWidth="1.5" />
+      <line x1="58" y1="182" x2="296" y2="182" stroke={P.ink} strokeWidth="1.5" />
+      <text x="20" y="46" fontFamily="Archivo,sans-serif" fontSize="8" letterSpacing="1.2" fill={P.gray}>WEIGHT</text>
+      <text x="246" y="200" fontFamily="Archivo,sans-serif" fontSize="8" letterSpacing="1.2" fill={P.gray}>WIDTH</text>
+      {/* 矩阵格子：粗细 × 宽窄 */}
+      {[0, 1, 2, 3].map(r => (
+        [0, 1, 2, 3, 4].map(c => (
+          <g key={`${r}-${c}`}>
+            <rect x={70 + c * 44} y={48 + r * 32} width={38} height={26} fill="none" stroke="#E4E2DA" strokeWidth="1" />
+            <rect x={74 + c * 44 - c} y={54 + r * 32} width={10 + c * 4} height={14} fill={P.ink} opacity={0.3 + r * 0.22} />
+          </g>
+        ))
+      ))}
+      {/* 编号系统 */}
+      {[["55", 1, 1], ["65", 1, 2], ["57", 0, 1], ["75", 1, 3]].map(([n, c, r], i) => (
+        <text key={i} x={72 + c * 44} y={44 + r * 32} fontFamily="Archivo,sans-serif" fontSize="9" fontWeight="700" fill={P.red}>{n}</text>
+      ))}
+      <rect x="114" y="80" width="38" height="26" fill="none" stroke={P.red} strokeWidth="2" />
+      {/* 共享骨架 */}
+      <line x1="58" y1="146" x2="296" y2="146" stroke={P.blue} strokeWidth="1" strokeDasharray="4 3" />
+      <line x1="58" y1="166" x2="296" y2="166" stroke={P.blue} strokeWidth="1" strokeDasharray="4 3" />
+      <text x="62" y="160" fontFamily="Archivo,sans-serif" fontSize="8" letterSpacing="1.2" fill={P.blue}>SHARED SKELETON · SAME x-HEIGHT</text>
+      <text x="20" y="26" fontFamily="Archivo,sans-serif" fontSize="9" letterSpacing="1.5" fill={P.ink}>FAMILY BEFORE INDIVIDUAL · 21 MEMBERS</text>
+      <text x="20" y="212" fontFamily="Archivo,sans-serif" fontSize="9" letterSpacing="1.5" fill={P.red}>NUMBERS, NOT NAMES</text>
+    </svg>
+  ),
+  didotHairline: (
+    <svg viewBox="0 0 320 220" role="img" aria-label="现代衬线尺寸依赖研究：发丝衬线在大字号成立、小字号消失">
+      <rect width="320" height="220" fill="#fff" />
+      {/* 大字号：极端对比成立 */}
+      <g transform="translate(40,44)">
+        <path d="M22 8 C 44 14 54 34 54 60 C 54 86 44 106 22 112 Z" fill={P.ink} />
+        <rect x="16" y="8" width="6" height="104" fill={P.ink} />
+        <line x1="2" y1="8" x2="42" y2="8" stroke={P.ink} strokeWidth="1.2" />
+        <line x1="2" y1="112" x2="42" y2="112" stroke={P.ink} strokeWidth="1.2" />
+        <circle cx="22" cy="8" r="9" fill="none" stroke={P.red} strokeWidth="1.5" />
+        <text x="-14" y="136" fontFamily="Archivo,sans-serif" fontSize="8" letterSpacing="1.2" fill={P.ink}>DISPLAY — WORKS</text>
+      </g>
+      <text x="92" y="60" fontFamily="Archivo,sans-serif" fontSize="8" letterSpacing="1.2" fill={P.red}>HAIRLINE SERIF</text>
+      <line x1="90" y1="54" x2="76" y2="52" stroke={P.red} strokeWidth="1" />
+      {/* 缩小后：发丝消失、笔画断裂 */}
+      <g transform="translate(160,96)">
+        <path d="M8 3 C 16 5 20 13 20 22 C 20 31 16 39 8 41 Z" fill={P.ink} />
+        <rect x="6" y="3" width="2" height="38" fill={P.ink} />
+        <text x="-6" y="62" fontFamily="Archivo,sans-serif" fontSize="8" letterSpacing="1.2" fill={P.gray}>TEXT — BREAKS</text>
+      </g>
+      <g transform="translate(206,110)">
+        <path d="M4 2 C 9 3 11 7 11 12 C 11 17 9 21 4 22 Z" fill="#B5B3AA" />
+        <rect x="3" y="2" width="1" height="20" fill="#B5B3AA" />
+      </g>
+      <line x1="186" y1="100" x2="214" y2="142" stroke={P.red} strokeWidth="2" />
+      <line x1="214" y1="100" x2="186" y2="142" stroke={P.red} strokeWidth="2" />
+      {/* 气质：奢华的联想遗产 */}
+      <line x1="248" y1="40" x2="248" y2="188" stroke={P.gray} strokeWidth="1" strokeDasharray="3 4" />
+      {[0, 1, 2, 3].map(i => (
+        <line key={i} x1="260" y1={64 + i * 22} x2={i % 2 ? 290 : 304} y2={64 + i * 22} stroke={P.ink} strokeWidth={i === 0 ? 1 : 1.5} />
+      ))}
+      <text x="258" y="50" fontFamily="Archivo,sans-serif" fontSize="8" letterSpacing="1.2" fill={P.gray}>FASHION</text>
+      <text x="258" y="172" fontFamily="Archivo,sans-serif" fontSize="8" letterSpacing="1.2" fill={P.gray}>MASTHEAD</text>
+      <text x="20" y="26" fontFamily="Archivo,sans-serif" fontSize="9" letterSpacing="1.5" fill={P.ink}>SIZE IS DESTINY</text>
+    </svg>
+  ),
+
+  /* ===== 主题日 05 · 海报的黄金时代：构图与传播研究图 ===== */
+  lautrecSilhouette: (
+    <svg viewBox="0 0 320 220" role="img" aria-label="石版套色的减法研究：人群压为剪影、主角简化为色面">
+      <rect width="320" height="220" fill="#fff" />
+      <rect x="22" y="20" width="276" height="180" fill="#E8DCC2" />
+      {/* 前景人群：压成一片黑剪影 */}
+      <path d="M22 200 L22 138 C 46 128 58 146 74 132 C 90 118 104 142 122 134
+        C 138 127 146 148 162 140 L162 200 Z" fill={P.ink} />
+      {/* 主角：平涂色面加轮廓线 */}
+      <path d="M186 200 C 176 160 190 116 216 104 C 244 92 268 112 266 146
+        C 264 172 256 190 250 200 Z" fill={P.yellow} />
+      <path d="M186 200 C 176 160 190 116 216 104 C 244 92 268 112 266 146
+        C 264 172 256 190 250 200" fill="none" stroke={P.ink} strokeWidth="2.5" />
+      <circle cx="222" cy="88" r="16" fill={P.red} />
+      <path d="M206 84 C 214 68 236 68 240 84" fill="none" stroke={P.ink} strokeWidth="2.5" />
+      {/* 斜切构图：浮世绘式的裁切 */}
+      <line x1="22" y1="112" x2="298" y2="66" stroke={P.ink} strokeWidth="1.5" strokeDasharray="5 4" />
+      {/* 字块：与图同层的平面元素 */}
+      <rect x="34" y="34" width="96" height="14" fill={P.ink} />
+      <rect x="34" y="54" width="62" height="9" fill={P.red} />
+      {/* 三色限制 */}
+      <g transform="translate(250,30)">
+        {[P.ink, P.red, P.yellow].map((c, i) => (
+          <rect key={i} x={i * 16} y="0" width="14" height="14" fill={c} />
+        ))}
+        <text x="-6" y="28" fontFamily="Archivo,sans-serif" fontSize="8" letterSpacing="1.2" fill={P.ink}>3 PLATES</text>
+      </g>
+      <text x="22" y="214" fontFamily="Archivo,sans-serif" fontSize="9" letterSpacing="1.5" fill={P.ink}>FLAT COLOUR · CROPPED · READ AT 3 METERS</text>
+    </svg>
+  ),
+  bernhardReduction: (
+    <svg viewBox="0 0 320 220" role="img" aria-label="实物海报的删减研究：从堆满道具到只剩商品与品牌名">
+      <rect width="320" height="220" fill="#fff" />
+      {/* 初稿：杂多元素 */}
+      <rect x="20" y="42" width="112" height="140" fill="#F2F0E8" stroke={P.gray} strokeWidth="1.5" />
+      <rect x="34" y="132" width="40" height="26" fill="#C9C7BE" />
+      <ellipse cx="96" cy="140" rx="22" ry="9" fill="#C9C7BE" />
+      <rect x="46" y="70" width="8" height="46" fill="#C9C7BE" />
+      <rect x="58" y="78" width="8" height="38" fill="#C9C7BE" />
+      <path d="M84 118 C 96 96 116 100 116 118 Z" fill="#C9C7BE" />
+      <rect x="32" y="52" width="60" height="8" fill="#C9C7BE" />
+      <text x="20" y="34" fontFamily="Archivo,sans-serif" fontSize="8" letterSpacing="1.2" fill={P.gray}>FIRST DRAFT</text>
+      {/* 删减箭头 */}
+      <line x1="144" y1="112" x2="176" y2="112" stroke={P.red} strokeWidth="2" />
+      <path d="M182 112 L172 107 L172 117 Z" fill={P.red} />
+      <text x="140" y="100" fontFamily="Archivo,sans-serif" fontSize="8" letterSpacing="1.2" fill={P.red}>ERASE</text>
+      {/* 终稿：只剩两根火柴与一个词 */}
+      <rect x="192" y="42" width="112" height="140" fill="#5A3A22" />
+      <rect x="222" y="74" width="9" height="62" fill="#E8DCC2" />
+      <rect x="244" y="74" width="9" height="62" fill="#E8DCC2" />
+      <ellipse cx="226.5" cy="70" rx="8" ry="10" fill={P.red} />
+      <ellipse cx="248.5" cy="70" rx="8" ry="10" fill={P.yellow} />
+      <rect x="216" y="152" width="64" height="11" fill="#E8DCC2" />
+      <text x="192" y="34" fontFamily="Archivo,sans-serif" fontSize="8" letterSpacing="1.2" fill={P.ink}>FINAL — 2 OBJECTS + 1 WORD</text>
+      <text x="20" y="206" fontFamily="Archivo,sans-serif" fontSize="9" letterSpacing="1.5" fill={P.ink}>THE PRODUCT AS MONUMENT</text>
+    </svg>
+  ),
+  cassandrePerspective: (
+    <svg viewBox="0 0 320 220" role="img" aria-label="仰视视角与字图建筑研究：船体压缩为三角纪念碑、船名作为基座">
+      <rect width="320" height="220" fill="#fff" />
+      <rect x="20" y="16" width="280" height="188" fill="#C8B98E" />
+      {/* 船体：正面仰视压缩成巨大三角 */}
+      <path d="M160 34 L236 160 L84 160 Z" fill={P.ink} />
+      <path d="M160 34 L196 94 L124 94 Z" fill="#3A3830" />
+      {/* 喷绘渐变的体量感 */}
+      <path d="M160 40 L186 84 L160 84 Z" fill="#54524A" opacity=".8" />
+      {/* 海鸥：尺度对比，小如尘埃 */}
+      {[[62, 62], [78, 50], [94, 68]].map(([x, y], i) => (
+        <path key={i} d={`M${x} ${y} C ${x + 4} ${y - 4} ${x + 8} ${y - 4} ${x + 12} ${y}`}
+          fill="none" stroke="#fff" strokeWidth="1.5" />
+      ))}
+      {/* 字块作为基座，承托船体 */}
+      <rect x="84" y="166" width="152" height="24" fill="#fff" />
+      <rect x="96" y="172" width="128" height="12" fill={P.ink} />
+      {/* 结构咬合的标注 */}
+      <line x1="84" y1="160" x2="84" y2="190" stroke={P.red} strokeWidth="1.5" strokeDasharray="3 3" />
+      <line x1="236" y1="160" x2="236" y2="190" stroke={P.red} strokeWidth="1.5" strokeDasharray="3 3" />
+      <text x="20" y="212" fontFamily="Archivo,sans-serif" fontSize="9" letterSpacing="1.5" fill={P.ink}>TYPE AS PLINTH · IMAGE AS TOWER</text>
+      <text x="222" y="30" fontFamily="Archivo,sans-serif" fontSize="8" letterSpacing="1.2" fill={P.ink}>LOW ANGLE</text>
+    </svg>
+  ),
+  bassSpiral: (
+    <svg viewBox="0 0 320 220" role="img" aria-label="观念海报研究：一个抽象漩涡承载整部影片的心理状态">
+      <rect width="320" height="220" fill="#fff" />
+      <rect x="20" y="16" width="280" height="188" fill={P.ink} />
+      {/* 漩涡：以极坐标生成的连续螺线 */}
+      <path d="M160 110
+        C 160 96 174 96 176 108 C 179 126 158 134 146 122 C 130 106 148 80 172 84
+        C 202 89 210 126 188 148 C 162 174 116 158 106 124 C 94 84 132 46 176 52"
+        fill="none" stroke={P.red} strokeWidth="3" />
+      {/* 坠落的人形剪影：抽象到可代入 */}
+      <g transform="translate(206,150) rotate(28)">
+        <circle cx="0" cy="0" r="5" fill="#fff" />
+        <path d="M-2 5 L-2 22 L-9 34 M-2 22 L6 32 M-8 10 L10 6" fill="none" stroke="#fff" strokeWidth="2.5" strokeLinecap="round" />
+      </g>
+      {/* 片名区：单一字块 */}
+      <rect x="40" y="176" width="86" height="10" fill="#fff" />
+      <text x="20" y="212" fontFamily="Archivo,sans-serif" fontSize="9" letterSpacing="1.5" fill={P.ink}>ONE FORM = ONE STATE OF MIND</text>
+      <text x="228" y="36" fontFamily="Archivo,sans-serif" fontSize="8" letterSpacing="1.2" fill="#fff">CONCEPT ▸ NOT SCENE</text>
+    </svg>
+  ),
+  tanakaFace: (
+    <svg viewBox="0 0 320 220" role="img" aria-label="网格中的东方脸研究：面容被纳入方格系统，色块比例承担全部表情">
+      <rect width="320" height="220" fill="#fff" />
+      {/* 网格底 */}
+      {[...Array(9)].map((_, i) => (
+        <line key={"v" + i} x1={96 + i * 16} y1="26" x2={96 + i * 16} y2="194" stroke="#E4E2DA" strokeWidth="1" />
+      ))}
+      {[...Array(11)].map((_, i) => (
+        <line key={"h" + i} x1="96" y1={26 + i * 16.8} x2="224" y2={26 + i * 16.8} stroke="#E4E2DA" strokeWidth="1" />
+      ))}
+      {/* 面部：色块拼合 */}
+      <rect x="96" y="26" width="128" height="46" fill="#1B2A5E" />
+      <rect x="96" y="72" width="128" height="88" fill="#F0E4D4" />
+      <rect x="96" y="160" width="128" height="34" fill="#9B1B2E" />
+      <rect x="112" y="92" width="36" height="9" fill={P.ink} />
+      <rect x="172" y="92" width="36" height="9" fill={P.ink} />
+      <rect x="150" y="118" width="20" height="26" fill="#E6C9A8" />
+      <rect x="144" y="146" width="32" height="10" fill="#9B1B2E" />
+      <rect x="96" y="26" width="128" height="14" fill="#0E1A3C" />
+      {/* 传统色与现代色域的双重血统 */}
+      <g transform="translate(24,60)">
+        {["#9B1B2E", "#1B2A5E", "#E6C9A8", "#0E1A3C"].map((c, i) => (
+          <rect key={i} x="0" y={i * 22} width="44" height="16" fill={c} />
+        ))}
+        <text x="-4" y="112" fontFamily="Archivo,sans-serif" fontSize="8" letterSpacing="1.2" fill={P.gray}>TRADITIONAL</text>
+        <text x="-4" y="126" fontFamily="Archivo,sans-serif" fontSize="8" letterSpacing="1.2" fill={P.gray}>+ MODERN</text>
+      </g>
+      {/* 识别临界：仅五个色块即可辨认 */}
+      <text x="240" y="60" fontFamily="Archivo,sans-serif" fontSize="8" letterSpacing="1.2" fill={P.red}>5 BLOCKS</text>
+      <text x="240" y="74" fontFamily="Archivo,sans-serif" fontSize="8" letterSpacing="1.2" fill={P.red}>= A FACE</text>
+      <line x1="236" y1="88" x2="222" y2="100" stroke={P.red} strokeWidth="1" />
+      <text x="24" y="212" fontFamily="Archivo,sans-serif" fontSize="9" letterSpacing="1.5" fill={P.ink}>TRADITION TRANSLATED BY GRID</text>
+    </svg>
+  ),
+  /* ===== 主题日 11 · 电子产品：界面元语法研究图 ===== */
+  braunT3Grid: (
+    <svg viewBox="0 0 320 220" role="img" aria-label="便携电子界面元语法研究：孔阵秩序与单一操控件的布局原型">
+      <rect width="320" height="220" fill="#fff" />
+      {/* 机身 */}
+      <rect x="66" y="30" width="126" height="160" rx="6" fill="#F4F3EE" stroke={P.ink} strokeWidth="2.5" />
+      {/* 孔阵：功能开孔升华为唯一表面肌理 */}
+      {[...Array(9)].map((_, r) => (
+        [...Array(7)].map((_, c) => (
+          <circle key={`${r}-${c}`} cx={84 + c * 15} cy={48 + r * 9.6} r="2.6" fill="#B5B3AA" />
+        ))
+      ))}
+      {/* 单一圆形拨盘 */}
+      <circle cx="129" cy="156" r="23" fill="#E4E2DA" stroke={P.ink} strokeWidth="2" />
+      <circle cx="129" cy="156" r="6" fill={P.ink} />
+      <line x1="129" y1="139" x2="129" y2="146" stroke={P.ink} strokeWidth="2" />
+      {/* 布局骨架：屏幕区 + 单一操控件 */}
+      <rect x="76" y="40" width="106" height="88" fill="none" stroke={P.blue} strokeWidth="1.5" strokeDasharray="4 3" />
+      <circle cx="129" cy="156" r="30" fill="none" stroke={P.blue} strokeWidth="1.5" strokeDasharray="4 3" />
+      <text x="20" y="44" fontFamily="Archivo,sans-serif" fontSize="8" letterSpacing="1.2" fill={P.blue}>FIELD</text>
+      <text x="20" y="160" fontFamily="Archivo,sans-serif" fontSize="8" letterSpacing="1.2" fill={P.blue}>ONE CONTROL</text>
+      {/* 同一骨架在后世设备上的转世 */}
+      <rect x="226" y="52" width="70" height="116" rx="10" fill="#fff" stroke={P.gray} strokeWidth="2" />
+      <rect x="236" y="62" width="50" height="44" fill="#EFEEE8" stroke={P.gray} strokeWidth="1.5" />
+      <circle cx="261" cy="134" r="20" fill="none" stroke={P.gray} strokeWidth="2" />
+      <circle cx="261" cy="134" r="7" fill="#EFEEE8" stroke={P.gray} strokeWidth="1.5" />
+      <line x1="196" y1="110" x2="220" y2="110" stroke={P.red} strokeWidth="1.5" strokeDasharray="4 3" />
+      <text x="226" y="186" fontFamily="Archivo,sans-serif" fontSize="8" letterSpacing="1.2" fill={P.red}>SAME SKELETON, 43 YEARS LATER</text>
+      <text x="20" y="26" fontFamily="Archivo,sans-serif" fontSize="9" letterSpacing="1.5" fill={P.ink}>ORDER, NOT ORNAMENT</text>
+    </svg>
+  ),
+  walkmanSubtract: (
+    <svg viewBox="0 0 320 220" role="img" aria-label="做减法的产品定义研究：删除录音与扬声器换取极致便携">
+      <rect width="320" height="220" fill="#fff" />
+      {/* 机身 */}
+      <rect x="40" y="62" width="130" height="102" rx="5" fill="#2E68B0" stroke={P.ink} strokeWidth="2" />
+      <rect x="54" y="78" width="102" height="52" fill="#E4E2DA" stroke={P.ink} strokeWidth="1.5" />
+      <circle cx="80" cy="104" r="13" fill="#fff" stroke={P.ink} strokeWidth="1.5" />
+      <circle cx="130" cy="104" r="13" fill="#fff" stroke={P.ink} strokeWidth="1.5" />
+      {[0, 1, 2, 3].map(i => (
+        <rect key={i} x={54 + i * 26} y="140" width="20" height="10" fill={P.ink} />
+      ))}
+      {/* 被删除的功能：录音键与扬声器 */}
+      <g opacity=".45">
+        <rect x="186" y="70" width="42" height="18" fill="none" stroke={P.gray} strokeWidth="1.5" strokeDasharray="4 3" />
+        <circle cx="207" cy="79" r="5" fill="none" stroke={P.gray} strokeWidth="1.5" />
+        <rect x="186" y="104" width="42" height="34" fill="none" stroke={P.gray} strokeWidth="1.5" strokeDasharray="4 3" />
+        {[...Array(9)].map((_, i) => (
+          <circle key={i} cx={193 + (i % 3) * 14} cy={112 + Math.floor(i / 3) * 11} r="2.4" fill={P.gray} />
+        ))}
+      </g>
+      <line x1="184" y1="66" x2="230" y2="92" stroke={P.red} strokeWidth="2.5" />
+      <line x1="230" y1="66" x2="184" y2="92" stroke={P.red} strokeWidth="2.5" />
+      <line x1="184" y1="102" x2="230" y2="140" stroke={P.red} strokeWidth="2.5" />
+      <line x1="230" y1="102" x2="184" y2="140" stroke={P.red} strokeWidth="2.5" />
+      <text x="184" y="158" fontFamily="Archivo,sans-serif" fontSize="8" letterSpacing="1.2" fill={P.red}>REMOVED</text>
+      {/* 换来的行为：边走边听 */}
+      <g transform="translate(252,74)">
+        <circle cx="16" cy="10" r="9" fill={P.ink} />
+        <path d="M16 20 L16 44 L6 64 M16 44 L28 62 M4 30 L30 30" fill="none" stroke={P.ink} strokeWidth="3" strokeLinecap="round" />
+        <path d="M6 8 C 6 -2 26 -2 26 8" fill="none" stroke={P.blue} strokeWidth="2.5" />
+        <circle cx="6" cy="10" r="3.5" fill={P.blue} />
+        <circle cx="26" cy="10" r="3.5" fill={P.blue} />
+      </g>
+      <text x="234" y="166" fontFamily="Archivo,sans-serif" fontSize="8" letterSpacing="1.2" fill={P.blue}>NEW BEHAVIOUR</text>
+      <text x="20" y="42" fontFamily="Archivo,sans-serif" fontSize="9" letterSpacing="1.5" fill={P.ink}>DEFINED BY DELETION</text>
+      <text x="20" y="196" fontFamily="Archivo,sans-serif" fontSize="9" letterSpacing="1.5" fill={P.gray}>PRIVATE SOUND IN PUBLIC SPACE</text>
+    </svg>
+  ),
+  macDesktop: (
+    <svg viewBox="0 0 320 220" role="img" aria-label="桌面隐喻研究：办公桌物件被翻译为屏幕对象，机身呈拟人姿态">
+      <rect width="320" height="220" fill="#fff" />
+      {/* 机身：竖向一体，微微仰起的脸 */}
+      <path d="M62 44 L172 44 C 180 44 184 48 184 56 L184 168 C 184 176 180 180 172 180 L62 180 C 54 180 50 176 50 168 L50 56 C 50 48 54 44 62 44 Z"
+        fill="#E8E5DA" stroke={P.ink} strokeWidth="2.5" />
+      <rect x="66" y="58" width="102" height="76" fill="#DCE4F5" stroke={P.ink} strokeWidth="1.5" />
+      <rect x="90" y="144" width="54" height="12" rx="2" fill="#C9C7BE" stroke={P.ink} strokeWidth="1.5" />
+      {/* 笑脸：消除对技术的恐惧 */}
+      <circle cx="98" cy="86" r="4" fill={P.ink} />
+      <circle cx="136" cy="86" r="4" fill={P.ink} />
+      <path d="M94 104 C 106 116 128 116 140 104" fill="none" stroke={P.ink} strokeWidth="2.5" />
+      {/* 桌面隐喻：实物 → 屏幕对象 */}
+      <g transform="translate(210,42)">
+        <rect x="0" y="0" width="30" height="24" fill="none" stroke={P.gray} strokeWidth="2" />
+        <path d="M0 8 L12 8 L16 2 L30 2" fill="none" stroke={P.gray} strokeWidth="2" />
+        <text x="-6" y="40" fontFamily="Archivo,sans-serif" fontSize="8" letterSpacing="1" fill={P.gray}>FOLDER</text>
+        <rect x="62" y="0" width="26" height="24" fill="none" stroke={P.gray} strokeWidth="2" />
+        <line x1="66" y1="6" x2="84" y2="6" stroke={P.gray} strokeWidth="1.5" />
+        <line x1="66" y1="12" x2="84" y2="12" stroke={P.gray} strokeWidth="1.5" />
+        <text x="58" y="40" fontFamily="Archivo,sans-serif" fontSize="8" letterSpacing="1" fill={P.gray}>PAGE</text>
+      </g>
+      <g transform="translate(210,110)">
+        <path d="M4 6 L26 6 L22 30 L8 30 Z" fill="none" stroke={P.ink} strokeWidth="2" />
+        <line x1="0" y1="6" x2="30" y2="6" stroke={P.ink} strokeWidth="2" />
+        <text x="-6" y="46" fontFamily="Archivo,sans-serif" fontSize="8" letterSpacing="1" fill={P.ink}>TRASH</text>
+        <path d="M68 4 L68 30 L76 24 L80 34 L84 32 L80 22 L88 22 Z" fill={P.ink} />
+        <text x="58" y="46" fontFamily="Archivo,sans-serif" fontSize="8" letterSpacing="1" fill={P.ink}>POINTER</text>
+      </g>
+      <line x1="196" y1="110" x2="196" y2="30" stroke={P.red} strokeWidth="1" strokeDasharray="3 3" />
+      <text x="20" y="30" fontFamily="Archivo,sans-serif" fontSize="9" letterSpacing="1.5" fill={P.ink}>DESK → SCREEN</text>
+      <text x="20" y="204" fontFamily="Archivo,sans-serif" fontSize="9" letterSpacing="1.5" fill={P.blue}>HARDWARE + SOFTWARE AS ONE</text>
+    </svg>
+  ),
+  gameboyWithered: (
+    <svg viewBox="0 0 320 220" role="img" aria-label="枯萎技术的水平思考研究：以落后一代的显示换取续航、价格与耐用">
+      <rect width="320" height="220" fill="#fff" />
+      {/* 机体 */}
+      <rect x="54" y="26" width="118" height="170" rx="10" fill="#D8D5C6" stroke={P.ink} strokeWidth="2.5" />
+      <rect x="70" y="44" width="86" height="66" rx="3" fill="#8FA87A" stroke={P.ink} strokeWidth="2" />
+      {[...Array(6)].map((_, i) => (
+        <rect key={i} x={78 + (i % 3) * 24} y={56 + Math.floor(i / 3) * 24} width="14" height="14" fill="#5E7550" />
+      ))}
+      {/* 十字键 + AB 键：定型的掌机语法 */}
+      <g transform="translate(88,140)">
+        <rect x="-16" y="-6" width="32" height="12" rx="2" fill={P.ink} />
+        <rect x="-6" y="-16" width="12" height="32" rx="2" fill={P.ink} />
+      </g>
+      <circle cx="140" cy="134" r="8" fill={P.red} />
+      <circle cx="158" cy="146" r="8" fill={P.red} />
+      <rect x="92" y="172" width="20" height="6" rx="3" fill="#9C9A92" transform="rotate(-20 102 175)" />
+      <rect x="118" y="172" width="20" height="6" rx="3" fill="#9C9A92" transform="rotate(-20 128 175)" />
+      {/* 技术取舍：以落后换取的三项优势 */}
+      <text x="196" y="42" fontFamily="Archivo,sans-serif" fontSize="8" letterSpacing="1.2" fill={P.gray}>TRADE-OFF</text>
+      {[["COLOUR", 26, P.red], ["BATTERY", 104, P.blue], ["PRICE", 96, P.blue], ["DURABILITY", 110, P.blue]].map(([t, w, c], i) => (
+        <g key={i}>
+          <rect x="196" y={54 + i * 26} width="112" height="9" fill="#EFEEE8" />
+          <rect x="196" y={54 + i * 26} width={w} height="9" fill={c} />
+          <text x="196" y={50 + i * 26} fontFamily="Archivo,sans-serif" fontSize="8" letterSpacing="1" fill={c}>{t}</text>
+        </g>
+      ))}
+      <text x="196" y="176" fontFamily="Archivo,sans-serif" fontSize="8" letterSpacing="1.2" fill={P.ink}>WITHERED TECH,</text>
+      <text x="196" y="188" fontFamily="Archivo,sans-serif" fontSize="8" letterSpacing="1.2" fill={P.ink}>LATERAL THINKING</text>
+      <text x="20" y="212" fontFamily="Archivo,sans-serif" fontSize="9" letterSpacing="1.5" fill={P.gray}>NOT NEWEST — FITTEST</text>
+    </svg>
+  ),
+  ipodWheel: (
+    <svg viewBox="0 0 320 220" role="img" aria-label="转盘操控密度研究：拇指划圈在万首歌中跳跃，白色线材成为识别">
+      <rect width="320" height="220" fill="#fff" />
+      {/* 机身 */}
+      <rect x="66" y="24" width="112" height="172" rx="12" fill="#F7F6F2" stroke={P.ink} strokeWidth="2.5" />
+      <rect x="82" y="40" width="80" height="54" fill="#DCE4F5" stroke={P.ink} strokeWidth="1.5" />
+      {[0, 1, 2, 3].map(i => (
+        <line key={i} x1="90" y1={52 + i * 12} x2={i === 3 ? 130 : 154} y2={52 + i * 12} stroke="#6E7A94" strokeWidth="3" />
+      ))}
+      {/* 转盘与加速度曲线 */}
+      <circle cx="122" cy="146" r="38" fill="#EFEEE8" stroke={P.ink} strokeWidth="2" />
+      <circle cx="122" cy="146" r="14" fill="#fff" stroke={P.ink} strokeWidth="2" />
+      <path d="M122 108 A 38 38 0 0 1 158 134" fill="none" stroke={P.red} strokeWidth="3" />
+      <path d="M160 140 L154 128 L166 130 Z" fill={P.red} />
+      <text x="188" y="132" fontFamily="Archivo,sans-serif" fontSize="8" letterSpacing="1.2" fill={P.red}>THUMB ARC</text>
+      {/* 输入方式匹配数据规模 */}
+      <g transform="translate(196,44)">
+        <line x1="0" y1="56" x2="106" y2="56" stroke={P.gray} strokeWidth="1.5" />
+        <line x1="0" y1="56" x2="0" y2="0" stroke={P.gray} strokeWidth="1.5" />
+        <path d="M0 54 C 30 52 46 20 106 6" fill="none" stroke={P.blue} strokeWidth="2" />
+        <text x="0" y="-6" fontFamily="Archivo,sans-serif" fontSize="8" letterSpacing="1.2" fill={P.blue}>SPEED ↔ ROTATION</text>
+        <text x="0" y="72" fontFamily="Archivo,sans-serif" fontSize="8" letterSpacing="1.2" fill={P.gray}>1000 SONGS</text>
+      </g>
+      {/* 白色耳机线：低成本差异化 */}
+      <path d="M122 24 C 122 10 196 6 214 16" fill="none" stroke="#fff" strokeWidth="4" />
+      <path d="M122 24 C 122 10 196 6 214 16" fill="none" stroke={P.gray} strokeWidth="1" />
+      <circle cx="218" cy="18" r="5" fill="#fff" stroke={P.gray} strokeWidth="1.5" />
+      <text x="228" y="22" fontFamily="Archivo,sans-serif" fontSize="8" letterSpacing="1.2" fill={P.gray}>WHITE = ADVERT</text>
+      <text x="20" y="206" fontFamily="Archivo,sans-serif" fontSize="9" letterSpacing="1.5" fill={P.ink}>ONE SENTENCE, ONE PRODUCT</text>
+    </svg>
+  ),
+
+  /* ===== 主题日 15 · 战后意大利设计：观念与工程研究图 ===== */
+  valentineRed: (
+    <svg viewBox="0 0 320 220" role="img" aria-label="产品人格化研究：艳红机体与提盒，从办公室走向乡间的场景转移">
+      <rect width="320" height="220" fill="#fff" />
+      {/* 打字机主体 */}
+      <path d="M70 112 L214 112 L222 166 L62 166 Z" fill="#D0361F" stroke={P.ink} strokeWidth="2" />
+      <path d="M84 96 L200 96 L214 112 L70 112 Z" fill="#B02A15" />
+      {[0, 1, 2, 3].map(r => (
+        [...Array(9)].map((_, c) => (
+          <circle key={`${r}-${c}`} cx={82 + c * 16 + r * 4} cy={124 + r * 11} r="3.4" fill="#F2F0E8" />
+        ))
+      ))}
+      <rect x="96" y="76" width="92" height="20" rx="3" fill="#B02A15" stroke={P.ink} strokeWidth="1.5" />
+      <rect x="112" y="60" width="60" height="18" fill="#fff" stroke={P.ink} strokeWidth="1.5" />
+      {/* 提盒：可拎走的机器 */}
+      <path d="M232 104 L294 104 L294 170 L232 170 Z" fill="#D0361F" stroke={P.ink} strokeWidth="2" />
+      <path d="M248 104 C 248 84 278 84 278 104" fill="none" stroke={P.ink} strokeWidth="3" />
+      <text x="230" y="186" fontFamily="Archivo,sans-serif" fontSize="8" letterSpacing="1.2" fill={P.red}>CARRY CASE</text>
+      {/* 场景转移：办公室 → 乡间 */}
+      <g transform="translate(24,42)">
+        <rect x="0" y="0" width="26" height="22" fill="none" stroke={P.gray} strokeWidth="1.5" />
+        <line x1="0" y1="8" x2="26" y2="8" stroke={P.gray} strokeWidth="1.5" />
+        <text x="-4" y="36" fontFamily="Archivo,sans-serif" fontSize="8" letterSpacing="1" fill={P.gray}>OFFICE</text>
+      </g>
+      <line x1="58" y1="50" x2="84" y2="50" stroke={P.red} strokeWidth="1.5" />
+      <path d="M90 50 L80 45 L80 55 Z" fill={P.red} />
+      <g transform="translate(100,36)">
+        <path d="M0 28 C 10 12 22 12 32 28 Z" fill="none" stroke={P.red} strokeWidth="1.5" />
+        <circle cx="42" cy="8" r="6" fill="none" stroke={P.red} strokeWidth="1.5" />
+        <text x="-2" y="44" fontFamily="Archivo,sans-serif" fontSize="8" letterSpacing="1" fill={P.red}>SUNDAY, COUNTRYSIDE</text>
+      </g>
+      <text x="20" y="208" fontFamily="Archivo,sans-serif" fontSize="9" letterSpacing="1.5" fill={P.ink}>A BRIEF WRITTEN AS A MOOD</text>
+    </svg>
+  ),
+  superleggeraLight: (
+    <svg viewBox="0 0 320 220" role="img" aria-label="极限减重研究：三角截面的削减与抛落不碎的结构验证">
+      <rect width="320" height="220" fill="#fff" />
+      {/* 椅子：极细杆件 */}
+      <g stroke="#C9922E" strokeWidth="4" strokeLinecap="round" fill="none">
+        <line x1="96" y1="42" x2="104" y2="124" />
+        <line x1="150" y1="40" x2="146" y2="124" />
+        <line x1="98" y1="58" x2="149" y2="56" />
+        <line x1="100" y1="82" x2="148" y2="80" />
+        <line x1="104" y1="124" x2="96" y2="186" />
+        <line x1="146" y1="124" x2="152" y2="186" />
+        <line x1="180" y1="132" x2="188" y2="186" />
+        <line x1="104" y1="124" x2="180" y2="132" />
+        <line x1="146" y1="124" x2="180" y2="132" />
+        <line x1="100" y1="160" x2="184" y2="164" />
+      </g>
+      <path d="M104 124 L180 132 L188 140 L110 132 Z" fill="#E8DCC2" stroke={P.ink} strokeWidth="1" />
+      <line x1="76" y1="190" x2="212" y2="190" stroke={P.ink} strokeWidth="1.5" />
+      {/* 三角截面：削到极限 */}
+      <g transform="translate(232,52)">
+        <circle cx="26" cy="26" r="26" fill="none" stroke={P.gray} strokeWidth="1.5" strokeDasharray="4 3" />
+        <path d="M26 6 L44 38 L8 38 Z" fill="#C9922E" stroke={P.ink} strokeWidth="1.5" />
+        <text x="-6" y="70" fontFamily="Archivo,sans-serif" fontSize="8" letterSpacing="1.2" fill={P.ink}>TRIANGULAR SECTION</text>
+      </g>
+      {/* 抛落验证 */}
+      <g transform="translate(236,136)">
+        <path d="M14 0 C 14 20 6 34 14 52" fill="none" stroke={P.red} strokeWidth="1.5" strokeDasharray="5 4" />
+        <path d="M14 58 L9 46 L19 46 Z" fill={P.red} />
+        <path d="M0 62 C 10 56 22 56 32 62" fill="none" stroke={P.red} strokeWidth="1.5" />
+        <text x="-14" y="80" fontFamily="Archivo,sans-serif" fontSize="8" letterSpacing="1.2" fill={P.red}>DROPPED — BOUNCES</text>
+      </g>
+      <text x="20" y="34" fontFamily="Archivo,sans-serif" fontSize="9" letterSpacing="1.5" fill={P.ink}>1.7 kg</text>
+      <text x="20" y="206" fontFamily="Archivo,sans-serif" fontSize="9" letterSpacing="1.5" fill={P.gray}>REDESIGN OF A FISHERMAN&#39;S CHAIR</text>
+    </svg>
+  ),
+  memphisTotem: (
+    <svg viewBox="0 0 320 220" role="img" aria-label="对好品味的罢工研究：斜板、糖果色与图腾式堆叠的反功能构成">
+      <rect width="320" height="220" fill="#fff" />
+      {/* 图腾式堆叠：倾斜的搁板放不稳书 */}
+      <rect x="140" y="40" width="20" height="150" fill="#2E68B0" />
+      <path d="M92 74 L160 58 L160 74 L92 90 Z" fill="#D0361F" />
+      <path d="M160 96 L226 80 L226 96 L160 112 Z" fill={P.yellow} />
+      <path d="M96 128 L160 116 L160 132 L96 144 Z" fill="#4CA64C" />
+      <path d="M160 152 L222 140 L222 156 L160 168 Z" fill="#8E3B8E" />
+      <rect x="112" y="184" width="76" height="14" fill="#E8B50C" />
+      {/* 廉价贴面纹样 */}
+      {[...Array(10)].map((_, i) => (
+        <g key={i}>
+          <circle cx={118 + (i % 5) * 16} cy={188 + Math.floor(i / 5) * 6} r="2" fill={P.ink} />
+        </g>
+      ))}
+      {/* 放不稳的书：功能的公然失效 */}
+      <g transform="translate(176,72) rotate(-14)">
+        <rect x="0" y="0" width="22" height="16" fill="#fff" stroke={P.ink} strokeWidth="1.5" />
+      </g>
+      <path d="M204 96 C 210 106 214 112 216 122" fill="none" stroke={P.red} strokeWidth="1.5" strokeDasharray="3 3" />
+      <text x="212" y="134" fontFamily="Archivo,sans-serif" fontSize="8" letterSpacing="1.2" fill={P.red}>SLIDES OFF</text>
+      {/* 好设计清单的反面 */}
+      <g transform="translate(20,44)">
+        {["SYMMETRY", "NEUTRAL", "USEFUL"].map((t, i) => (
+          <g key={i}>
+            <text x="0" y={i * 22} fontFamily="Archivo,sans-serif" fontSize="8" letterSpacing="1.2" fill={P.gray}>{t}</text>
+            <line x1="-2" y1={i * 22 - 3} x2="56" y2={i * 22 - 3} stroke={P.red} strokeWidth="1.5" />
+          </g>
+        ))}
+        <text x="0" y="80" fontFamily="Archivo,sans-serif" fontSize="8" letterSpacing="1.2" fill={P.ink}>TASTE IS</text>
+        <text x="0" y="92" fontFamily="Archivo,sans-serif" fontSize="8" letterSpacing="1.2" fill={P.ink}>NEGOTIABLE</text>
+      </g>
+      <text x="20" y="208" fontFamily="Archivo,sans-serif" fontSize="9" letterSpacing="1.5" fill={P.ink}>FURNITURE AS TOTEM</text>
+    </svg>
+  ),
+  alessiBird: (
+    <svg viewBox="0 0 320 220" role="img" aria-label="情感化设计研究：锥体加热效率与以鸟鸣取代汽笛的愉悦事件">
+      <rect width="320" height="220" fill="#fff" />
+      {/* 宽底锥形壶身：加热效率与稳定 */}
+      <path d="M74 178 L96 92 L192 92 L214 178 Z" fill="#DCDAD1" stroke={P.ink} strokeWidth="2.5" />
+      <ellipse cx="144" cy="92" rx="48" ry="9" fill="#EFEEE8" stroke={P.ink} strokeWidth="2" />
+      {/* 蓝色圆球手柄：防烫提示 */}
+      <path d="M186 96 C 226 96 234 140 206 158" fill="none" stroke={P.ink} strokeWidth="5" />
+      <circle cx="232" cy="122" r="11" fill="#2E68B0" stroke={P.ink} strokeWidth="1.5" />
+      {/* 壶嘴与鸟 */}
+      <path d="M74 122 L44 108 L40 122 L70 138 Z" fill="#DCDAD1" stroke={P.ink} strokeWidth="2" />
+      <path d="M34 104 C 26 96 30 84 42 86 C 52 88 54 100 46 108 Z" fill={P.red} />
+      <path d="M30 96 L20 92 L28 90 Z" fill={P.yellow} />
+      {/* 鸟鸣：功能被转写为愉悦事件 */}
+      {[0, 1, 2].map(i => (
+        <path key={i} d={`M22 ${76 - i * 10} C 34 ${66 - i * 10} 48 ${72 - i * 10} 58 ${62 - i * 10}`}
+          fill="none" stroke={P.red} strokeWidth="1.5" strokeDasharray="4 4" opacity={0.9 - i * 0.24} />
+      ))}
+      <text x="66" y="52" fontFamily="Archivo,sans-serif" fontSize="8" letterSpacing="1.2" fill={P.red}>BIRD SONG ≠ WHISTLE</text>
+      {/* 加热效率：宽底受热面积 */}
+      <line x1="74" y1="192" x2="214" y2="192" stroke={P.blue} strokeWidth="1.5" />
+      {[...Array(7)].map((_, i) => (
+        <path key={i} d={`M${86 + i * 21} 200 C ${90 + i * 21} 194 ${82 + i * 21} 190 ${86 + i * 21} 184`}
+          fill="none" stroke={P.blue} strokeWidth="1.5" />
+      ))}
+      <text x="222" y="196" fontFamily="Archivo,sans-serif" fontSize="8" letterSpacing="1.2" fill={P.blue}>WIDE BASE</text>
+      <text x="222" y="70" fontFamily="Archivo,sans-serif" fontSize="8" letterSpacing="1.2" fill={P.ink}>BRAND AS</text>
+      <text x="222" y="82" fontFamily="Archivo,sans-serif" fontSize="8" letterSpacing="1.2" fill={P.ink}>CURATOR</text>
+      <text x="20" y="30" fontFamily="Archivo,sans-serif" fontSize="9" letterSpacing="1.5" fill={P.ink}>FUNCTION DRAMATISED</text>
+    </svg>
+  ),
+  ts502Cube: (
+    <svg viewBox="0 0 320 220" role="img" aria-label="两种存在状态研究：合上是沉默立方，打开才成为设备">
+      <rect width="320" height="220" fill="#fff" />
+      {/* 合上：休眠态的雕塑 */}
+      <rect x="34" y="72" width="96" height="96" fill="#E8752A" stroke={P.ink} strokeWidth="2.5" />
+      <line x1="34" y1="120" x2="130" y2="120" stroke={P.ink} strokeWidth="1.5" />
+      <rect x="120" y="114" width="6" height="12" fill={P.ink} />
+      <text x="34" y="190" fontFamily="Archivo,sans-serif" fontSize="8" letterSpacing="1.2" fill={P.gray}>CLOSED — SCULPTURE</text>
+      {/* 开合动作：使用的序曲 */}
+      <path d="M146 120 C 158 106 168 104 178 106" fill="none" stroke={P.blue} strokeWidth="1.5" strokeDasharray="4 3" />
+      <path d="M184 106 L172 102 L176 112 Z" fill={P.blue} />
+      <text x="140" y="142" fontFamily="Archivo,sans-serif" fontSize="8" letterSpacing="1.2" fill={P.blue}>HINGE RITUAL</text>
+      {/* 打开：使用态的设备 */}
+      <path d="M196 72 L292 72 L292 118 L196 118 Z" fill="#E8752A" stroke={P.ink} strokeWidth="2.5" transform="rotate(-16 196 118)" />
+      <rect x="196" y="122" width="96" height="46" fill="#E8752A" stroke={P.ink} strokeWidth="2.5" />
+      <circle cx="222" cy="145" r="13" fill="#C9C7BE" stroke={P.ink} strokeWidth="1.5" />
+      <circle cx="222" cy="145" r="4" fill={P.ink} />
+      {[...Array(12)].map((_, i) => (
+        <circle key={i} cx={250 + (i % 4) * 12} cy={134 + Math.floor(i / 4) * 11} r="2.6" fill="#B5B3AA" />
+      ))}
+      <text x="196" y="190" fontFamily="Archivo,sans-serif" fontSize="8" letterSpacing="1.2" fill={P.ink}>OPEN — DEVICE</text>
+      <text x="20" y="34" fontFamily="Archivo,sans-serif" fontSize="9" letterSpacing="1.5" fill={P.ink}>DESIGN THE OFF STATE</text>
+      <text x="20" y="212" fontFamily="Archivo,sans-serif" fontSize="9" letterSpacing="1.5" fill={P.gray}>ELECTRONICS AS FURNITURE</text>
+    </svg>
+  ),
+  /* ===== 主题日 16 · 北欧设计：自然与民主研究图 ===== */
+  aaltoWave: (
+    <svg viewBox="0 0 320 220" role="img" aria-label="自由曲线的来源研究：湖岸轮廓转化为器皿开口与木模吹制的微差">
+      <rect width="320" height="220" fill="#fff" />
+      {/* 湖岸线：自然轮廓 */}
+      <path d="M20 54 C 56 40 74 66 108 58 C 140 50 152 74 186 66 C 216 58 238 74 300 62"
+        fill="none" stroke={P.blue} strokeWidth="2" strokeDasharray="5 4" />
+      <text x="20" y="42" fontFamily="Archivo,sans-serif" fontSize="8" letterSpacing="1.2" fill={P.blue}>SHORELINE</text>
+      <line x1="150" y1="72" x2="150" y2="92" stroke={P.gray} strokeWidth="1.5" />
+      <path d="M150 98 L145 86 L155 86 Z" fill={P.gray} />
+      {/* 器皿：非对称的自由开口 */}
+      <path d="M92 108 C 110 98 122 118 146 110 C 168 102 178 120 202 112 C 214 108 224 114 230 110
+        L230 176 C 222 190 196 196 160 196 C 124 196 98 190 90 176 Z"
+        fill="#DFF0EE" stroke={P.ink} strokeWidth="2.5" />
+      <path d="M92 108 C 110 98 122 118 146 110 C 168 102 178 120 202 112 C 214 108 224 114 230 110"
+        fill="none" stroke={P.blue} strokeWidth="3" />
+      {/* 玻璃的高光与木纹微差 */}
+      <path d="M112 128 C 108 150 110 168 118 182" fill="none" stroke="#fff" strokeWidth="4" opacity=".9" />
+      {[0, 1, 2].map(i => (
+        <path key={i} d={`M${150 + i * 22} 130 C ${146 + i * 22} 152 ${152 + i * 22} 170 ${148 + i * 22} 186`}
+          fill="none" stroke="#B7CFCB" strokeWidth="1.5" />
+      ))}
+      {/* 不规定的使用方式 */}
+      <line x1="120" y1="112" x2="120" y2="84" stroke={P.red} strokeWidth="2" />
+      <line x1="176" y1="114" x2="176" y2="90" stroke={P.red} strokeWidth="2" />
+      <line x1="214" y1="110" x2="214" y2="96" stroke={P.red} strokeWidth="2" />
+      <text x="248" y="108" fontFamily="Archivo,sans-serif" fontSize="8" letterSpacing="1.2" fill={P.red}>NO FIXED</text>
+      <text x="248" y="120" fontFamily="Archivo,sans-serif" fontSize="8" letterSpacing="1.2" fill={P.red}>ARRANGEMENT</text>
+      <text x="20" y="212" fontFamily="Archivo,sans-serif" fontSize="9" letterSpacing="1.5" fill={P.ink}>ORGANIC CURVE AS POSITION</text>
+    </svg>
+  ),
+  stoolLLeg: (
+    <svg viewBox="0 0 320 220" role="img" aria-label="L形腿节点与堆叠螺旋研究：一个专利节点解决整件家具">
+      <rect width="320" height="220" fill="#fff" />
+      {/* L 腿节点放大 */}
+      <g transform="translate(30,40)">
+        <path d="M10 92 L10 30 C 10 16 22 10 36 10 L88 10" fill="none" stroke="#C9922E" strokeWidth="14" strokeLinecap="round" />
+        <rect x="36" y="2" width="56" height="9" fill="#B5813C" />
+        <circle cx="24" cy="24" r="16" fill="none" stroke={P.red} strokeWidth="2" strokeDasharray="4 3" />
+        <text x="-4" y="120" fontFamily="Archivo,sans-serif" fontSize="8" letterSpacing="1.2" fill={P.red}>BENT &amp; FIXED — NO BRACE</text>
+      </g>
+      {/* 堆叠螺旋：三足错开自然旋转成塔 */}
+      <g transform="translate(206,40)">
+        {[0, 1, 2, 3].map(i => (
+          <g key={i} transform={`translate(${i * 4},${i * 26})`}>
+            <ellipse cx="46" cy="16" rx="42" ry="12" fill="#E8DCC2" stroke={P.ink} strokeWidth="1.5" />
+            <line x1={16 + i * 6} y1="22" x2={12 + i * 6} y2="44" stroke="#C9922E" strokeWidth="5" />
+            <line x1={76 - i * 4} y1="22" x2={80 - i * 4} y2="44" stroke="#C9922E" strokeWidth="5" />
+          </g>
+        ))}
+        <path d="M-12 20 C -26 60 -26 90 -12 124" fill="none" stroke={P.blue} strokeWidth="1.5" strokeDasharray="4 3" />
+        <text x="-30" y="146" fontFamily="Archivo,sans-serif" fontSize="8" letterSpacing="1.2" fill={P.blue}>STACKS INTO A SPIRAL</text>
+      </g>
+      <text x="20" y="28" fontFamily="Archivo,sans-serif" fontSize="9" letterSpacing="1.5" fill={P.ink}>ONE JOINT SOLVES THE WHOLE</text>
+      <text x="20" y="208" fontFamily="Archivo,sans-serif" fontSize="9" letterSpacing="1.5" fill={P.gray}>FINNISH BIRCH · 1933</text>
+    </svg>
+  ),
+  unikkoScale: (
+    <svg viewBox="0 0 320 220" role="img" aria-label="图案尺度研究：花朵放大到超出布幅、边缘被裁切而获得抽象力量">
+      <rect width="320" height="220" fill="#fff" />
+      <rect x="20" y="26" width="196" height="172" fill="#F2EFE6" />
+      {/* 放大到出框的花：手绘的歪斜被保留 */}
+      <circle cx="112" cy="104" r="30" fill="#E8752A" />
+      {[0, 1, 2, 3, 4, 5, 6].map(i => {
+        const a = i * Math.PI / 3.5;
+        return (
+          <ellipse key={i} cx={112 + 56 * Math.cos(a)} cy={104 + 56 * Math.sin(a)} rx="34" ry="26"
+            fill="#D0361F" transform={`rotate(${i * 51 + 8} ${112 + 56 * Math.cos(a)} ${104 + 56 * Math.sin(a)})`} />
+        );
+      })}
+      <circle cx="112" cy="104" r="30" fill="#E8B50C" />
+      <circle cx="112" cy="104" r="14" fill="#B02A15" />
+      {/* 被布幅裁切的第二朵 */}
+      <circle cx="212" cy="186" r="26" fill="#E8B50C" />
+      <circle cx="212" cy="186" r="46" fill="none" stroke="#D0361F" strokeWidth="22" strokeDasharray="30 18" />
+      <rect x="216" y="26" width="6" height="172" fill="#fff" />
+      {/* 尺度对照：常规印花 */}
+      <g transform="translate(238,52)">
+        {[...Array(9)].map((_, i) => (
+          <circle key={i} cx={10 + (i % 3) * 22} cy={10 + Math.floor(i / 3) * 22} r="6" fill="#C9C7BE" />
+        ))}
+        <text x="-2" y="82" fontFamily="Archivo,sans-serif" fontSize="8" letterSpacing="1.2" fill={P.gray}>USUAL SCALE</text>
+      </g>
+      <line x1="238" y1="104" x2="238" y2="130" stroke={P.red} strokeWidth="1.5" />
+      <path d="M238 136 L233 124 L243 124 Z" fill={P.red} />
+      <text x="238" y="154" fontFamily="Archivo,sans-serif" fontSize="8" letterSpacing="1.2" fill={P.red}>×20 SCALE</text>
+      <text x="238" y="168" fontFamily="Archivo,sans-serif" fontSize="8" letterSpacing="1.2" fill={P.red}>= ABSTRACTION</text>
+      <text x="20" y="18" fontFamily="Archivo,sans-serif" fontSize="9" letterSpacing="1.5" fill={P.ink}>CROPPED BY THE CLOTH</text>
+    </svg>
+  ),
+  legoStud: (
+    <svg viewBox="0 0 320 220" role="img" aria-label="凸管夹持结构研究：稳固与可拆之间的公差甜点与向后兼容">
+      <rect width="320" height="220" fill="#fff" />
+      {/* 剖面：上砖的内管与下砖的凸点咬合 */}
+      <rect x="54" y="44" width="150" height="46" fill="#D0361F" stroke={P.ink} strokeWidth="2" />
+      {[0, 1, 2, 3].map(i => (
+        <rect key={i} x={68 + i * 36} y="30" width="22" height="14" rx="3" fill="#D0361F" stroke={P.ink} strokeWidth="2" />
+      ))}
+      <rect x="54" y="106" width="150" height="46" fill="#2E68B0" stroke={P.ink} strokeWidth="2" />
+      {[0, 1, 2, 3].map(i => (
+        <rect key={"s" + i} x={68 + i * 36} y="92" width="22" height="14" rx="3" fill="#2E68B0" stroke={P.ink} strokeWidth="2" />
+      ))}
+      {/* 内管：夹持凸点的三点接触 */}
+      {[0, 1, 2].map(i => (
+        <circle key={"t" + i} cx={104 + i * 36} cy="128" r="11" fill="none" stroke="#fff" strokeWidth="3" />
+      ))}
+      {[0, 1, 2, 3].map(i => (
+        <rect key={"g" + i} x={68 + i * 36} y="106" width="22" height="14" fill="#1F4E8C" />
+      ))}
+      {/* 夹持力甜点 */}
+      <g transform="translate(224,44)">
+        <line x1="0" y1="96" x2="76" y2="96" stroke={P.gray} strokeWidth="1.5" />
+        <line x1="0" y1="96" x2="0" y2="16" stroke={P.gray} strokeWidth="1.5" />
+        <path d="M0 92 C 22 92 30 24 38 24 C 46 24 56 90 76 92" fill="none" stroke={P.red} strokeWidth="2" />
+        <line x1="38" y1="24" x2="38" y2="96" stroke={P.red} strokeWidth="1" strokeDasharray="3 3" />
+        <circle cx="38" cy="24" r="4" fill={P.red} />
+        <text x="-2" y="10" fontFamily="Archivo,sans-serif" fontSize="8" letterSpacing="1.2" fill={P.red}>CLUTCH SWEET SPOT</text>
+        <text x="-4" y="112" fontFamily="Archivo,sans-serif" fontSize="8" letterSpacing="1" fill={P.gray}>LOOSE</text>
+        <text x="52" y="112" fontFamily="Archivo,sans-serif" fontSize="8" letterSpacing="1" fill={P.gray}>TIGHT</text>
+      </g>
+      {/* 向后兼容 */}
+      <line x1="54" y1="176" x2="204" y2="176" stroke={P.blue} strokeWidth="1.5" />
+      <text x="54" y="192" fontFamily="Archivo,sans-serif" fontSize="8" letterSpacing="1.2" fill={P.blue}>1958 BRICK STILL FITS TODAY</text>
+      <text x="20" y="24" fontFamily="Archivo,sans-serif" fontSize="9" letterSpacing="1.5" fill={P.ink}>A SYSTEM, NOT A TOY</text>
+    </svg>
+  ),
+  beogramTangent: (
+    <svg viewBox="0 0 320 220" role="img" aria-label="切线循迹研究：唱臂平移消除循迹失真，技术转化为可观赏的仪式">
+      <rect width="320" height="220" fill="#fff" />
+      {/* 铝面机身 */}
+      <rect x="34" y="52" width="252" height="132" rx="4" fill="#D8D6CE" stroke={P.ink} strokeWidth="2" />
+      {[...Array(14)].map((_, i) => (
+        <line key={i} x1={40 + i * 18} y1="52" x2={40 + i * 18} y2="184" stroke="#C4C2B9" strokeWidth="1" />
+      ))}
+      {/* 唱片 */}
+      <circle cx="136" cy="118" r="58" fill={P.ink} />
+      <circle cx="136" cy="118" r="20" fill="#C9C7BE" />
+      <circle cx="136" cy="118" r="3" fill="#fff" />
+      {[28, 38, 48].map((r, i) => (
+        <circle key={i} cx="136" cy="118" r={r} fill="none" stroke="#3A3830" strokeWidth="1" />
+      ))}
+      {/* 切线臂：沿半径平移而非旋转 */}
+      <line x1="136" y1="46" x2="136" y2="184" stroke="#B5B3AA" strokeWidth="1" strokeDasharray="4 4" />
+      <rect x="112" y="64" width="90" height="9" rx="2" fill="#9C9A92" stroke={P.ink} strokeWidth="1.5" />
+      <rect x="126" y="73" width="12" height="16" fill={P.ink} />
+      <line x1="136" y1="89" x2="136" y2="98" stroke={P.red} strokeWidth="2" />
+      {/* 平移轨迹 */}
+      <line x1="84" y1="118" x2="136" y2="118" stroke={P.red} strokeWidth="1.5" strokeDasharray="5 4" />
+      <path d="M78 118 L90 113 L90 123 Z" fill={P.red} />
+      <text x="62" y="140" fontFamily="Archivo,sans-serif" fontSize="8" letterSpacing="1.2" fill={P.red}>TANGENT TRAVEL</text>
+      {/* 对照：普通旋转臂的循迹角误差 */}
+      <g transform="translate(212,96)">
+        <circle cx="34" cy="34" r="34" fill="none" stroke={P.gray} strokeWidth="1.5" strokeDasharray="3 3" />
+        <line x1="72" y1="4" x2="34" y2="34" stroke={P.gray} strokeWidth="2" />
+        <path d="M34 34 L56 18" fill="none" stroke={P.red} strokeWidth="1.5" />
+        <text x="-6" y="88" fontFamily="Archivo,sans-serif" fontSize="8" letterSpacing="1.2" fill={P.gray}>PIVOT ARM — ERROR</text>
+      </g>
+      {/* 极少的操作元素 */}
+      {[0, 1, 2].map(i => (
+        <rect key={i} x={222 + i * 18} y="66" width="12" height="4" fill={P.ink} />
+      ))}
+      <text x="20" y="34" fontFamily="Archivo,sans-serif" fontSize="9" letterSpacing="1.5" fill={P.ink}>TECHNIQUE MADE VISIBLE</text>
+      <text x="20" y="206" fontFamily="Archivo,sans-serif" fontSize="9" letterSpacing="1.5" fill={P.gray}>BRUSHED ALUMINIUM GRAMMAR</text>
+    </svg>
+  ),
+
+  /* ===== 主题日 17 · 日本设计 II：观念与材料研究图 ===== */
+  fukudaReversal: (
+    <svg viewBox="0 0 320 220" role="img" aria-label="视觉反转研究：炮弹回飞炮管，以一处反常完成反战寓言">
+      <rect width="320" height="220" fill="#fff" />
+      <rect x="20" y="24" width="280" height="172" fill="#E8DCC2" />
+      {/* 炮管 */}
+      <path d="M40 150 L206 150 L206 124 L40 124 Z" fill={P.ink} />
+      <path d="M206 158 L246 158 L246 116 L206 116 Z" fill={P.ink} />
+      <circle cx="40" cy="137" r="22" fill={P.ink} />
+      {/* 炮弹：方向反转，飞回自身 */}
+      <g transform="translate(262,122)">
+        <path d="M26 15 L10 0 L-14 0 L-14 30 L10 30 Z" fill={P.red} />
+        <path d="M-14 4 L-24 -4 L-24 34 L-14 26 Z" fill={P.red} />
+      </g>
+      {/* 反向轨迹 */}
+      <path d="M296 104 C 274 86 246 90 236 110" fill="none" stroke={P.ink} strokeWidth="1.5" strokeDasharray="5 4" />
+      <path d="M234 116 L232 104 L242 108 Z" fill={P.ink} />
+      {/* 一秒钟的顿悟 */}
+      <text x="36" y="188" fontFamily="Archivo,sans-serif" fontSize="8" letterSpacing="1.2" fill={P.ink}>ONE OBJECT + ONE ANOMALY</text>
+      <text x="200" y="52" fontFamily="Archivo,sans-serif" fontSize="8" letterSpacing="1.2" fill={P.red}>RETURNS TO SENDER</text>
+      <line x1="252" y1="58" x2="268" y2="96" stroke={P.red} strokeWidth="1" strokeDasharray="3 3" />
+      <text x="20" y="214" fontFamily="Archivo,sans-serif" fontSize="9" letterSpacing="1.5" fill={P.gray}>HUMOUR BYPASSES DEFENCE</text>
+    </svg>
+  ),
+  yokooCollage: (
+    <svg viewBox="0 0 320 220" role="img" aria-label="过剩美学研究：旭日放射、拼贴与霓虹配色对国际风格的起义">
+      <rect width="320" height="220" fill="#fff" />
+      <rect x="20" y="22" width="280" height="176" fill="#F2D0A8" />
+      {/* 旭日放射 */}
+      {[...Array(16)].map((_, i) => {
+        const a = (i * Math.PI) / 8;
+        return (
+          <path key={i} d={`M160 110 L${160 + 190 * Math.cos(a)} ${110 + 190 * Math.sin(a)} L${160 + 190 * Math.cos(a + 0.19)} ${110 + 190 * Math.sin(a + 0.19)} Z`}
+            fill={i % 2 ? "#D0361F" : "#E8752A"} opacity=".85" />
+        );
+      })}
+      <rect x="20" y="22" width="280" height="176" fill="none" stroke="#fff" strokeWidth="0" />
+      {/* 中央圆日 */}
+      <circle cx="160" cy="110" r="34" fill="#E8B50C" stroke={P.ink} strokeWidth="2" />
+      {/* 拼贴照片块：私人图像直接印上商业海报 */}
+      <rect x="44" y="40" width="54" height="66" fill="#8E3B8E" stroke="#fff" strokeWidth="3" transform="rotate(-6 44 40)" />
+      <rect x="226" y="126" width="58" height="52" fill="#2E68B0" stroke="#fff" strokeWidth="3" transform="rotate(5 226 126)" />
+      {/* 密集字块：土俗招贴的排字 */}
+      {[0, 1, 2].map(i => (
+        <rect key={i} x="40" y={150 + i * 14} width={128 - i * 26} height="9" fill={P.ink} />
+      ))}
+      <rect x="216" y="42" width="66" height="12" fill={P.ink} />
+      <rect x="216" y="58" width="48" height="8" fill="#fff" />
+      {/* 与瑞士网格的对照 */}
+      <g transform="translate(24,204)">
+        <text x="0" y="0" fontFamily="Archivo,sans-serif" fontSize="8" letterSpacing="1.2" fill={P.gray}>AGAINST THE GRID · EXCESS AS AVANT-GARDE</text>
+      </g>
+      <text x="20" y="18" fontFamily="Archivo,sans-serif" fontSize="8" letterSpacing="1.2" fill={P.ink}>FESTIVAL COLOUR · COLLAGE · RAYS</text>
+    </svg>
+  ),
+  miyakePleats: (
+    <svg viewBox="0 0 320 220" role="img" aria-label="工艺顺序翻转研究：先裁剪成衣后热压定褶，材料获得记忆">
+      <rect width="320" height="220" fill="#fff" />
+      {/* 步骤一：整片布 */}
+      <rect x="26" y="60" width="66" height="96" fill="#EFEEE8" stroke={P.ink} strokeWidth="1.5" />
+      <text x="26" y="176" fontFamily="Archivo,sans-serif" fontSize="8" letterSpacing="1.2" fill={P.gray}>1 · ONE CLOTH</text>
+      <line x1="98" y1="108" x2="116" y2="108" stroke={P.ink} strokeWidth="1.5" />
+      <path d="M122 108 L112 103 L112 113 Z" fill={P.ink} />
+      {/* 步骤二：先裁剪成衣（超大版型） */}
+      <path d="M134 62 L200 62 L212 84 L196 92 L196 156 L138 156 L138 92 L122 84 Z"
+        fill="#EFEEE8" stroke={P.ink} strokeWidth="1.5" />
+      <text x="130" y="176" fontFamily="Archivo,sans-serif" fontSize="8" letterSpacing="1.2" fill={P.gray}>2 · CUT OVERSIZE</text>
+      <line x1="220" y1="108" x2="238" y2="108" stroke={P.red} strokeWidth="1.5" />
+      <path d="M244 108 L234 103 L234 113 Z" fill={P.red} />
+      {/* 步骤三：热压定褶，尺寸收缩、材料获得记忆 */}
+      <path d="M252 70 L298 70 L302 88 L294 92 L294 148 L256 148 L256 92 L248 88 Z"
+        fill="#B7A6D6" stroke={P.ink} strokeWidth="1.5" />
+      {[...Array(9)].map((_, i) => (
+        <line key={i} x1={254 + i * 5.4} y1="70" x2={254 + i * 5.4} y2="148" stroke="#8E7CB8" strokeWidth="1.2" />
+      ))}
+      <text x="248" y="176" fontFamily="Archivo,sans-serif" fontSize="8" letterSpacing="1.2" fill={P.red}>3 · HEAT-PRESS</text>
+      {/* 翻转说明：常规是先打褶再裁剪 */}
+      <text x="26" y="36" fontFamily="Archivo,sans-serif" fontSize="8" letterSpacing="1.2" fill={P.gray}>USUAL ORDER — PLEAT, THEN CUT</text>
+      <line x1="24" y1="42" x2="228" y2="42" stroke={P.red} strokeWidth="1.5" />
+      <text x="26" y="200" fontFamily="Archivo,sans-serif" fontSize="9" letterSpacing="1.5" fill={P.ink}>REVERSED ORDER = NEW TERRITORY</text>
+      <text x="236" y="200" fontFamily="Archivo,sans-serif" fontSize="8" letterSpacing="1.2" fill={P.blue}>WASHABLE</text>
+    </svg>
+  ),
+  nagaiLines: (
+    <svg viewBox="0 0 320 220" role="img" aria-label="线条呼吸研究：上万条颤动短线织出毛羽，动物正面凝视观者">
+      <rect width="320" height="220" fill="#fff" />
+      {/* 以短线织出的动物头部 */}
+      <ellipse cx="160" cy="116" rx="72" ry="82" fill="#F7F6F2" />
+      {[...Array(30)].map((_, r) => (
+        [...Array(16)].map((_, c) => {
+          const x = 96 + c * 8.6 + ((r % 2) * 4);
+          const y = 44 + r * 4.8;
+          const dx = (x - 160) / 72;
+          const dy = (y - 116) / 82;
+          if (dx * dx + dy * dy > 1) return null;
+          return <line key={`${r}-${c}`} x1={x} y1={y} x2={x + 2} y2={y + 4.4} stroke={P.ink} strokeWidth="1" opacity=".72" />;
+        })
+      ))}
+      {/* 正面直视的眼睛：人与自然位置对调 */}
+      <ellipse cx="132" cy="106" rx="13" ry="15" fill="#fff" stroke={P.ink} strokeWidth="2" />
+      <ellipse cx="188" cy="106" rx="13" ry="15" fill="#fff" stroke={P.ink} strokeWidth="2" />
+      <circle cx="132" cy="108" r="7" fill={P.ink} />
+      <circle cx="188" cy="108" r="7" fill={P.ink} />
+      <circle cx="129" cy="104" r="2.4" fill="#fff" />
+      <circle cx="185" cy="104" r="2.4" fill="#fff" />
+      <path d="M150 146 C 156 140 164 140 170 146 C 164 154 156 154 150 146 Z" fill={P.red} />
+      {/* 线条密度标注 */}
+      <line x1="238" y1="60" x2="238" y2="160" stroke={P.gray} strokeWidth="1" strokeDasharray="3 4" />
+      {[0, 1, 2].map(i => (
+        <g key={i} transform={`translate(250,${70 + i * 38})`}>
+          {[...Array(6 + i * 5)].map((_, k) => (
+            <line key={k} x1={k * (22 / (6 + i * 5))} y1="0" x2={k * (22 / (6 + i * 5)) + 2} y2="12" stroke={P.ink} strokeWidth="1" />
+          ))}
+          <text x="30" y="10" fontFamily="Archivo,sans-serif" fontSize="8" letterSpacing="1" fill={P.gray}>{["THIN", "MID", "DENSE"][i]}</text>
+        </g>
+      ))}
+      <text x="20" y="30" fontFamily="Archivo,sans-serif" fontSize="9" letterSpacing="1.5" fill={P.ink}>HAND TREMOR AS LIFE</text>
+      <text x="20" y="208" fontFamily="Archivo,sans-serif" fontSize="9" letterSpacing="1.5" fill={P.red}>THE ANIMAL LOOKS BACK</text>
+    </svg>
+  ),
+  satohMilk: (
+    <svg viewBox="0 0 320 220" role="img" aria-label="日常再设计研究：信息层级的毫米推敲与经得起十年注视的克制">
+      <rect width="320" height="220" fill="#fff" />
+      {/* 纸盒正面 */}
+      <path d="M92 44 L206 44 L206 190 L92 190 Z" fill="#fff" stroke={P.ink} strokeWidth="2" />
+      <path d="M92 44 L118 26 L232 26 L206 44 Z" fill="#F4F3EE" stroke={P.ink} strokeWidth="2" />
+      <path d="M206 44 L232 26 L232 172 L206 190 Z" fill="#EFEEE8" stroke={P.ink} strokeWidth="2" />
+      {/* 品名与卖点：字号层级经过推敲 */}
+      <rect x="108" y="66" width="82" height="16" fill="#1B3F8B" />
+      <rect x="108" y="88" width="56" height="8" fill="#1B3F8B" />
+      <rect x="108" y="102" width="40" height="5" fill="#8A8880" />
+      {/* 一杯牛奶的照片位 */}
+      <path d="M126 122 L172 122 L166 168 L132 168 Z" fill="#F2F0E8" stroke="#C9C7BE" strokeWidth="1.5" />
+      <path d="M128 136 L170 136 L166 168 L132 168 Z" fill="#fff" stroke="#DCDAD1" strokeWidth="1" />
+      <rect x="108" y="178" width="38" height="5" fill="#B5B3AA" />
+      {/* 层级标注：毫米级的秩序 */}
+      {[[66, "1"], [88, "2"], [102, "3"], [178, "4"]].map(([y, n], i) => (
+        <g key={i}>
+          <line x1="80" y1={y + 4} x2="104" y2={y + 4} stroke={P.blue} strokeWidth="1" strokeDasharray="3 2" />
+          <text x="66" y={y + 8} fontFamily="Archivo,sans-serif" fontSize="8" fontWeight="700" fill={P.blue}>{n}</text>
+        </g>
+      ))}
+      <text x="36" y="200" fontFamily="Archivo,sans-serif" fontSize="8" letterSpacing="1.2" fill={P.blue}>HIERARCHY</text>
+      {/* 解剖：向公众解释设计 */}
+      <g transform="translate(250,60)">
+        {["PAPER", "INK", "CAP", "MILK"].map((t, i) => (
+          <g key={i}>
+            <rect x="0" y={i * 28} width="18" height="18" fill="none" stroke={P.gray} strokeWidth="1.5" />
+            <text x="24" y={i * 28 + 13} fontFamily="Archivo,sans-serif" fontSize="8" letterSpacing="1" fill={P.gray}>{t}</text>
+          </g>
+        ))}
+        <text x="-2" y="132" fontFamily="Archivo,sans-serif" fontSize="8" letterSpacing="1.2" fill={P.ink}>ANATOMY OF</text>
+        <text x="-2" y="144" fontFamily="Archivo,sans-serif" fontSize="8" letterSpacing="1.2" fill={P.ink}>DESIGN</text>
+      </g>
+      <text x="20" y="22" fontFamily="Archivo,sans-serif" fontSize="9" letterSpacing="1.5" fill={P.ink}>SEEN 100 TIMES A DAY</text>
+    </svg>
+  ),
+  /* ===== 主题日 18 · 美国平面与广告：论点即版式研究图 ===== */
+  thinkSmallVoid: (
+    <svg viewBox="0 0 320 220" role="img" aria-label="留白作为论点研究：昂贵版面大片空置，把「小」演给读者看">
+      <rect width="320" height="220" fill="#fff" />
+      <rect x="20" y="20" width="280" height="180" fill="#F7F6F2" stroke={P.gray} strokeWidth="1" />
+      {/* 极小的主体：被留白包围 */}
+      <g transform="translate(96,60)">
+        <path d="M0 22 C 1 14 6 10 12 9 C 16 2 30 2 34 9 C 40 10 45 14 46 22 Z" fill={P.ink} />
+        <circle cx="12" cy="23" r="4.5" fill="#fff" stroke={P.ink} strokeWidth="1.5" />
+        <circle cx="34" cy="23" r="4.5" fill="#fff" stroke={P.ink} strokeWidth="1.5" />
+      </g>
+      {/* 留白量的标注 */}
+      <line x1="40" y1="40" x2="40" y2="180" stroke={P.blue} strokeWidth="1" strokeDasharray="4 3" />
+      <line x1="34" y1="40" x2="46" y2="40" stroke={P.blue} strokeWidth="1.5" />
+      <line x1="34" y1="180" x2="46" y2="180" stroke={P.blue} strokeWidth="1.5" />
+      <text x="50" y="164" fontFamily="Archivo,sans-serif" fontSize="8" letterSpacing="1.2" fill={P.blue}>PAID SPACE, LEFT EMPTY</text>
+      {/* 标题与正文：坦白的文案 */}
+      <rect x="96" y="146" width="66" height="9" fill={P.ink} />
+      {[0, 1, 2].map(i => (
+        <line key={i} x1="96" y1={166 + i * 8} x2={i === 2 ? 156 : 196} y2={166 + i * 8} stroke="#8A8880" strokeWidth="2" />
+      ))}
+      {/* 对照：同期广告的夸张做法 */}
+      <g transform="translate(212,44)">
+        <rect x="0" y="0" width="76" height="60" fill="#EFEEE8" stroke={P.gray} strokeWidth="1.5" />
+        <path d="M6 44 C 10 24 22 18 38 18 C 56 18 68 26 70 44 Z" fill={P.gray} />
+        <rect x="6" y="6" width="64" height="8" fill={P.gray} />
+        <text x="-2" y="76" fontFamily="Archivo,sans-serif" fontSize="8" letterSpacing="1.2" fill={P.gray}>RIVALS — FILL IT ALL</text>
+        <line x1="0" y1="-6" x2="76" y2="-6" stroke={P.red} strokeWidth="1.5" />
+      </g>
+      <text x="20" y="214" fontFamily="Archivo,sans-serif" fontSize="9" letterSpacing="1.5" fill={P.ink}>LAYOUT IS THE ARGUMENT</text>
+      <text x="212" y="140" fontFamily="Archivo,sans-serif" fontSize="8" letterSpacing="1.2" fill={P.red}>HONESTY AS STRATEGY</text>
+    </svg>
+  ),
+  lubalinLigature: (
+    <svg viewBox="0 0 320 220" role="img" aria-label="负空间雕刻研究：字距压至笔画相触，字间空气成为被雕刻的形">
+      <rect width="320" height="220" fill="#fff" />
+      {/* 常规字距 */}
+      <g transform="translate(34,50)">
+        <path d="M0 60 L18 6 L36 60" fill="none" stroke={P.gray} strokeWidth="9" />
+        <path d="M52 6 L70 60 L88 6" fill="none" stroke={P.gray} strokeWidth="9" />
+        <text x="-4" y="84" fontFamily="Archivo,sans-serif" fontSize="8" letterSpacing="1.2" fill={P.gray}>NORMAL SPACING</text>
+      </g>
+      {/* 极限压缩：共享斜边的连字 */}
+      <g transform="translate(180,50)">
+        <path d="M0 60 L22 6 L44 60" fill="none" stroke={P.ink} strokeWidth="10" />
+        <path d="M30 6 L52 60 L74 6" fill="none" stroke={P.ink} strokeWidth="10" />
+        <path d="M22 6 L37 42 L30 6 Z" fill={P.red} />
+        <text x="-4" y="84" fontFamily="Archivo,sans-serif" fontSize="8" letterSpacing="1.2" fill={P.ink}>LIGATURE — SHARED EDGE</text>
+      </g>
+      <text x="216" y="30" fontFamily="Archivo,sans-serif" fontSize="8" letterSpacing="1.2" fill={P.red}>NEGATIVE SPACE CARVED</text>
+      {/* 字间空气的形状 */}
+      <g transform="translate(34,148)">
+        <rect x="0" y="0" width="120" height="44" fill="#EFEEE8" />
+        <path d="M18 44 L36 0 L54 44 Z" fill="#fff" />
+        <path d="M66 0 L84 44 L102 0 Z" fill="#fff" />
+        <text x="-4" y="60" fontFamily="Archivo,sans-serif" fontSize="8" letterSpacing="1.2" fill={P.gray}>THE AIR BETWEEN</text>
+      </g>
+      {/* 使用语境的警示 */}
+      <g transform="translate(184,148)">
+        <rect x="0" y="0" width="120" height="44" fill="none" stroke={P.red} strokeWidth="1.5" strokeDasharray="4 3" />
+        {[0, 1, 2, 3].map(i => (
+          <line key={i} x1="8" y1={10 + i * 9} x2={i === 3 ? 76 : 112} y2={10 + i * 9} stroke={P.gray} strokeWidth="2" />
+        ))}
+        <line x1="0" y1="0" x2="120" y2="44" stroke={P.red} strokeWidth="2" />
+        <text x="-2" y="60" fontFamily="Archivo,sans-serif" fontSize="8" letterSpacing="1.2" fill={P.red}>NOT FOR BODY TEXT</text>
+      </g>
+      <text x="20" y="24" fontFamily="Archivo,sans-serif" fontSize="9" letterSpacing="1.5" fill={P.ink}>TYPE SET TO TOUCH</text>
+    </svg>
+  ),
+  variableIdentity: (
+    <svg viewBox="0 0 320 220" role="img" aria-label="可变识别研究：骨架恒定、表皮千变的标志系统">
+      <rect width="320" height="220" fill="#fff" />
+      <defs>
+        <clipPath id="vi-mark">
+          <path d="M8 76 L8 10 L26 10 L40 40 L54 10 L72 10 L72 76 L54 76 L54 40 L40 66 L26 40 L26 76 Z" />
+        </clipPath>
+      </defs>
+      {/* 骨架：不变的粗壮字形 */}
+      <g transform="translate(24,46)">
+        <path d="M8 76 L8 10 L26 10 L40 40 L54 10 L72 10 L72 76 L54 76 L54 40 L40 66 L26 40 L26 76 Z"
+          fill="none" stroke={P.ink} strokeWidth="2" strokeDasharray="4 3" />
+        <text x="-4" y="98" fontFamily="Archivo,sans-serif" fontSize="8" letterSpacing="1.2" fill={P.ink}>CONSTANT SKELETON</text>
+      </g>
+      {/* 三种可替换的表皮 */}
+      {[0, 1, 2].map(i => (
+        <g key={i} transform={`translate(${126 + i * 62},46)`}>
+          <g clipPath="url(#vi-mark)">
+            <rect x="0" y="0" width="80" height="86" fill={["#D0361F", "#2E68B0", "#E8B50C"][i]} />
+            {i === 0 && [...Array(8)].map((_, k) => (
+              <line key={k} x1={k * 12} y1="0" x2={k * 12 - 20} y2="86" stroke="#fff" strokeWidth="4" />
+            ))}
+            {i === 1 && [...Array(12)].map((_, k) => (
+              <circle key={k} cx={8 + (k % 4) * 22} cy={12 + Math.floor(k / 4) * 28} r="7" fill="#fff" />
+            ))}
+            {i === 2 && [...Array(5)].map((_, k) => (
+              <rect key={k} x="0" y={k * 18} width="80" height="8" fill={P.ink} />
+            ))}
+          </g>
+          <path d="M8 76 L8 10 L26 10 L40 40 L54 10 L72 10 L72 76 L54 76 L54 40 L40 66 L26 40 L26 76 Z"
+            fill="none" stroke={P.ink} strokeWidth="1.5" />
+        </g>
+      ))}
+      <text x="126" y="144" fontFamily="Archivo,sans-serif" fontSize="8" letterSpacing="1.2" fill={P.red}>INFINITE SKINS</text>
+      {/* 喷漆字：街头文化进入主流识别 */}
+      <g transform="translate(126,166)">
+        <path d="M0 22 C 10 4 26 4 34 16 C 42 4 58 4 66 20" fill="none" stroke={P.ink} strokeWidth="7" strokeLinecap="round" />
+        {[...Array(14)].map((_, i) => (
+          <circle key={i} cx={4 + i * 5} cy={30 + (i % 3) * 3} r="1.6" fill={P.gray} />
+        ))}
+        <text x="80" y="26" fontFamily="Archivo,sans-serif" fontSize="8" letterSpacing="1.2" fill={P.gray}>SPRAY-PAINT LEGITIMISED</text>
+      </g>
+      <text x="20" y="26" fontFamily="Archivo,sans-serif" fontSize="9" letterSpacing="1.5" fill={P.ink}>CHANGE ITSELF IS THE IDENTITY</text>
+    </svg>
+  ),
+  scherVolume: (
+    <svg viewBox="0 0 320 220" role="img" aria-label="排印音量研究：木活字式密排、字号暴涨与方向冲撞形成识别音色">
+      <rect width="320" height="220" fill="#fff" />
+      <rect x="20" y="20" width="280" height="180" fill="#E8DCC2" />
+      {/* 密排字块：木活字招贴的传统 */}
+      <rect x="30" y="30" width="260" height="30" fill={P.ink} />
+      <rect x="30" y="64" width="150" height="46" fill="#D0361F" />
+      <rect x="184" y="64" width="106" height="20" fill={P.ink} />
+      <rect x="184" y="88" width="106" height="22" fill="#1B3F8B" />
+      {/* 斜冲出血的标语 */}
+      <g transform="rotate(-8 160 134)">
+        <rect x="14" y="120" width="300" height="28" fill={P.ink} />
+        <rect x="24" y="126" width="120" height="16" fill="#E8B50C" />
+      </g>
+      <rect x="30" y="160" width="88" height="34" fill="#1B3F8B" />
+      <rect x="124" y="160" width="60" height="34" fill="#D0361F" />
+      <rect x="190" y="160" width="100" height="34" fill={P.ink} />
+      {/* 无插图：文字即图像 */}
+      <text x="20" y="214" fontFamily="Archivo,sans-serif" fontSize="9" letterSpacing="1.5" fill={P.ink}>NO IMAGE — TYPE IS THE PICTURE</text>
+      <text x="196" y="16" fontFamily="Archivo,sans-serif" fontSize="8" letterSpacing="1.2" fill={P.gray}>IDENTITY BY VOLUME</text>
+    </svg>
+  ),
+  stencilThree: (
+    <svg viewBox="0 0 320 220" role="img" aria-label="三色模板化研究：连续影调被压缩为三层色块，图像因此可被二次创作">
+      <rect width="320" height="220" fill="#fff" />
+      {/* 连续影调 → 三色分层的过程 */}
+      <g transform="translate(26,46)">
+        <ellipse cx="42" cy="52" rx="34" ry="42" fill="#8A8880" />
+        <ellipse cx="34" cy="44" rx="22" ry="28" fill="#B5B3AA" />
+        <ellipse cx="30" cy="38" rx="12" ry="16" fill="#DCDAD1" />
+        <text x="-6" y="116" fontFamily="Archivo,sans-serif" fontSize="8" letterSpacing="1.2" fill={P.gray}>CONTINUOUS TONE</text>
+      </g>
+      <line x1="118" y1="98" x2="140" y2="98" stroke={P.ink} strokeWidth="1.5" />
+      <path d="M146 98 L136 93 L136 103 Z" fill={P.ink} />
+      {/* 三层模板 */}
+      <g transform="translate(160,46)">
+        <ellipse cx="42" cy="52" rx="34" ry="42" fill="#1B3F8B" />
+        <path d="M42 10 C 60 14 72 32 70 60 C 56 66 44 60 36 48 C 30 38 32 18 42 10 Z" fill="#D0361F" />
+        <path d="M34 22 C 46 20 54 30 52 44 C 44 48 36 42 32 34 Z" fill="#E8DCC2" />
+        <text x="-6" y="116" fontFamily="Archivo,sans-serif" fontSize="8" letterSpacing="1.2" fill={P.ink}>THREE FLAT LAYERS</text>
+      </g>
+      {/* 三色图例 */}
+      <g transform="translate(262,52)">
+        {["#1B3F8B", "#D0361F", "#E8DCC2"].map((c, i) => (
+          <rect key={i} x="0" y={i * 22} width="34" height="16" fill={c} stroke={P.ink} strokeWidth="1" />
+        ))}
+        <text x="-2" y="82" fontFamily="Archivo,sans-serif" fontSize="8" letterSpacing="1.2" fill={P.gray}>3 PLATES</text>
+      </g>
+      {/* 可二创：模板被无限改编 */}
+      <g transform="translate(26,176)">
+        {[0, 1, 2, 3, 4].map(i => (
+          <g key={i} transform={`translate(${i * 40},0)`}>
+            <ellipse cx="14" cy="14" rx="12" ry="15" fill={["#1B3F8B", "#4CA64C", "#8E3B8E", "#E8752A", "#2E68B0"][i]} />
+            <path d="M14 1 C 20 3 24 9 23 18 C 18 21 13 18 10 13 Z" fill="#fff" opacity=".65" />
+          </g>
+        ))}
+        <text x="212" y="18" fontFamily="Archivo,sans-serif" fontSize="8" letterSpacing="1.2" fill={P.red}>REMIXABLE = VIRAL</text>
+      </g>
+      <text x="20" y="30" fontFamily="Archivo,sans-serif" fontSize="9" letterSpacing="1.5" fill={P.ink}>STENCIL LOGIC</text>
+    </svg>
+  ),
+
+  /* ===== 主题日 19 · 数字时代的体验：注意力与系统研究图 ===== */
+  googleBlank: (
+    <svg viewBox="0 0 320 220" role="img" aria-label="单一入口研究：门户堆叠链接与极简首页的元素数量对照">
+      <rect width="320" height="220" fill="#fff" />
+      {/* 左：门户时代——堆满链接 */}
+      <rect x="22" y="36" width="126" height="152" fill="#F7F6F2" stroke={P.gray} strokeWidth="1.5" />
+      {[...Array(11)].map((_, r) => (
+        [...Array(3)].map((_, c) => (
+          <line key={`${r}-${c}`} x1={30 + c * 40} y1={48 + r * 13} x2={30 + c * 40 + (c === 2 ? 22 : 30)} y2={48 + r * 13}
+            stroke="#A8A69D" strokeWidth="3" />
+        ))
+      ))}
+      <text x="22" y="204" fontFamily="Archivo,sans-serif" fontSize="8" letterSpacing="1.2" fill={P.gray}>PORTAL — 120+ LINKS</text>
+      {/* 右：一个框 */}
+      <rect x="172" y="36" width="126" height="152" fill="#fff" stroke={P.ink} strokeWidth="1.5" />
+      <g transform="translate(200,86)">
+        {["#2E68B0", "#D0361F", "#E8B50C", "#4CA64C"].map((c, i) => (
+          <circle key={i} cx={i * 18} cy="0" r="7" fill={c} />
+        ))}
+      </g>
+      <rect x="188" y="110" width="94" height="18" rx="9" fill="#fff" stroke={P.ink} strokeWidth="1.5" />
+      <circle cx="274" cy="119" r="5" fill="none" stroke={P.gray} strokeWidth="1.5" />
+      <rect x="206" y="142" width="26" height="10" fill="#EFEEE8" stroke={P.gray} strokeWidth="1" />
+      <rect x="240" y="142" width="26" height="10" fill="#EFEEE8" stroke={P.gray} strokeWidth="1" />
+      <text x="172" y="204" fontFamily="Archivo,sans-serif" fontSize="8" letterSpacing="1.2" fill={P.ink}>ONE FIELD</text>
+      {/* 性能作为体验指标 */}
+      <line x1="158" y1="36" x2="158" y2="188" stroke={P.gray} strokeWidth="1" strokeDasharray="3 4" />
+      <text x="172" y="26" fontFamily="Archivo,sans-serif" fontSize="8" letterSpacing="1.2" fill={P.red}>BYTES BUDGETED · SPEED AS AESTHETIC</text>
+      <text x="22" y="26" fontFamily="Archivo,sans-serif" fontSize="8" letterSpacing="1.2" fill={P.gray}>1998</text>
+    </svg>
+  ),
+  dysonCyclone: (
+    <svg viewBox="0 0 320 220" role="img" aria-label="透明集尘与工程美学研究：气旋分离路径与高亮标注的功能件">
+      <rect width="320" height="220" fill="#fff" />
+      {/* 机身 */}
+      <path d="M96 190 L96 96 C 96 76 112 62 134 62 L166 62 C 188 62 202 76 202 96 L202 190 Z"
+        fill="#D8D6CE" stroke={P.ink} strokeWidth="2.5" />
+      {/* 透明集尘筒：看见灰尘成为卖点 */}
+      <path d="M112 176 L112 104 C 112 92 124 84 142 84 L160 84 C 176 84 188 92 188 104 L188 176 Z"
+        fill="#E8F0F7" stroke={P.ink} strokeWidth="2" />
+      {/* 气旋路径 */}
+      <path d="M150 96 C 176 102 178 122 156 128 C 134 134 126 152 146 160"
+        fill="none" stroke={P.red} strokeWidth="2" strokeDasharray="5 4" />
+      <path d="M150 164 L138 158 L148 152 Z" fill={P.red} />
+      {/* 被分离的尘粒 */}
+      {[[126, 150], [140, 166], [160, 158], [172, 144], [132, 134]].map(([x, y], i) => (
+        <circle key={i} cx={x} cy={y} r="2.6" fill="#8A8880" />
+      ))}
+      {/* 高亮黄：关键功能件如工程图引注 */}
+      <rect x="120" y="60" width="58" height="12" rx="3" fill="#E8B50C" stroke={P.ink} strokeWidth="1.5" />
+      <path d="M202 120 L232 108 L240 124 L208 136 Z" fill="#E8B50C" stroke={P.ink} strokeWidth="1.5" />
+      <circle cx="149" cy="190" r="10" fill={P.ink} />
+      <line x1="184" y1="66" x2="230" y2="52" stroke={P.gray} strokeWidth="1" strokeDasharray="3 3" />
+      <text x="234" y="52" fontFamily="Archivo,sans-serif" fontSize="8" letterSpacing="1.2" fill="#B08A0C">YELLOW = FUNCTION</text>
+      {/* 迭代次数 */}
+      <g transform="translate(24,52)">
+        <text x="0" y="0" fontFamily="Archivo,sans-serif" fontSize="8" letterSpacing="1.2" fill={P.gray}>PROTOTYPES</text>
+        {[...Array(5)].map((_, r) => (
+          [...Array(8)].map((_, c) => (
+            <rect key={`${r}-${c}`} x={c * 7} y={8 + r * 7} width="4" height="4" fill="#C9C7BE" />
+          ))
+        ))}
+        <text x="0" y="60" fontFamily="Archivo,sans-serif" fontSize="9" fontWeight="700" fill={P.red}>5127</text>
+      </g>
+      <text x="20" y="200" fontFamily="Archivo,sans-serif" fontSize="9" letterSpacing="1.5" fill={P.ink}>SHOW THE DIRT</text>
+    </svg>
+  ),
+  wiiGesture: (
+    <svg viewBox="0 0 320 220" role="img" aria-label="外形心理学研究：伪装成遥控器以降低门槛，动作取代按键组合">
+      <rect width="320" height="220" fill="#fff" />
+      {/* 手柄：熟悉的遥控器外形 */}
+      <rect x="66" y="34" width="52" height="152" rx="10" fill="#F7F6F2" stroke={P.ink} strokeWidth="2.5" />
+      <circle cx="92" cy="62" r="12" fill="#EFEEE8" stroke={P.ink} strokeWidth="1.5" />
+      <line x1="92" y1="54" x2="92" y2="70" stroke={P.ink} strokeWidth="2" />
+      <line x1="84" y1="62" x2="100" y2="62" stroke={P.ink} strokeWidth="2" />
+      <circle cx="92" cy="92" r="6" fill={P.red} />
+      {[0, 1, 2, 3].map(i => (
+        <rect key={i} x="82" y={112 + i * 16} width="20" height="7" rx="3" fill="#C9C7BE" />
+      ))}
+      {/* 对照：传统手柄的按键密度 */}
+      <g transform="translate(24,40)">
+        <path d="M0 14 C 10 4 26 4 32 14 C 38 4 54 4 64 14 L60 44 L4 44 Z" fill="none" stroke={P.gray} strokeWidth="1.5" />
+        {[...Array(8)].map((_, i) => (
+          <circle key={i} cx={10 + (i % 4) * 14} cy={22 + Math.floor(i / 4) * 12} r="3" fill={P.gray} />
+        ))}
+        <text x="-4" y="62" fontFamily="Archivo,sans-serif" fontSize="8" letterSpacing="1.2" fill={P.gray}>12 BUTTONS</text>
+        <line x1="0" y1="-6" x2="64" y2="-6" stroke={P.red} strokeWidth="1.5" />
+      </g>
+      {/* 动作即输入：挥、指、倾 */}
+      {[["SWING", 60], ["POINT", 108], ["TILT", 156]].map(([t, y], i) => (
+        <g key={i} transform={`translate(156,${y})`}>
+          <path d={i === 0 ? "M0 20 C 16 2 40 2 56 20" : i === 1 ? "M0 12 L56 12" : "M0 22 C 20 22 36 8 56 4"}
+            fill="none" stroke={P.blue} strokeWidth="2.5" strokeDasharray="5 4" />
+          <path d={i === 1 ? "M62 12 L50 7 L50 17 Z" : "M60 12 L48 8 L50 18 Z"} fill={P.blue} />
+          <text x="76" y="16" fontFamily="Archivo,sans-serif" fontSize="8" letterSpacing="1.2" fill={P.blue}>{t}</text>
+        </g>
+      ))}
+      {/* 用户版图扩大 */}
+      <g transform="translate(232,34)">
+        {[0, 1, 2].map(i => (
+          <g key={i} transform={`translate(${i * 24},0)`}>
+            <circle cx="8" cy="8" r="7" fill={i === 1 ? P.blue : "#C9C7BE"} />
+            <path d="M2 18 C 2 14 14 14 14 18 L14 30 L2 30 Z" fill={i === 1 ? P.blue : "#C9C7BE"} />
+          </g>
+        ))}
+        <text x="-4" y="46" fontFamily="Archivo,sans-serif" fontSize="8" letterSpacing="1.2" fill={P.blue}>NON-GAMERS INCLUDED</text>
+      </g>
+      <text x="20" y="200" fontFamily="Archivo,sans-serif" fontSize="9" letterSpacing="1.5" fill={P.ink}>FAMILIAR SHELL, NEW INPUT</text>
+    </svg>
+  ),
+  kindleCalm: (
+    <svg viewBox="0 0 320 220" role="img" aria-label="平静技术研究：不发光的电子墨水、零通知与云端书库的生态支撑">
+      <rect width="320" height="220" fill="#fff" />
+      {/* 设备：故意无聊的灰盒 */}
+      <rect x="66" y="34" width="116" height="152" rx="6" fill="#DCDAD1" stroke={P.ink} strokeWidth="2.5" />
+      <rect x="78" y="46" width="92" height="112" fill="#F4F3EE" stroke={P.gray} strokeWidth="1" />
+      {[...Array(11)].map((_, i) => (
+        <line key={i} x1="86" y1={58 + i * 9} x2={i === 10 ? 132 : 162} y2={58 + i * 9} stroke="#7A7870" strokeWidth="2" />
+      ))}
+      {[0, 1].map(i => (
+        <rect key={"k" + i} x={86 + i * 60} y="166" width="34" height="8" rx="3" fill="#C4C2B9" />
+      ))}
+      {/* 对照：发光屏与通知打扰 */}
+      <g transform="translate(206,40)">
+        <rect x="0" y="0" width="76" height="120" rx="8" fill="#2A2A2A" stroke={P.ink} strokeWidth="2" />
+        <rect x="8" y="10" width="60" height="100" fill="#4A6FA8" />
+        {[0, 1, 2].map(i => (
+          <rect key={i} x="12" y={16 + i * 22} width="52" height="16" rx="3" fill="#fff" opacity=".9" />
+        ))}
+        {[0, 1, 2].map(i => (
+          <circle key={"d" + i} cx="66" cy={18 + i * 22} r="4" fill={P.red} />
+        ))}
+        <text x="-4" y="136" fontFamily="Archivo,sans-serif" fontSize="8" letterSpacing="1.2" fill={P.red}>NOTIFICATIONS</text>
+      </g>
+      {/* 反射光 vs 背光 */}
+      <path d="M46 44 L74 60" stroke={P.yellow} strokeWidth="2" />
+      <path d="M46 56 L74 72" stroke={P.yellow} strokeWidth="2" />
+      <text x="20" y="90" fontFamily="Archivo,sans-serif" fontSize="8" letterSpacing="1.2" fill="#B08A0C">REFLECTED</text>
+      <text x="20" y="102" fontFamily="Archivo,sans-serif" fontSize="8" letterSpacing="1.2" fill="#B08A0C">LIGHT ONLY</text>
+      {/* 生态：看不见的系统侧 */}
+      <g transform="translate(66,192)">
+        <path d="M14 10 C 14 2 28 -2 34 4 C 44 0 54 6 52 14 C 60 16 60 26 50 26 L10 26 C 0 26 0 12 14 10 Z"
+          fill="none" stroke={P.blue} strokeWidth="1.5" />
+        <line x1="32" y1="-4" x2="32" y2="-16" stroke={P.blue} strokeWidth="1.5" strokeDasharray="3 3" />
+        <text x="70" y="20" fontFamily="Archivo,sans-serif" fontSize="8" letterSpacing="1.2" fill={P.blue}>CLOUD LIBRARY — HALF THE DESIGN</text>
+      </g>
+      <text x="20" y="28" fontFamily="Archivo,sans-serif" fontSize="9" letterSpacing="1.5" fill={P.ink}>BORING ON PURPOSE</text>
+    </svg>
+  ),
+  nestDial: (
+    <svg viewBox="0 0 320 220" role="img" aria-label="单旋钮与学习型交互研究：复杂系统被压缩为一个环，配置被自动学习取代">
+      <rect width="320" height="220" fill="#fff" />
+      {/* 旋钮环：旋转调温、按压确认 */}
+      <circle cx="120" cy="110" r="66" fill="#D8D6CE" stroke={P.ink} strokeWidth="2.5" />
+      <circle cx="120" cy="110" r="52" fill="#1F2A36" />
+      <path d="M120 44 A 66 66 0 0 1 178 142" fill="none" stroke={P.red} strokeWidth="5" />
+      {[...Array(24)].map((_, i) => {
+        const a = (i * Math.PI) / 12;
+        return (
+          <line key={i} x1={120 + 58 * Math.cos(a)} y1={110 + 58 * Math.sin(a)}
+            x2={120 + 64 * Math.cos(a)} y2={110 + 64 * Math.sin(a)} stroke="#B5B3AA" strokeWidth="1.5" />
+        );
+      })}
+      <text x="120" y="122" textAnchor="middle" fontFamily="Archivo,sans-serif" fontSize="34" fontWeight="700" fill="#fff">21</text>
+      {/* 两种输入：旋与按 */}
+      <path d="M186 74 C 204 86 206 108 192 122" fill="none" stroke={P.blue} strokeWidth="2" strokeDasharray="5 4" />
+      <path d="M190 128 L186 116 L196 118 Z" fill={P.blue} />
+      <text x="200" y="70" fontFamily="Archivo,sans-serif" fontSize="8" letterSpacing="1.2" fill={P.blue}>ROTATE = SET</text>
+      <text x="200" y="136" fontFamily="Archivo,sans-serif" fontSize="8" letterSpacing="1.2" fill={P.blue}>PRESS = CONFIRM</text>
+      {/* 学习替代设置：一周作息自动生成 */}
+      <g transform="translate(196,158)">
+        <line x1="0" y1="30" x2="104" y2="30" stroke={P.gray} strokeWidth="1.5" />
+        <path d="M0 26 L14 26 L14 10 L34 10 L34 24 L58 24 L58 8 L80 8 L80 22 L104 22"
+          fill="none" stroke={P.red} strokeWidth="2" />
+        <text x="-2" y="46" fontFamily="Archivo,sans-serif" fontSize="8" letterSpacing="1.2" fill={P.red}>LEARNS THE WEEK</text>
+      </g>
+      {/* 被划掉的配置项 */}
+      <g transform="translate(24,42)">
+        {["SCHEDULE", "PROGRAM", "TIMER"].map((t, i) => (
+          <g key={i}>
+            <text x="0" y={i * 18} fontFamily="Archivo,sans-serif" fontSize="8" letterSpacing="1.2" fill={P.gray}>{t}</text>
+            <line x1="-2" y1={i * 18 - 3} x2="56" y2={i * 18 - 3} stroke={P.red} strokeWidth="1.5" />
+          </g>
+        ))}
+        <text x="-2" y="62" fontFamily="Archivo,sans-serif" fontSize="8" letterSpacing="1.2" fill={P.ink}>TASKS REMOVED</text>
+      </g>
+      <text x="20" y="206" fontFamily="Archivo,sans-serif" fontSize="9" letterSpacing="1.5" fill={P.ink}>A DULL CATEGORY, TAKEN SERIOUSLY</text>
+    </svg>
+  ),
   /* ===== 主题日 13 · 信息与界面：编码与界面语言研究图 ===== */
   isotypeRepeat: (
     <svg viewBox="0 0 320 220" role="img" aria-label="重复优于放大研究：等大符号的数量重复与错误的尺寸夸张对照">
@@ -2451,7 +3763,7 @@ const CASES = [
 
   /* ---- 主题日 D04 · 字体的世纪 ---- */
   {
-    id: "futura", day: 3, cat: "type", title: "Futura 字体", designer: "保罗·伦纳 Paul Renner", year: 1927,
+    id: "futura", day: 3, cat: "type", visual: "futuraGeometry", title: "Futura 字体", designer: "保罗·伦纳 Paul Renner", year: 1927,
     field: "字体 · 平面设计", movement: "德国现代主义",
     intro: "以圆、三角、方为骨架的几何无衬线体，自称「我们时代的字体」，后来随阿波罗11号登上了月球铭牌。",
     points: [
@@ -2464,7 +3776,7 @@ const CASES = [
     searchQuery: "Futura 字体 几何无衬线 设计解析", searchQueryEn: "Futura typeface Paul Renner history"
   },
   {
-    id: "garamond", day: 3, cat: "type", title: "Garamond 加拉蒙体", designer: "克洛德·加拉蒙 Claude Garamond", year: 1540,
+    id: "garamond", day: 3, cat: "type", visual: "garamondStroke", title: "Garamond 加拉蒙体", designer: "克洛德·加拉蒙 Claude Garamond", year: 1540,
     field: "字体 · 平面设计", movement: "文艺复兴人文主义",
     intro: "十六世纪巴黎刻字匠的杰作，五百年来始终是「优雅正文」的代名词，也是无数经典书籍的默认声音。",
     points: [
@@ -2477,7 +3789,7 @@ const CASES = [
     searchQuery: "Garamond 加拉蒙 衬线字体 历史", searchQueryEn: "Garamond typeface history classic serif"
   },
   {
-    id: "baskerville", day: 3, cat: "type", title: "Baskerville 巴斯克维尔体", designer: "约翰·巴斯克维尔 John Baskerville", year: 1757,
+    id: "baskerville", day: 3, cat: "type", visual: "baskervilleContrast", title: "Baskerville 巴斯克维尔体", designer: "约翰·巴斯克维尔 John Baskerville", year: 1757,
     field: "字体 · 平面设计", movement: "过渡期衬线",
     intro: "一位漆器商人对印刷全链路的偏执改造：更黑的墨、更光的纸、更锐利的字，共同定义了「过渡期」衬线的精致。",
     points: [
@@ -2490,7 +3802,7 @@ const CASES = [
     searchQuery: "Baskerville 字体 过渡期衬线 解析", searchQueryEn: "Baskerville typeface John Baskerville history"
   },
   {
-    id: "univers", day: 3, cat: "type", title: "Univers 字体家族", designer: "阿德里安·弗鲁提格 Adrian Frutiger", year: 1957,
+    id: "univers", day: 3, cat: "type", visual: "universMatrix", title: "Univers 字体家族", designer: "阿德里安·弗鲁提格 Adrian Frutiger", year: 1957,
     field: "字体 · 平面设计", movement: "瑞士国际主义风格",
     intro: "第一个在诞生之初就规划为完整「系统」的字体家族：21个成员用两位数字编号，织成一张字重×字宽的坐标网。",
     points: [
@@ -2503,7 +3815,7 @@ const CASES = [
     searchQuery: "Univers 字体 弗鲁提格 字体家族系统", searchQueryEn: "Univers typeface Adrian Frutiger family system"
   },
   {
-    id: "didot", day: 3, cat: "type", title: "Didot 迪多体", designer: "菲尔曼·迪多 Firmin Didot", year: 1784,
+    id: "didot", day: 3, cat: "type", visual: "didotHairline", title: "Didot 迪多体", designer: "菲尔曼·迪多 Firmin Didot", year: 1784,
     field: "字体 · 平面设计", movement: "现代衬线 Didone",
     intro: "极端的粗细对比与发丝般的衬线，让它成为「奢华」与「时尚」的字体化身，两百年后仍统治着高级时装刊头。",
     points: [
@@ -2518,7 +3830,7 @@ const CASES = [
 
   /* ---- 主题日 D05 · 海报的黄金时代 ---- */
   {
-    id: "moulin-rouge", day: 4, cat: "poster", title: "《红磨坊》石版海报", designer: "图卢兹-劳特累克 Toulouse-Lautrec", year: 1891,
+    id: "moulin-rouge", day: 4, cat: "poster", visual: "lautrecSilhouette", title: "《红磨坊》石版海报", designer: "图卢兹-劳特累克 Toulouse-Lautrec", year: 1891,
     field: "海报 · 平面设计", movement: "新艺术 / 石版印刷",
     intro: "把街头广告变成艺术的第一张海报：大色块、剪影与浮世绘式构图，让巴黎人半夜撬下墙上的招贴收藏。",
     points: [
@@ -2531,7 +3843,7 @@ const CASES = [
     searchQuery: "劳特累克 红磨坊海报 石版画 解析", searchQueryEn: "Toulouse Lautrec Moulin Rouge poster lithograph"
   },
   {
-    id: "priester", day: 4, cat: "poster", title: "Priester 火柴海报", designer: "卢西安·伯恩哈德 Lucian Bernhard", year: 1906,
+    id: "priester", day: 4, cat: "poster", visual: "bernhardReduction", title: "Priester 火柴海报", designer: "卢西安·伯恩哈德 Lucian Bernhard", year: 1906,
     field: "海报 · 平面设计", movement: "实物海报 Sachplakat",
     intro: "画面里只有两根火柴与一个品牌名——18岁青年在竞赛截稿前的删减，开创了「实物海报」流派。",
     points: [
@@ -2544,7 +3856,7 @@ const CASES = [
     searchQuery: "伯恩哈德 Priester 火柴海报 实物海报", searchQueryEn: "Lucian Bernhard Priester poster Sachplakat"
   },
   {
-    id: "normandie", day: 4, cat: "poster", title: "「诺曼底号」邮轮海报", designer: "卡桑德尔 A.M. Cassandre", year: 1935,
+    id: "normandie", day: 4, cat: "poster", visual: "cassandrePerspective", title: "「诺曼底号」邮轮海报", designer: "卡桑德尔 A.M. Cassandre", year: 1935,
     field: "海报 · 平面设计", movement: "装饰艺术 Art Deco",
     intro: "正对船头的极端仰视，让巨轮化作一座几何纪念碑——装饰艺术时代对速度与机械的最高礼赞。",
     points: [
@@ -2557,7 +3869,7 @@ const CASES = [
     searchQuery: "卡桑德尔 诺曼底号 海报 装饰艺术", searchQueryEn: "Cassandre Normandie poster Art Deco"
   },
   {
-    id: "vertigo-poster", day: 4, cat: "poster", title: "《迷魂记》海报与片头", designer: "索尔·巴斯 Saul Bass", year: 1958,
+    id: "vertigo-poster", day: 4, cat: "poster", visual: "bassSpiral", title: "《迷魂记》海报与片头", designer: "索尔·巴斯 Saul Bass", year: 1958,
     field: "海报 · 动态图形", movement: "美国现代平面设计",
     intro: "一根旋涡线与坠落的人形剪影——巴斯证明：一个抽象图形足以装下整部电影的心理漩涡。",
     points: [
@@ -2570,7 +3882,7 @@ const CASES = [
     searchQuery: "索尔巴斯 迷魂记 海报 电影片头设计", searchQueryEn: "Saul Bass Vertigo poster title sequence"
   },
   {
-    id: "nihon-buyo", day: 4, cat: "poster", title: "Nihon Buyo 日本舞踊海报", designer: "田中一光", year: 1981,
+    id: "nihon-buyo", day: 4, cat: "poster", visual: "tanakaFace", title: "Nihon Buyo 日本舞踊海报", designer: "田中一光", year: 1981,
     field: "海报 · 平面设计", movement: "日本现代设计",
     intro: "用色块网格拼出的艺伎面容：传统能剧之美与蒙德里安式构成在一张脸上达成和解。",
     points: [
@@ -2920,7 +4232,7 @@ const CASES = [
 
   /* ---- 主题日 D11 · 电子产品 ---- */
   {
-    id: "braun-t3", day: 10, cat: "product", title: "Braun T3 袖珍收音机", designer: "迪特·拉姆斯 Dieter Rams", year: 1958,
+    id: "braun-t3", day: 10, cat: "product", visual: "braunT3Grid", title: "Braun T3 袖珍收音机", designer: "迪特·拉姆斯 Dieter Rams", year: 1958,
     field: "产品 · 工业设计", movement: "功能主义",
     intro: "一块素白小盒、一片孔阵、一个转盘——半个世纪后，初代iPod对它的致意肉眼可见。",
     points: [
@@ -2933,7 +4245,7 @@ const CASES = [
     searchQuery: "Braun T3 收音机 拉姆斯 iPod", searchQueryEn: "Braun T3 radio Dieter Rams iPod"
   },
   {
-    id: "walkman", day: 10, cat: "product", title: "Sony Walkman TPS-L2", designer: "索尼设计中心", year: 1979,
+    id: "walkman", day: 10, cat: "product", visual: "walkmanSubtract", title: "Sony Walkman TPS-L2", designer: "索尼设计中心", year: 1979,
     field: "产品 · 工业设计", movement: "日本消费电子",
     intro: "砍掉录音功能、砍掉外放喇叭——一台「只能听」的机器，发明了「随身音乐」这种生活方式。",
     points: [
@@ -2946,7 +4258,7 @@ const CASES = [
     searchQuery: "索尼 Walkman 随身听 设计历史", searchQueryEn: "Sony Walkman TPS-L2 design history"
   },
   {
-    id: "macintosh", day: 10, cat: "product", title: "Macintosh 128K", designer: "苹果团队 / Hartmut Esslinger 风格", year: 1984,
+    id: "macintosh", day: 10, cat: "product", visual: "macDesktop", title: "Macintosh 128K", designer: "苹果团队 / Hartmut Esslinger 风格", year: 1984,
     field: "产品 · 交互设计", movement: "个人计算革命",
     intro: "一台会对你「微笑」的电脑：米色一体机身、图形界面与鼠标，把计算从机房请进书房。",
     points: [
@@ -2959,7 +4271,7 @@ const CASES = [
     searchQuery: "Macintosh 1984 麦金塔 设计", searchQueryEn: "Macintosh 128K 1984 design GUI"
   },
   {
-    id: "gameboy", day: 10, cat: "product", title: "Game Boy 掌机", designer: "横井军平", year: 1989,
+    id: "gameboy", day: 10, cat: "product", visual: "gameboyWithered", title: "Game Boy 掌机", designer: "横井军平", year: 1989,
     field: "产品 · 工业设计", movement: "日本消费电子",
     intro: "「枯萎技术的水平思考」：用落后一代的黑白屏与成熟芯片，赢下便携游戏市场十余年。",
     points: [
@@ -2972,7 +4284,7 @@ const CASES = [
     searchQuery: "Game Boy 横井军平 枯萎技术", searchQueryEn: "Game Boy Gunpei Yokoi lateral thinking withered technology"
   },
   {
-    id: "ipod", day: 10, cat: "product", title: "iPod 初代", designer: "苹果设计团队", year: 2001,
+    id: "ipod", day: 10, cat: "product", visual: "ipodWheel", title: "iPod 初代", designer: "苹果设计团队", year: 2001,
     field: "产品 · 交互设计", movement: "当代科技设计",
     intro: "「把一千首歌装进口袋」：转盘滑动的物理快感与白色耳机线，重新发明了人与音乐库的关系。",
     points: [
@@ -3188,7 +4500,7 @@ const CASES = [
 
   /* ---- 主题日 D15 · 战后意大利设计 ---- */
   {
-    id: "valentine", day: 14, cat: "product", title: "Valentine 便携打字机", designer: "埃托雷·索特萨斯 Ettore Sottsass", year: 1969,
+    id: "valentine", day: 14, cat: "product", visual: "valentineRed", title: "Valentine 便携打字机", designer: "埃托雷·索特萨斯 Ettore Sottsass", year: 1969,
     field: "产品 · 工业设计", movement: "意大利激进设计",
     intro: "一台艳红色的「反机器」：索特萨斯要它远离办公室,陪诗人去乡间的周末——工具第一次被赋予了叛逆人格。",
     points: [
@@ -3201,7 +4513,7 @@ const CASES = [
     searchQuery: "索特萨斯 Valentine 打字机 红色", searchQueryEn: "Sottsass Valentine typewriter Olivetti"
   },
   {
-    id: "superleggera", day: 14, cat: "chair", title: "Superleggera 超轻椅", designer: "吉奥·庞蒂 Gio Ponti", year: 1957,
+    id: "superleggera", day: 14, cat: "chair", visual: "superleggeraLight", title: "Superleggera 超轻椅", designer: "吉奥·庞蒂 Gio Ponti", year: 1957,
     field: "家具 · 工业设计", movement: "意大利现代设计",
     intro: "1.7公斤,单指可提,小孩可抛接——庞蒂把渔村传统木椅提炼到极限,证明「轻」是意大利的现代性。",
     points: [
@@ -3214,7 +4526,7 @@ const CASES = [
     searchQuery: "庞蒂 超轻椅 Superleggera", searchQueryEn: "Gio Ponti Superleggera chair design"
   },
   {
-    id: "carlton", day: 14, cat: "product", title: "Carlton 书架", designer: "埃托雷·索特萨斯 / 孟菲斯 Memphis", year: 1981,
+    id: "carlton", day: 14, cat: "product", visual: "memphisTotem", title: "Carlton 书架", designer: "埃托雷·索特萨斯 / 孟菲斯 Memphis", year: 1981,
     field: "家具 · 后现代设计", movement: "孟菲斯 Memphis",
     intro: "彩色塑料贴面拼成的图腾柱,斜板放不稳几本书——孟菲斯用一件「坏家具」炸开了功能主义的天花板。",
     points: [
@@ -3227,7 +4539,7 @@ const CASES = [
     searchQuery: "孟菲斯 Carlton 书架 索特萨斯", searchQueryEn: "Memphis Carlton bookcase Sottsass"
   },
   {
-    id: "alessi-9093", day: 14, cat: "product", title: "9093 鸣鸟水壶", designer: "迈克尔·格雷夫斯 Michael Graves", year: 1985,
+    id: "alessi-9093", day: 14, cat: "product", visual: "alessiBird", title: "9093 鸣鸟水壶", designer: "迈克尔·格雷夫斯 Michael Graves", year: 1985,
     field: "产品 · 后现代设计", movement: "后现代主义",
     intro: "壶嘴上一只会唱歌的小鸟：水开时鸟鸣代替汽笛——Alessi最畅销的单品,让厨房有了幽默感。",
     points: [
@@ -3240,7 +4552,7 @@ const CASES = [
     searchQuery: "Alessi 9093 水壶 格雷夫斯", searchQueryEn: "Alessi 9093 kettle Michael Graves"
   },
   {
-    id: "ts502", day: 14, cat: "product", title: "TS502 立方体收音机", designer: "马尔科·扎努索 & 理查德·萨帕", year: 1964,
+    id: "ts502", day: 14, cat: "product", visual: "ts502Cube", title: "TS502 立方体收音机", designer: "马尔科·扎努索 & 理查德·萨帕", year: 1964,
     field: "产品 · 工业设计", movement: "意大利现代设计",
     intro: "合上是一只沉默的彩色立方体,打开才露出喇叭与旋钮——收音机第一次拥有了「关机的形态」。",
     points: [
@@ -3255,7 +4567,7 @@ const CASES = [
 
   /* ---- 主题日 D16 · 北欧设计 ---- */
   {
-    id: "savoy-vase", day: 15, cat: "product", title: "Savoy 花瓶", designer: "阿尔瓦·阿尔托 Alvar Aalto", year: 1936,
+    id: "savoy-vase", day: 15, cat: "product", visual: "aaltoWave", title: "Savoy 花瓶", designer: "阿尔瓦·阿尔托 Alvar Aalto", year: 1936,
     field: "产品 · 玻璃设计", movement: "北欧有机现代主义",
     intro: "打破对称的自由波浪轮廓——据说源自芬兰湖岸线,让玻璃器皿从「容器」变成了「地形」。",
     points: [
@@ -3268,7 +4580,7 @@ const CASES = [
     searchQuery: "阿尔托 Savoy 花瓶 设计", searchQueryEn: "Alvar Aalto Savoy vase design"
   },
   {
-    id: "stool60", day: 15, cat: "chair", title: "Stool 60 三足凳", designer: "阿尔瓦·阿尔托 Alvar Aalto", year: 1933,
+    id: "stool60", day: 15, cat: "chair", visual: "stoolLLeg", title: "Stool 60 三足凳", designer: "阿尔瓦·阿尔托 Alvar Aalto", year: 1933,
     field: "家具 · 工业设计", movement: "北欧现代主义",
     intro: "L形弯腿直接旋入座面——一个专利节点,让桦木凳可无限堆叠成塔,九十年畅销不衰。",
     points: [
@@ -3281,7 +4593,7 @@ const CASES = [
     searchQuery: "阿尔托 Stool60 三足凳", searchQueryEn: "Aalto Stool 60 L-leg Artek"
   },
   {
-    id: "unikko", day: 15, cat: "poster", title: "Unikko 罂粟花图案", designer: "玛依娅·伊索拉 Maija Isola / Marimekko", year: 1964,
+    id: "unikko", day: 15, cat: "poster", visual: "unikkoScale", title: "Unikko 罂粟花图案", designer: "玛依娅·伊索拉 Maija Isola / Marimekko", year: 1964,
     field: "图案 · 纺织设计", movement: "芬兰纺织设计",
     intro: "老板宣布「绝不做花卉印花」,伊索拉偏画出一朵巨大到出框的罂粟——违抗命令的图案成了芬兰的国民符号。",
     points: [
@@ -3294,7 +4606,7 @@ const CASES = [
     searchQuery: "Marimekko Unikko 罂粟花 图案", searchQueryEn: "Marimekko Unikko Maija Isola pattern"
   },
   {
-    id: "lego", day: 15, cat: "product", title: "乐高积木凸管专利", designer: "戈特弗雷德·柯克·克里斯蒂安森", year: 1958,
+    id: "lego", day: 15, cat: "product", visual: "legoStud", title: "乐高积木凸管专利", designer: "戈特弗雷德·柯克·克里斯蒂安森", year: 1958,
     field: "产品 · 玩具设计", movement: "系统设计",
     intro: "凸点与内管的咬合专利:让两块小砖既咬得紧又拆得开——一个夹持结构,支撑起一个无限组合的宇宙。",
     points: [
@@ -3307,7 +4619,7 @@ const CASES = [
     searchQuery: "乐高 积木 凸管专利 设计", searchQueryEn: "LEGO brick stud tube patent design"
   },
   {
-    id: "beogram", day: 15, cat: "product", title: "Beogram 4000 唱机", designer: "雅各布·延森 Jacob Jensen / B&O", year: 1972,
+    id: "beogram", day: 15, cat: "product", visual: "beogramTangent", title: "Beogram 4000 唱机", designer: "雅各布·延森 Jacob Jensen / B&O", year: 1972,
     field: "产品 · 工业设计", movement: "丹麦极简电子",
     intro: "切线循迹臂如仪器般平移过唱片——铝面、细线与克制的灰阶,定义了「昂贵的安静」这一北欧高端语言。",
     points: [
@@ -3322,7 +4634,7 @@ const CASES = [
 
   /* ---- 主题日 D17 · 日本设计 II ---- */
   {
-    id: "victory-1945", day: 16, cat: "poster", title: "《VICTORY 1945》海报", designer: "福田繁雄", year: 1975,
+    id: "victory-1945", day: 16, cat: "poster", visual: "fukudaReversal", title: "《VICTORY 1945》海报", designer: "福田繁雄", year: 1975,
     field: "海报 · 平面设计", movement: "日本视觉幽默",
     intro: "一枚炮弹掉头飞回炮管——战争胜利三十周年之际,一个视觉反转道尽「加害者终自伤」的反战寓言。",
     points: [
@@ -3335,7 +4647,7 @@ const CASES = [
     searchQuery: "福田繁雄 VICTORY 海报 反战", searchQueryEn: "Shigeo Fukuda Victory 1945 poster"
   },
   {
-    id: "yokoo", day: 16, cat: "poster", title: "横尾忠则剧团海报", designer: "横尾忠则", year: 1966,
+    id: "yokoo", day: 16, cat: "poster", visual: "yokooCollage", title: "横尾忠则剧团海报", designer: "横尾忠则", year: 1966,
     field: "海报 · 平面设计", movement: "日本迷幻波普",
     intro: "旭日、浮世绘、霓虹粉与拼贴照片挤作一团——在瑞士极简当道之时,横尾用「过剩」开辟了另一条现代之路。",
     points: [
@@ -3348,7 +4660,7 @@ const CASES = [
     searchQuery: "横尾忠则 海报 迷幻 解析", searchQueryEn: "Tadanori Yokoo poster psychedelic design"
   },
   {
-    id: "pleats-please", day: 16, cat: "fashion", title: "Pleats Please 褶皱系列", designer: "三宅一生", year: 1993,
+    id: "pleats-please", day: 16, cat: "fashion", visual: "miyakePleats", title: "Pleats Please 褶皱系列", designer: "三宅一生", year: 1993,
     field: "服装 · 系统设计", movement: "日本当代时装",
     intro: "先裁剪后打褶的工艺倒置:一块布经热压获得记忆,轻若无物、随身而动、卷起即走——服装成为可量产的雕塑。",
     points: [
@@ -3361,7 +4673,7 @@ const CASES = [
     searchQuery: "三宅一生 褶皱 Pleats Please", searchQueryEn: "Issey Miyake Pleats Please design"
   },
   {
-    id: "nagai-life", day: 16, cat: "poster", title: "LIFE 系列海报", designer: "永井一正", year: 1988,
+    id: "nagai-life", day: 16, cat: "poster", visual: "nagaiLines", title: "LIFE 系列海报", designer: "永井一正", year: 1988,
     field: "海报 · 平面设计", movement: "日本平面设计",
     intro: "从几何抽象转向手绘动物:布满细密线条的鹤、鹿与游鱼凝视观者——一位大师晚年向「生命」的漫长致敬。",
     points: [
@@ -3374,7 +4686,7 @@ const CASES = [
     searchQuery: "永井一正 LIFE 海报 动物", searchQueryEn: "Kazumasa Nagai LIFE poster animals"
   },
   {
-    id: "meiji-milk", day: 16, cat: "product", title: "明治「美味牛奶」包装", designer: "佐藤卓", year: 2001,
+    id: "meiji-milk", day: 16, cat: "product", visual: "satohMilk", title: "明治「美味牛奶」包装", designer: "佐藤卓", year: 2001,
     field: "包装 · 品牌设计", movement: "日本日常设计",
     intro: "一盒看似「没设计过」的牛奶:白底、蓝字、一杯牛奶照片——克制到近乎匿名,却统治货架二十余年。",
     points: [
@@ -3389,7 +4701,7 @@ const CASES = [
 
   /* ---- 主题日 D18 · 美国平面与广告 ---- */
   {
-    id: "think-small", day: 17, cat: "poster", title: "「Think Small」甲壳虫广告", designer: "DDB / 赫尔穆特·克罗恩", year: 1959,
+    id: "think-small", day: 17, cat: "poster", visual: "thinkSmallVoid", title: "「Think Small」甲壳虫广告", designer: "DDB / 赫尔穆特·克罗恩", year: 1959,
     field: "广告 · 平面设计", movement: "创意革命",
     intro: "整版留白里一辆小小的甲壳虫:在吹嘘成风的美国车市,一句自嘲开启了广告的「创意革命」。",
     points: [
@@ -3402,7 +4714,7 @@ const CASES = [
     searchQuery: "Think Small 甲壳虫广告 DDB", searchQueryEn: "Think Small VW ad DDB creative revolution"
   },
   {
-    id: "avant-garde", day: 17, cat: "type", title: "Avant Garde 标志与字体", designer: "赫布·卢巴林 Herb Lubalin", year: 1968,
+    id: "avant-garde", day: 17, cat: "type", visual: "lubalinLigature", title: "Avant Garde 标志与字体", designer: "赫布·卢巴林 Herb Lubalin", year: 1968,
     field: "字体 · 平面设计", movement: "美国表现主义排印",
     intro: "为先锋杂志设计的刊头连字:字母相互嵌套斜倚,紧到极限——排印第一次公然以「亲密」为美。",
     points: [
@@ -3415,7 +4727,7 @@ const CASES = [
     searchQuery: "卢巴林 Avant Garde 字体 连字", searchQueryEn: "Herb Lubalin Avant Garde ligatures"
   },
   {
-    id: "mtv", day: 17, cat: "logo", title: "MTV 标志", designer: "Manhattan Design", year: 1981,
+    id: "mtv", day: 17, cat: "logo", visual: "variableIdentity", title: "MTV 标志", designer: "Manhattan Design", year: 1981,
     field: "标志 · 品牌设计", movement: "美国流行文化设计",
     intro: "一个骨架恒定、表皮千变的M+TV:标志史上第一次,「不断变化」本身成为识别的核心。",
     points: [
@@ -3428,7 +4740,7 @@ const CASES = [
     searchQuery: "MTV 标志 可变识别 设计", searchQueryEn: "MTV logo flexible identity design"
   },
   {
-    id: "public-theater", day: 17, cat: "poster", title: "公共剧院视觉识别", designer: "宝拉·舍尔 Paula Scher", year: 1994,
+    id: "public-theater", day: 17, cat: "poster", visual: "scherVolume", title: "公共剧院视觉识别", designer: "宝拉·舍尔 Paula Scher", year: 1994,
     field: "海报 · 品牌设计", movement: "美国当代平面设计",
     intro: "木刻字体挤满海报、标语斜冲出血——舍尔从街头拳赛招贴中提炼出「城市的音量」,让剧院海报重新喧哗。",
     points: [
@@ -3441,7 +4753,7 @@ const CASES = [
     searchQuery: "宝拉舍尔 公共剧院 海报", searchQueryEn: "Paula Scher Public Theater posters"
   },
   {
-    id: "hope-poster", day: 17, cat: "poster", title: "《HOPE》竞选海报", designer: "谢泼德·费尔雷 Shepard Fairey", year: 2008,
+    id: "hope-poster", day: 17, cat: "poster", visual: "stencilThree", title: "《HOPE》竞选海报", designer: "谢泼德·费尔雷 Shepard Fairey", year: 2008,
     field: "海报 · 平面设计", movement: "街头艺术 / 政治传播",
     intro: "红蓝米三色的模板化肖像配一个单词:一张源自街头贴纸文化的海报,成为社交媒体时代政治图像的分水岭。",
     points: [
@@ -3456,7 +4768,7 @@ const CASES = [
 
   /* ---- 主题日 D19 · 数字时代的体验 ---- */
   {
-    id: "google-home", day: 18, cat: "info", title: "Google 极简首页", designer: "拉里·佩奇 / 谷歌团队", year: 1998,
+    id: "google-home", day: 18, cat: "info", visual: "googleBlank", title: "Google 极简首页", designer: "拉里·佩奇 / 谷歌团队", year: 1998,
     field: "界面 · 交互设计", movement: "网页设计",
     intro: "在门户网站堆满链接的年代,一个标志加一个输入框——「简陋」的首页把速度与专注变成了商业哲学。",
     points: [
@@ -3469,7 +4781,7 @@ const CASES = [
     searchQuery: "谷歌首页 极简设计 历史", searchQueryEn: "Google homepage minimalist design history"
   },
   {
-    id: "dyson-dc01", day: 18, cat: "product", title: "Dyson DC01 吸尘器", designer: "詹姆斯·戴森 James Dyson", year: 1993,
+    id: "dyson-dc01", day: 18, cat: "product", visual: "dysonCyclone", title: "Dyson DC01 吸尘器", designer: "詹姆斯·戴森 James Dyson", year: 1993,
     field: "产品 · 工业设计", movement: "英国工程设计",
     intro: "5127个原型之后:透明集尘筒把「看见灰尘」变成卖点,气旋技术以黄灰撞色高调示人——工程本身成为风格。",
     points: [
@@ -3482,7 +4794,7 @@ const CASES = [
     searchQuery: "戴森 DC01 吸尘器 设计", searchQueryEn: "Dyson DC01 vacuum design story"
   },
   {
-    id: "wii-remote", day: 18, cat: "product", title: "Wii 遥控器手柄", designer: "任天堂设计团队", year: 2006,
+    id: "wii-remote", day: 18, cat: "product", visual: "wiiGesture", title: "Wii 遥控器手柄", designer: "任天堂设计团队", year: 2006,
     field: "产品 · 交互设计", movement: "日本消费电子",
     intro: "游戏手柄伪装成电视遥控器:一个亲切的旧外形装进体感新技术,把祖母与孙子拉到同一块屏幕前。",
     points: [
@@ -3495,7 +4807,7 @@ const CASES = [
     searchQuery: "Wii 手柄 体感 设计", searchQueryEn: "Wii Remote motion control design"
   },
   {
-    id: "kindle", day: 18, cat: "product", title: "Kindle 电子阅读器", designer: "亚马逊 Lab126", year: 2007,
+    id: "kindle", day: 18, cat: "product", visual: "kindleCalm", title: "Kindle 电子阅读器", designer: "亚马逊 Lab126", year: 2007,
     field: "产品 · 交互设计", movement: "平静技术",
     intro: "电子墨水不发光、翻页有残影、机身灰而钝——一台故意「无聊」的设备,只为让你忘记设备而记住书。",
     points: [
@@ -3508,7 +4820,7 @@ const CASES = [
     searchQuery: "Kindle 电子墨水 阅读器 设计", searchQueryEn: "Kindle e-ink reader calm technology design"
   },
   {
-    id: "nest", day: 18, cat: "product", title: "Nest 智能恒温器", designer: "托尼·法德尔 Tony Fadell", year: 2011,
+    id: "nest", day: 18, cat: "product", visual: "nestDial", title: "Nest 智能恒温器", designer: "托尼·法德尔 Tony Fadell", year: 2011,
     field: "产品 · 交互设计", movement: "智能家居设计",
     intro: "iPod之父盯上了墙上最被嫌弃的塑料盒子:一个会学习的金属圆环,证明「无聊品类」正是设计的富矿。",
     points: [
