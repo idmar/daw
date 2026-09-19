@@ -25,6 +25,7 @@ export function CaseCard({
   onInspect,
   onStartTimer,
   onInspectMaster,
+  onCompare,
   extraActions,
 }) {
   const [draft, setDraft] = useState(savedLink || "");
@@ -130,6 +131,14 @@ export function CaseCard({
                   🏛️ {master.nameZh}
                 </button>
               )}
+              <button
+                type="button"
+                className="art-compare-btn"
+                onClick={() => onCompare && onCompare(c)}
+                title="在并置策展台中进行横向学术比较"
+              >
+                ⚖️ 并置对比
+              </button>
             </div>
           </figure>
           <p className="artwork-note">

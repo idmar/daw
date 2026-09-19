@@ -13,6 +13,7 @@ import { VisualInspectorModal } from "./components/VisualInspectorModal.jsx";
 import { FocusTimerModal } from "./components/FocusTimerModal.jsx";
 import { MasterBioModal } from "./components/MasterBioModal.jsx";
 import { TimelineView } from "./components/TimelineView.jsx";
+import { ComparativeCuratorialModal } from "./components/ComparativeCuratorialModal.jsx";
 import { MASTERS } from "./data/masters.js";
 
 const STORAGE_KEY = "aesthetic-atelier-v1";
@@ -28,6 +29,8 @@ export default function AestheticAtelier() {
   const [inspectMaster, setInspectMaster] = useState(null); // 大师档案选中的大师
   const [timerOpen, setTimerOpen] = useState(false); // 画室沉浸专注钟
   const [timerCase, setTimerCase] = useState(null); // 当前专注研习案例
+  const [compareOpen, setCompareOpen] = useState(false); // 双件并置策展台
+  const [compareCase, setCompareCase] = useState(null); // 送入策展台的比对案例
   const [extraShown, setExtraShown] = useState(5);
   const [reviewDay, setReviewDay] = useState(null); // 学习足迹 → 点击进入的复习日期
   const [toasts, setToasts] = useState([]); // 徽章解锁提示队列
@@ -278,6 +281,17 @@ export default function AestheticAtelier() {
               >
                 ⏱️ 沉浸专注
               </button>
+              <button
+                type="button"
+                className="compare-launcher-btn"
+                onClick={() => {
+                  setCompareCase(null);
+                  setCompareOpen(true);
+                }}
+                title="打开双件经典并置策展台"
+              >
+                ⚖️ 并置对比
+              </button>
               <div className="theme-switch" role="radiogroup" aria-label="展厅光照模式">
                 {THEMES.map(t => (
                   <button
@@ -390,6 +404,10 @@ export default function AestheticAtelier() {
                     setTimerOpen(true);
                   }}
                   onInspectMaster={setInspectMaster}
+                  onCompare={cItem => {
+                    setCompareCase(cItem);
+                    setCompareOpen(true);
+                  }}
                 />
               ))}
             </div>
@@ -457,6 +475,10 @@ export default function AestheticAtelier() {
                             setTimerOpen(true);
                           }}
                           onInspectMaster={setInspectMaster}
+                          onCompare={cItem => {
+                            setCompareCase(cItem);
+                            setCompareOpen(true);
+                          }}
                         />
                       ))}
                     </div>
@@ -817,6 +839,10 @@ export default function AestheticAtelier() {
                         setTimerOpen(true);
                       }}
                       onInspectMaster={setInspectMaster}
+                      onCompare={cItem => {
+                        setCompareCase(cItem);
+                        setCompareOpen(true);
+                      }}
                     />
                   ))}
                 </div>
@@ -974,6 +1000,21 @@ export default function AestheticAtelier() {
             setTab("archive");
             setArchQuery(targetCase.title);
             setOpenId(targetCase.id);
+          }}
+        />
+      )}
+      {/* 双件经典并置策展台 */}
+      {compareOpen && (
+        <ComparativeCuratorialModal
+          initialCase={compareCase}
+          onClose={() => {
+            setCompareOpen(false);
+            setCompareCase(null);
+          }}
+          onInspect={setInspectCase}
+          onStartTimer={cItem => {
+            setTimerCase(cItem);
+            setTimerOpen(true);
           }}
         />
       )}
