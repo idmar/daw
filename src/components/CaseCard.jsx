@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { getVisual } from "../data/visuals.jsx";
 import { toEmbed } from "../utils/embed.js";
+import { findMasterForCase } from "../data/masters.js";
 
 const QUICK_TAGS = ["#形式追随功能", "#网格系统", "#克制极简", "#人机工学", "#减法设计", "#材料诚实", "#东方留白"];
 
@@ -23,6 +24,7 @@ export function CaseCard({
   onSaveNote,
   onInspect,
   onStartTimer,
+  onInspectMaster,
   extraActions,
 }) {
   const [draft, setDraft] = useState(savedLink || "");
@@ -30,6 +32,7 @@ export function CaseCard({
   const [noteSavedAlert, setNoteSavedAlert] = useState(false);
   const [confirmReset, setConfirmReset] = useState(false);
   const [frameReady, setFrameReady] = useState(false);
+  const master = useMemo(() => findMasterForCase(c), [c]);
 
   useEffect(() => setDraft(savedLink || ""), [savedLink]);
   useEffect(() => setNoteDraft(savedNote || ""), [savedNote]);
@@ -117,6 +120,16 @@ export function CaseCard({
               >
                 ⏱️ 沉浸研习钟
               </button>
+              {master && (
+                <button
+                  type="button"
+                  className="art-master-btn"
+                  onClick={() => onInspectMaster && onInspectMaster(master)}
+                  title={`查阅 ${master.nameZh} 大师生平与设计哲学`}
+                >
+                  🏛️ {master.nameZh}
+                </button>
+              )}
             </div>
           </figure>
           <p className="artwork-note">

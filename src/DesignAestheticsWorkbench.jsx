@@ -11,6 +11,8 @@ import { CaseCard } from "./components/CaseCard.jsx";
 import { FlashcardView } from "./components/FlashcardView.jsx";
 import { VisualInspectorModal } from "./components/VisualInspectorModal.jsx";
 import { FocusTimerModal } from "./components/FocusTimerModal.jsx";
+import { MasterBioModal } from "./components/MasterBioModal.jsx";
+import { MASTERS } from "./data/masters.js";
 
 const STORAGE_KEY = "aesthetic-atelier-v1";
 
@@ -22,6 +24,7 @@ export default function AestheticAtelier() {
   const [tab, setTab] = useState("today");
   const [openId, setOpenId] = useState(null);
   const [inspectCase, setInspectCase] = useState(null); // 几何构图检视镜选中的案例
+  const [inspectMaster, setInspectMaster] = useState(null); // 大师档案选中的大师
   const [timerOpen, setTimerOpen] = useState(false); // 画室沉浸专注钟
   const [timerCase, setTimerCase] = useState(null); // 当前专注研习案例
   const [extraShown, setExtraShown] = useState(5);
@@ -257,6 +260,14 @@ export default function AestheticAtelier() {
             <div className="masthead-controls">
               <button
                 type="button"
+                className="masters-launcher-btn"
+                onClick={() => setInspectMaster(MASTERS[0])}
+                title="查阅现代设计大师微传记与哲学档案"
+              >
+                🏛️ 大师辞典
+              </button>
+              <button
+                type="button"
                 className="focus-launcher-btn"
                 onClick={() => {
                   setTimerCase(null);
@@ -376,6 +387,7 @@ export default function AestheticAtelier() {
                     setTimerCase(cItem);
                     setTimerOpen(true);
                   }}
+                  onInspectMaster={setInspectMaster}
                 />
               ))}
             </div>
@@ -442,6 +454,7 @@ export default function AestheticAtelier() {
                             setTimerCase(cItem);
                             setTimerOpen(true);
                           }}
+                          onInspectMaster={setInspectMaster}
                         />
                       ))}
                     </div>
@@ -784,6 +797,7 @@ export default function AestheticAtelier() {
                         setTimerCase(cItem);
                         setTimerOpen(true);
                       }}
+                      onInspectMaster={setInspectMaster}
                     />
                   ))}
                 </div>
@@ -931,6 +945,19 @@ export default function AestheticAtelier() {
         onClose={() => setTimerOpen(false)}
         currentCase={timerCase}
       />
+      {/* 现代设计大师微传记档案 */}
+      {inspectMaster && (
+        <MasterBioModal
+          master={inspectMaster}
+          onClose={() => setInspectMaster(null)}
+          onSelectCase={(targetCase) => {
+            setInspectMaster(null);
+            setTab("archive");
+            setArchQuery(targetCase.title);
+            setOpenId(targetCase.id);
+          }}
+        />
+      )}
     </div>
   );
 }
