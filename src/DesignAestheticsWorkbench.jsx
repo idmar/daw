@@ -9,6 +9,7 @@ import { DISCIPLINES, MOVEMENTS, filterCuratedCases, getCaseDiscipline } from ".
 import { ProgressRing } from "./components/ProgressRing.jsx";
 import { CaseCard } from "./components/CaseCard.jsx";
 import { FlashcardView } from "./components/FlashcardView.jsx";
+import { VisualInspectorModal } from "./components/VisualInspectorModal.jsx";
 
 const STORAGE_KEY = "aesthetic-atelier-v1";
 
@@ -19,6 +20,7 @@ export default function AestheticAtelier() {
   const [state, setState] = useState({ completed: {}, videoLinks: {}, notes: {} });
   const [tab, setTab] = useState("today");
   const [openId, setOpenId] = useState(null);
+  const [inspectCase, setInspectCase] = useState(null); // 几何构图检视镜选中的案例
   const [extraShown, setExtraShown] = useState(5);
   const [reviewDay, setReviewDay] = useState(null); // 学习足迹 → 点击进入的复习日期
   const [toasts, setToasts] = useState([]); // 徽章解锁提示队列
@@ -353,6 +355,7 @@ export default function AestheticAtelier() {
                   onSaveLink={url => saveLink(c.id, url)}
                   savedNote={state.notes[c.id]}
                   onSaveNote={note => saveNote(c.id, note)}
+                  onInspect={setInspectCase}
                 />
               ))}
             </div>
@@ -414,6 +417,7 @@ export default function AestheticAtelier() {
                           onSaveLink={url => saveLink(c.id, url)}
                           savedNote={state.notes[c.id]}
                           onSaveNote={note => saveNote(c.id, note)}
+                          onInspect={setInspectCase}
                         />
                       ))}
                     </div>
@@ -751,6 +755,7 @@ export default function AestheticAtelier() {
                       onSaveLink={url => saveLink(c.id, url)}
                       savedNote={state.notes[c.id]}
                       onSaveNote={note => saveNote(c.id, note)}
+                      onInspect={setInspectCase}
                     />
                   ))}
                 </div>
@@ -885,6 +890,13 @@ export default function AestheticAtelier() {
           )
         )}
       </div>
+      {/* 几何解剖图交互检视镜 */}
+      {inspectCase && (
+        <VisualInspectorModal
+          c={inspectCase}
+          onClose={() => setInspectCase(null)}
+        />
+      )}
     </div>
   );
 }

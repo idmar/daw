@@ -21,6 +21,7 @@ export function CaseCard({
   onSaveLink,
   savedNote,
   onSaveNote,
+  onInspect,
   extraActions,
 }) {
   const [draft, setDraft] = useState(savedLink || "");
@@ -98,6 +99,14 @@ export function CaseCard({
               <span className="plate-t">{c.title}</span>
               <span className="cat-yr">{c.year}</span>
             </figcaption>
+            <button
+              type="button"
+              className="art-inspect-btn"
+              onClick={() => onInspect && onInspect(c)}
+              title="在构图检视镜中放大并拆解图层"
+            >
+              🔍 构图解剖与图层拆解
+            </button>
           </figure>
           <p className="artwork-note">
             上图为原创几何示意研究图。建议同时检索原作高清图对照观看：

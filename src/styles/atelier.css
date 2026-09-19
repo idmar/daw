@@ -1219,6 +1219,205 @@
   margin-top: 10px;
 }
 
+/* ---------- 几何解剖图交互检视镜 ---------- */
+.inspector-mask {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  background: rgba(18, 19, 22, 0.78);
+  backdrop-filter: blur(10px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  animation: fadeIn .25s var(--ease) both;
+}
+.inspector-window {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  box-shadow: 0 24px 60px -18px rgba(0,0,0,.6);
+  max-width: 920px;
+  width: 100%;
+  max-height: 92vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border-radius: 2px;
+  animation: sheetIn .3s var(--ease) both;
+}
+.inspector-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 22px;
+  border-bottom: 1px solid var(--line);
+  background: var(--panel);
+  flex-wrap: wrap;
+}
+.inspector-meta h3 {
+  font-family: 'Noto Serif SC', serif;
+  font-weight: 900;
+  font-size: 18px;
+  margin: 2px 0;
+}
+.inspector-meta .sub {
+  font-size: 12px;
+  color: var(--muted);
+}
+.inspector-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+/* 图层按钮组 */
+.layer-toggles {
+  display: inline-flex;
+  gap: 4px;
+  background: var(--wall);
+  padding: 3px;
+  border: 1px solid var(--line);
+  border-radius: 99px;
+}
+.layer-btn {
+  appearance: none;
+  border: none;
+  background: none;
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 500;
+  padding: 4px 10px;
+  border-radius: 99px;
+  color: var(--muted);
+  cursor: pointer;
+  transition: all .15s;
+}
+.layer-btn:hover { color: var(--ink); }
+.layer-btn.on {
+  background: var(--panel);
+  color: var(--blue);
+  font-weight: 700;
+  box-shadow: 0 1px 3px rgba(0,0,0,.15);
+}
+
+/* 缩放控制器 */
+.zoom-controls {
+  display: inline-flex;
+  border: 1px solid var(--line);
+  background: var(--panel);
+}
+.zoom-btn {
+  appearance: none;
+  border: none;
+  background: none;
+  font-family: 'Archivo', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  padding: 5px 11px;
+  color: var(--ink);
+  cursor: pointer;
+  transition: background .15s;
+}
+.zoom-btn:hover { background: var(--wall); }
+.zoom-btn.text { font-size: 11px; border-left: 1px solid var(--line); border-right: 1px solid var(--line); }
+
+.inspector-close {
+  appearance: none;
+  border: none;
+  background: none;
+  font-size: 18px;
+  color: var(--muted);
+  cursor: pointer;
+  padding: 4px 8px;
+}
+.inspector-close:hover { color: var(--ink); }
+
+/* 画布视口 */
+.inspector-canvas {
+  flex: 1;
+  min-height: 380px;
+  max-height: 58vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--wall);
+  overflow: auto;
+  padding: 24px;
+}
+.inspector-art-wrap {
+  transform-origin: center center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.inspector-art-wrap svg {
+  max-width: 600px;
+  width: 100%;
+  height: auto;
+  background: var(--art-bg);
+  box-shadow: 0 8px 30px -12px rgba(0,0,0,.25);
+}
+
+/* 图层过滤动态规则 */
+.inspector-canvas.hide-optics svg [stroke="#D0361F"],
+.inspector-canvas.hide-optics svg [fill="#D0361F"] {
+  opacity: 0 !important;
+  transition: opacity .2s;
+}
+.inspector-canvas.hide-labels svg text {
+  opacity: 0 !important;
+  transition: opacity .2s;
+}
+.inspector-canvas.hide-grid svg [stroke-dasharray] {
+  opacity: 0.04 !important;
+  transition: opacity .2s;
+}
+
+.inspector-foot {
+  padding: 14px 22px;
+  border-top: 1px solid var(--line);
+  background: var(--panel);
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.hint-tip {
+  font-size: 12.5px;
+  color: var(--ink);
+  max-width: 600px;
+}
+.hint-tip b { color: var(--blue); }
+.zoom-hint {
+  font-size: 11px;
+  color: var(--muted);
+}
+
+/* 展签图片上的检视按钮 */
+.art-inspect-btn {
+  margin-top: 8px;
+  appearance: none;
+  background: var(--panel);
+  border: 1px dashed var(--line);
+  font-family: inherit;
+  font-size: 11.5px;
+  color: var(--blue);
+  padding: 5px 12px;
+  cursor: pointer;
+  border-radius: 2px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  transition: all .15s;
+}
+.art-inspect-btn:hover {
+  background: var(--blue-soft);
+  border-color: var(--blue);
+}
+
 /* 页脚 */
 .foot {
   margin-top: 56px;
