@@ -443,6 +443,96 @@
 }
 .exercise b { color: var(--gold); }
 
+/* 研习手记 */
+.note-section {
+  margin-top: 14px;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  padding: 16px 18px;
+}
+.note-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+.note-title {
+  font-family: 'Noto Serif SC', serif;
+  font-weight: 700;
+  font-size: 13.5px;
+  color: var(--ink);
+}
+.note-alert {
+  font-size: 11px;
+  color: var(--gold);
+  font-weight: 600;
+}
+.note-input {
+  width: 100%;
+  box-sizing: border-box;
+  font-family: inherit;
+  font-size: 13px;
+  line-height: 1.6;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  background: var(--wall);
+  color: var(--ink);
+  resize: vertical;
+  min-height: 72px;
+  border-radius: 2px;
+}
+.note-input:focus {
+  outline: 2px solid var(--blue);
+  outline-offset: -1px;
+}
+.note-tags {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-top: 8px;
+}
+.note-tag-label {
+  font-size: 11px;
+  color: var(--muted);
+}
+.note-tag-btn {
+  appearance: none;
+  border: 1px dashed var(--line);
+  background: none;
+  font-family: inherit;
+  font-size: 11px;
+  padding: 2px 7px;
+  color: var(--muted);
+  cursor: pointer;
+  border-radius: 2px;
+  transition: all .15s;
+}
+.note-tag-btn:hover {
+  border-color: var(--blue);
+  color: var(--blue);
+  background: var(--blue-soft);
+}
+
+/* 档案管理工具条 */
+.archive-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 22px;
+  padding: 14px 18px;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow);
+}
+.archive-toolbar .title {
+  font-weight: 700;
+  font-size: 13px;
+  color: var(--ink);
+  margin-right: auto;
+}
+
 /* 视频区 */
 .video-box { background: var(--wall); border: 1px solid var(--line); padding: 18px; }
 .video-outline { list-style: none; margin-bottom: 14px; }

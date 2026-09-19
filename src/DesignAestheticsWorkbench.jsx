@@ -4,6 +4,7 @@ import { CASES, DAY_THEMES, BADGES } from "./data/cases.js";
 import { getVisual } from "./data/visuals.jsx";
 import { todayKey, dayIndexOf, casesForDay, fmtDate, calculateStats } from "./utils/date.js";
 import { THEMES, getInitialTheme, saveTheme } from "./utils/theme.js";
+import { formatArchivePayload, validateArchive, generateMarkdownReport, downloadFile } from "./utils/archive.js";
 import { ProgressRing } from "./components/ProgressRing.jsx";
 import { CaseCard } from "./components/CaseCard.jsx";
 
@@ -107,6 +108,46 @@ export default function AestheticAtelier() {
 
   const saveLink = (id, url) => {
     persist({ ...state, videoLinks: { ...state.videoLinks, [id]: url } });
+  };
+
+  const saveNote = (id, noteText) => {
+    persist({ ...state, notes: { ...state.notes, [id]: noteText } });
+  };
+
+  const handleExportJson = () => {
+    const payload = formatArchivePayload(state, stats);
+    downloadFile(`atelier-archive-${tKey}.json`, JSON.stringify(payload, null, 2), "application/json");
+  };
+
+  const handleExportMarkdown = () => {
+    const md = generateMarkdownReport(state, CASES, DAY_THEMES);
+    downloadFile(`aesthetic-study-report-${tKey}.md`, md, "text/markdown");
+  };
+
+  const handleImportJson = e => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = evt => {
+      try {
+        const json = JSON.parse(evt.target.result);
+        const res = validateArchive(json);
+        if (!res.valid) {
+          alert(`导入失败：${res.error}`);
+          return;
+        }
+        persist({
+          completed: res.data.completed,
+          videoLinks: res.data.videoLinks,
+          notes: res.data.notes,
+        });
+        alert("研习档案已成功导入！");
+      } catch (err) {
+        alert("导入失败：文件不是有效的 JSON 格式");
+      }
+    };
+    reader.readAsText(file);
+    e.target.value = "";
   };
 
   const resetCase = (id, dayKey) => {
@@ -305,6 +346,8 @@ export default function AestheticAtelier() {
                   resetNote="将从今日记录中移除，可重新学习。"
                   savedLink={state.videoLinks[c.id]}
                   onSaveLink={url => saveLink(c.id, url)}
+                  savedNote={state.notes[c.id]}
+                  onSaveNote={note => saveNote(c.id, note)}
                 />
               ))}
             </div>
@@ -364,6 +407,8 @@ export default function AestheticAtelier() {
                           resetNote="将从今日记录中移除，可重新学习。"
                           savedLink={state.videoLinks[c.id]}
                           onSaveLink={url => saveLink(c.id, url)}
+                          savedNote={state.notes[c.id]}
+                          onSaveNote={note => saveNote(c.id, note)}
                         />
                       ))}
                     </div>
@@ -652,6 +697,8 @@ export default function AestheticAtelier() {
                       resetNote={`将从 ${reviewDay} 的记录中移除；若该日因此不足 5 件，「闭馆」与连续天数会相应变化。`}
                       savedLink={state.videoLinks[c.id]}
                       onSaveLink={url => saveLink(c.id, url)}
+                      savedNote={state.notes[c.id]}
+                      onSaveNote={note => saveNote(c.id, note)}
                     />
                   ))}
                 </div>
@@ -678,6 +725,21 @@ export default function AestheticAtelier() {
                 </div>
                 <div className="t">研习过的不同案例</div>
               </div>
+            </div>
+
+            {/* 档案备份与成果导出工具条 */}
+            <div className="archive-toolbar">
+              <span className="title">📂 研习档案与专刊导出</span>
+              <button className="btn" onClick={handleExportJson} title="将研习打卡、自选视频与个人笔记备份为 JSON 文件">
+                💾 导出备份 (JSON)
+              </button>
+              <label className="btn" style={{ cursor: "pointer" }} title="从已备份的 JSON 文件恢复学习数据">
+                📥 恢复档案
+                <input type="file" accept=".json" onChange={handleImportJson} style={{ display: "none" }} />
+              </label>
+              <button className="btn primary" onClick={handleExportMarkdown} title="整理已研习案例与心得，导出为可提交或导入知识库的 Markdown 专刊">
+                📑 导出研习专刊 (Markdown)
+              </button>
             </div>
 
             {historyDays.length === 0 ? (

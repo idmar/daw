@@ -2,6 +2,8 @@ import React, { useState, useEffect, useMemo } from "react";
 import { getVisual } from "../data/visuals.jsx";
 import { toEmbed } from "../utils/embed.js";
 
+const QUICK_TAGS = ["#形式追随功能", "#网格系统", "#克制极简", "#人机工学", "#减法设计", "#材料诚实", "#东方留白"];
+
 /**
  * 单件案例展签卡片组件
  */
@@ -17,13 +19,18 @@ export function CaseCard({
   resetNote,
   savedLink,
   onSaveLink,
+  savedNote,
+  onSaveNote,
   extraActions,
 }) {
   const [draft, setDraft] = useState(savedLink || "");
+  const [noteDraft, setNoteDraft] = useState(savedNote || "");
+  const [noteSavedAlert, setNoteSavedAlert] = useState(false);
   const [confirmReset, setConfirmReset] = useState(false);
   const [frameReady, setFrameReady] = useState(false);
 
   useEffect(() => setDraft(savedLink || ""), [savedLink]);
+  useEffect(() => setNoteDraft(savedNote || ""), [savedNote]);
   useEffect(() => {
     setFrameReady(false);
   }, [savedLink]); // 换片时重新显示骨架屏
@@ -121,7 +128,52 @@ export function CaseCard({
             {c.exercise}
           </div>
 
-          {/* 额外扩展插槽（如：笔记系统） */}
+          {/* 研习手记批注区 */}
+          <div className="note-section">
+            <div className="note-head">
+              <span className="note-title">📝 我的研习手记与思考批注</span>
+              {noteSavedAlert && <span className="note-alert">已自动保存 ✓</span>}
+            </div>
+            <textarea
+              className="note-input"
+              value={noteDraft}
+              onChange={e => {
+                const val = e.target.value;
+                setNoteDraft(val);
+                if (onSaveNote) {
+                  onSaveNote(val);
+                  setNoteSavedAlert(true);
+                  setTimeout(() => setNoteSavedAlert(false), 2000);
+                }
+              }}
+              placeholder="记录本案例的观察心得、构图推导或与导师同学研讨的思考点…"
+              rows={3}
+              aria-label={`${c.title} 研习手记`}
+            />
+            <div className="note-tags">
+              <span className="note-tag-label">快捷标签：</span>
+              {QUICK_TAGS.map(tag => (
+                <button
+                  key={tag}
+                  type="button"
+                  className="note-tag-btn"
+                  onClick={() => {
+                    const updated = noteDraft ? `${noteDraft.trim()} ${tag} ` : `${tag} `;
+                    setNoteDraft(updated);
+                    if (onSaveNote) {
+                      onSaveNote(updated);
+                      setNoteSavedAlert(true);
+                      setTimeout(() => setNoteSavedAlert(false), 2000);
+                    }
+                  }}
+                >
+                  {tag}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* 额外扩展插槽 */}
           {extraActions && extraActions(c)}
 
           <div className="sec-title">
