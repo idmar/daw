@@ -10,6 +10,7 @@ import { ProgressRing } from "./components/ProgressRing.jsx";
 import { CaseCard } from "./components/CaseCard.jsx";
 import { FlashcardView } from "./components/FlashcardView.jsx";
 import { VisualInspectorModal } from "./components/VisualInspectorModal.jsx";
+import { FocusTimerModal } from "./components/FocusTimerModal.jsx";
 
 const STORAGE_KEY = "aesthetic-atelier-v1";
 
@@ -21,6 +22,8 @@ export default function AestheticAtelier() {
   const [tab, setTab] = useState("today");
   const [openId, setOpenId] = useState(null);
   const [inspectCase, setInspectCase] = useState(null); // 几何构图检视镜选中的案例
+  const [timerOpen, setTimerOpen] = useState(false); // 画室沉浸专注钟
+  const [timerCase, setTimerCase] = useState(null); // 当前专注研习案例
   const [extraShown, setExtraShown] = useState(5);
   const [reviewDay, setReviewDay] = useState(null); // 学习足迹 → 点击进入的复习日期
   const [toasts, setToasts] = useState([]); // 徽章解锁提示队列
@@ -251,23 +254,36 @@ export default function AestheticAtelier() {
             <div className="streak">
               连续研习 <b>{stats.streak}</b> 天 · 累计 <b style={{ color: "var(--ink)" }}>{stats.total}</b> 次
             </div>
-            <div className="theme-switch" role="radiogroup" aria-label="展厅光照模式">
-              {THEMES.map(t => (
-                <button
-                  key={t.id}
-                  className={`theme-btn ${theme === t.id ? "on" : ""}`}
-                  onClick={() => {
-                    setTheme(t.id);
-                    saveTheme(t.id);
-                  }}
-                  title={t.desc}
-                  aria-checked={theme === t.id}
-                  role="radio"
-                >
-                  <span aria-hidden="true">{t.icon}</span>
-                  <span>{t.name}</span>
-                </button>
-              ))}
+            <div className="masthead-controls">
+              <button
+                type="button"
+                className="focus-launcher-btn"
+                onClick={() => {
+                  setTimerCase(null);
+                  setTimerOpen(true);
+                }}
+                title="开启画室沉浸研习时钟"
+              >
+                ⏱️ 沉浸专注
+              </button>
+              <div className="theme-switch" role="radiogroup" aria-label="展厅光照模式">
+                {THEMES.map(t => (
+                  <button
+                    key={t.id}
+                    className={`theme-btn ${theme === t.id ? "on" : ""}`}
+                    onClick={() => {
+                      setTheme(t.id);
+                      saveTheme(t.id);
+                    }}
+                    title={t.desc}
+                    aria-checked={theme === t.id}
+                    role="radio"
+                  >
+                    <span aria-hidden="true">{t.icon}</span>
+                    <span>{t.name}</span>
+                  </button>
+                ))}
+              </div>
             </div>
           </div>
         </header>
@@ -356,6 +372,10 @@ export default function AestheticAtelier() {
                   savedNote={state.notes[c.id]}
                   onSaveNote={note => saveNote(c.id, note)}
                   onInspect={setInspectCase}
+                  onStartTimer={cItem => {
+                    setTimerCase(cItem);
+                    setTimerOpen(true);
+                  }}
                 />
               ))}
             </div>
@@ -418,6 +438,10 @@ export default function AestheticAtelier() {
                           savedNote={state.notes[c.id]}
                           onSaveNote={note => saveNote(c.id, note)}
                           onInspect={setInspectCase}
+                          onStartTimer={cItem => {
+                            setTimerCase(cItem);
+                            setTimerOpen(true);
+                          }}
                         />
                       ))}
                     </div>
@@ -756,6 +780,10 @@ export default function AestheticAtelier() {
                       savedNote={state.notes[c.id]}
                       onSaveNote={note => saveNote(c.id, note)}
                       onInspect={setInspectCase}
+                      onStartTimer={cItem => {
+                        setTimerCase(cItem);
+                        setTimerOpen(true);
+                      }}
                     />
                   ))}
                 </div>
@@ -897,6 +925,12 @@ export default function AestheticAtelier() {
           onClose={() => setInspectCase(null)}
         />
       )}
+      {/* 美术馆画室沉浸研习钟 */}
+      <FocusTimerModal
+        isOpen={timerOpen}
+        onClose={() => setTimerOpen(false)}
+        currentCase={timerCase}
+      />
     </div>
   );
 }

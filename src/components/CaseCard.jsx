@@ -22,6 +22,7 @@ export function CaseCard({
   savedNote,
   onSaveNote,
   onInspect,
+  onStartTimer,
   extraActions,
 }) {
   const [draft, setDraft] = useState(savedLink || "");
@@ -99,14 +100,24 @@ export function CaseCard({
               <span className="plate-t">{c.title}</span>
               <span className="cat-yr">{c.year}</span>
             </figcaption>
-            <button
-              type="button"
-              className="art-inspect-btn"
-              onClick={() => onInspect && onInspect(c)}
-              title="在构图检视镜中放大并拆解图层"
-            >
-              🔍 构图解剖与图层拆解
-            </button>
+            <div className="art-tools-bar">
+              <button
+                type="button"
+                className="art-inspect-btn"
+                onClick={() => onInspect && onInspect(c)}
+                title="在构图检视镜中放大并拆解图层"
+              >
+                🔍 构图解剖与图层拆解
+              </button>
+              <button
+                type="button"
+                className="art-timer-btn"
+                onClick={() => onStartTimer && onStartTimer(c)}
+                title="开启画室专注钟深入精读此案例"
+              >
+                ⏱️ 沉浸研习钟
+              </button>
+            </div>
           </figure>
           <p className="artwork-note">
             上图为原创几何示意研究图。建议同时检索原作高清图对照观看：
