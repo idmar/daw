@@ -8,6 +8,7 @@ import { formatArchivePayload, validateArchive, generateMarkdownReport, download
 import { DISCIPLINES, MOVEMENTS, filterCuratedCases, getCaseDiscipline } from "./utils/taxonomy.js";
 import { ProgressRing } from "./components/ProgressRing.jsx";
 import { CaseCard } from "./components/CaseCard.jsx";
+import { FlashcardView } from "./components/FlashcardView.jsx";
 
 const STORAGE_KEY = "aesthetic-atelier-v1";
 
@@ -273,6 +274,7 @@ export default function AestheticAtelier() {
           {[
             ["today", "今日展厅"],
             ["archive", "馆藏总览"],
+            ["flashcard", "经典闪卡"],
             ["badges", "成就徽章"],
             ["history", "学习足迹"],
           ].map(([k, t]) => (
@@ -648,6 +650,14 @@ export default function AestheticAtelier() {
               </div>
             );
           })()}
+
+        {/* ============ 经典闪卡 ============ */}
+        {tab === "flashcard" && (
+          <FlashcardView
+            cases={CASES}
+            learnedIds={new Set(Object.values(state.completed).flat())}
+          />
+        )}
 
         {/* ============ 成就徽章 ============ */}
         {tab === "badges" && (

@@ -1038,6 +1038,187 @@
 }
 .undo-btn:hover { background: var(--ink); color: #fff; }
 
+/* ---------- 3D 翻转闪卡抽认 ---------- */
+.flashcard-controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 24px;
+}
+.flashcard-controls select {
+  font-family: inherit;
+  font-size: 13px;
+  padding: 8px 12px;
+  border: 1px solid var(--line);
+  background: var(--panel);
+  color: var(--ink);
+  cursor: pointer;
+  border-radius: 2px;
+}
+.deck-counter {
+  margin-left: auto;
+  font-size: 13px;
+  color: var(--muted);
+  font-family: 'Archivo', sans-serif;
+}
+.deck-counter b { color: var(--blue); }
+
+.card-scene {
+  width: 100%;
+  max-width: 620px;
+  margin: 0 auto 24px;
+  height: 500px;
+  position: relative;
+  perspective: 1400px;
+  cursor: pointer;
+}
+.card-face {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow);
+  padding: 26px 28px;
+  display: flex;
+  flex-direction: column;
+  backface-visibility: hidden;
+  transition: transform .55s cubic-bezier(.22, 1, .36, 1);
+  border-radius: 2px;
+}
+.card-face.front {
+  transform: rotateY(0deg);
+  border-top: 6px solid var(--blue);
+}
+.card-face.back {
+  transform: rotateY(180deg);
+  border-top: 6px solid var(--gold);
+  overflow-y: auto;
+}
+.card-scene.flipped .card-face.front {
+  transform: rotateY(-180deg);
+}
+.card-scene.flipped .card-face.back {
+  transform: rotateY(0deg);
+}
+
+.card-badge-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 14px;
+}
+.card-pill {
+  font-size: 12px;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 99px;
+  background: var(--blue-soft);
+  color: var(--blue);
+}
+.card-pill.ok {
+  background: var(--gold-soft);
+  color: var(--gold);
+}
+.card-year {
+  font-family: 'Archivo', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--muted);
+}
+.card-visual-box {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--wall);
+  border: 1px solid var(--line);
+  padding: 14px;
+  margin-bottom: 16px;
+  overflow: hidden;
+}
+.card-visual-box svg {
+  max-width: 100%;
+  max-height: 200px;
+  height: auto;
+  background: var(--art-bg);
+}
+.card-prompt {
+  background: var(--panel);
+  border-left: 3px solid var(--blue);
+  padding: 10px 14px;
+  margin-bottom: 12px;
+}
+.card-prompt .q-label {
+  display: block;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--blue);
+  letter-spacing: .08em;
+  margin-bottom: 2px;
+}
+.card-prompt p {
+  font-size: 13px;
+  color: var(--ink);
+  line-height: 1.5;
+}
+.card-hint {
+  text-align: center;
+  font-size: 11.5px;
+  color: var(--muted);
+  letter-spacing: .05em;
+}
+
+.card-answer-head {
+  margin-bottom: 12px;
+}
+.card-answer-head h3 {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 22px;
+  font-weight: 900;
+  line-height: 1.25;
+  color: var(--ink);
+}
+.designer-tag {
+  font-size: 13px;
+  color: var(--muted);
+  margin-top: 4px;
+}
+.card-intro {
+  font-size: 13.5px;
+  color: var(--ink);
+  line-height: 1.75;
+  margin-bottom: 16px;
+}
+.card-points {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+.card-point-item {
+  font-size: 13px;
+  color: var(--ink);
+  background: var(--wall);
+  padding: 8px 12px;
+  border-left: 3px solid var(--gold);
+}
+.card-rating-bar {
+  margin-top: auto;
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+}
+
+.flashcard-nav {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  margin-top: 10px;
+}
+
 /* 页脚 */
 .foot {
   margin-top: 56px;
