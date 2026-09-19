@@ -1435,11 +1435,11 @@
   gap: 4px;
   transition: all .15s;
 }
-.art-inspect-btn:hover, .art-timer-btn:hover, .art-master-btn:hover, .art-compare-btn:hover {
+.art-inspect-btn:hover, .art-timer-btn:hover, .art-master-btn:hover, .art-compare-btn:hover, .art-poster-btn:hover {
   background: var(--blue-soft);
   border-color: var(--blue);
 }
-.art-master-btn, .art-compare-btn {
+.art-master-btn, .art-compare-btn, .art-poster-btn {
   appearance: none;
   background: var(--wall);
   border: 1px solid var(--line);
@@ -2445,6 +2445,283 @@
   line-height: 1.6;
 }
 .compare-custom-note b { color: var(--ink); }
+
+/* ---------- 学术展签海报与文献引文模态框 ---------- */
+.poster-mask {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 15, 20, 0.78);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+  animation: fadeIn .2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.poster-modal {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  width: 100%;
+  max-width: 980px;
+  max-height: 90vh;
+  box-shadow: 0 28px 80px rgba(0,0,0,.45);
+  display: flex;
+  flex-direction: column;
+  border-radius: 4px;
+  overflow: hidden;
+}
+.poster-head {
+  padding: 18px 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--line);
+  background: var(--wall);
+}
+.poster-head h3 {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 18px;
+  font-weight: 900;
+  margin-top: 2px;
+}
+.poster-close-btn {
+  appearance: none;
+  border: none;
+  background: none;
+  font-size: 18px;
+  color: var(--muted);
+  cursor: pointer;
+  padding: 4px 8px;
+}
+.poster-close-btn:hover { color: var(--ink); }
+
+.poster-layout {
+  display: grid;
+  grid-template-columns: 460px 1fr;
+  overflow-y: auto;
+}
+@media (max-width: 840px) {
+  .poster-layout { grid-template-columns: 1fr; }
+}
+
+.poster-preview-col {
+  padding: 28px;
+  background: var(--wall);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-right: 1px solid var(--line);
+}
+.poster-frame {
+  width: 100%;
+  max-width: 380px;
+  background: #F7F5EE;
+  border: 1px solid #17160F;
+  box-shadow: 0 16px 40px -10px rgba(0,0,0,.25);
+  padding: 16px;
+  color: #17160F;
+}
+.poster-canvas {
+  border: 1px solid #17160F;
+  padding: 14px 14px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  position: relative;
+}
+.poster-header-line {
+  display: flex;
+  justify-content: space-between;
+  font-family: 'Archivo', sans-serif;
+  font-size: 8.5px;
+  font-weight: 800;
+  letter-spacing: .15em;
+  color: #002FA7;
+  border-bottom: 1px solid #17160F;
+  padding-bottom: 6px;
+}
+.poster-visual-box {
+  height: 170px;
+  background: #FFFFFF;
+  border: 1px solid #C9C7BE;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  padding: 8px;
+}
+.poster-visual-box svg {
+  max-height: 100%;
+  width: auto;
+}
+.poster-art-year {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  font-family: 'Archivo', sans-serif;
+  font-size: 10px;
+  font-weight: 900;
+  background: #002FA7;
+  color: #fff;
+  padding: 2px 6px;
+}
+
+.poster-caption-box .p-eyebrow {
+  font-family: 'Archivo', sans-serif;
+  font-size: 8px;
+  font-weight: 800;
+  letter-spacing: .15em;
+  color: #002FA7;
+}
+.poster-caption-box .p-title {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 18px;
+  font-weight: 900;
+  color: #17160F;
+  line-height: 1.2;
+  margin: 3px 0;
+}
+.poster-caption-box .p-designer {
+  font-family: 'Archivo', sans-serif;
+  font-size: 10px;
+  color: #727068;
+}
+
+.poster-quote-banner {
+  background: #EFECE3;
+  border-left: 2px solid #002FA7;
+  padding: 6px 10px;
+  font-family: 'Noto Serif SC', serif;
+  font-style: italic;
+  font-size: 10.5px;
+  color: #17160F;
+  line-height: 1.4;
+  display: flex;
+  gap: 4px;
+}
+.quote-icon {
+  font-size: 14px;
+  color: #002FA7;
+  line-height: 1;
+}
+
+.poster-note-box {
+  border-top: 1px solid #C9C7BE;
+  padding-top: 8px;
+}
+.p-note-label {
+  font-family: 'Archivo', sans-serif;
+  font-size: 8.5px;
+  font-weight: 700;
+  color: #002FA7;
+  letter-spacing: .1em;
+  margin-bottom: 2px;
+}
+.p-note-content {
+  font-size: 10.5px;
+  color: #17160F;
+  line-height: 1.45;
+  max-height: 48px;
+  overflow: hidden;
+}
+
+.poster-footer-seal {
+  border-top: 1px solid #17160F;
+  padding-top: 6px;
+  display: flex;
+  justify-content: space-between;
+  font-family: 'Archivo', sans-serif;
+  font-size: 7.5px;
+  font-weight: 700;
+  color: #727068;
+}
+
+/* 右侧工具栏 */
+.poster-tools-col {
+  padding: 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  background: var(--panel);
+}
+.tool-section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.tool-title {
+  font-family: 'Archivo', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.quote-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-height: 180px;
+  overflow-y: auto;
+  border: 1px solid var(--line);
+  padding: 6px;
+  background: var(--wall);
+}
+.quote-option-btn {
+  text-align: left;
+  appearance: none;
+  background: var(--panel);
+  border: 1px solid transparent;
+  padding: 8px 10px;
+  font-family: inherit;
+  font-size: 12px;
+  color: var(--ink);
+  cursor: pointer;
+  border-radius: 2px;
+  transition: all .15s;
+}
+.quote-option-btn:hover {
+  background: var(--blue-soft);
+  color: var(--blue);
+}
+.quote-option-btn.active {
+  border-color: var(--blue);
+  background: var(--blue-soft);
+  font-weight: 700;
+  color: var(--blue);
+}
+
+.full-width {
+  width: 100%;
+  padding: 12px;
+  font-size: 13.5px;
+}
+.tool-hint {
+  font-size: 11px;
+  color: var(--muted);
+  line-height: 1.4;
+}
+
+.citation-btn-group {
+  display: flex;
+  gap: 10px;
+}
+.citation-btn-group .btn {
+  flex: 1;
+}
+.copy-status-tip {
+  font-size: 12px;
+  font-weight: 700;
+  color: #1a7f37;
+  background: #dafbe1;
+  border: 1px solid #aceebb;
+  padding: 6px 12px;
+  border-radius: 2px;
+  animation: fadeIn .15s ease;
+}
 
 /* 页脚 */
 .foot {

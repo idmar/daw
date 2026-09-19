@@ -26,6 +26,7 @@ export function CaseCard({
   onStartTimer,
   onInspectMaster,
   onCompare,
+  onPoster,
   extraActions,
 }) {
   const [draft, setDraft] = useState(savedLink || "");
@@ -138,6 +139,14 @@ export function CaseCard({
                 title="在并置策展台中进行横向学术比较"
               >
                 ⚖️ 并置对比
+              </button>
+              <button
+                type="button"
+                className="art-poster-btn"
+                onClick={() => onPoster && onPoster(c)}
+                title="生成并下载学术收藏展签海报与文献引文"
+              >
+                🖼️ 展签海报
               </button>
             </div>
           </figure>

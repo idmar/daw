@@ -14,6 +14,7 @@ import { FocusTimerModal } from "./components/FocusTimerModal.jsx";
 import { MasterBioModal } from "./components/MasterBioModal.jsx";
 import { TimelineView } from "./components/TimelineView.jsx";
 import { ComparativeCuratorialModal } from "./components/ComparativeCuratorialModal.jsx";
+import { ExhibitionPosterModal } from "./components/ExhibitionPosterModal.jsx";
 import { MASTERS } from "./data/masters.js";
 
 const STORAGE_KEY = "aesthetic-atelier-v1";
@@ -31,6 +32,7 @@ export default function AestheticAtelier() {
   const [timerCase, setTimerCase] = useState(null); // 当前专注研习案例
   const [compareOpen, setCompareOpen] = useState(false); // 双件并置策展台
   const [compareCase, setCompareCase] = useState(null); // 送入策展台的比对案例
+  const [posterCase, setPosterCase] = useState(null); // 学术展签海报案例
   const [extraShown, setExtraShown] = useState(5);
   const [reviewDay, setReviewDay] = useState(null); // 学习足迹 → 点击进入的复习日期
   const [toasts, setToasts] = useState([]); // 徽章解锁提示队列
@@ -408,6 +410,7 @@ export default function AestheticAtelier() {
                     setCompareCase(cItem);
                     setCompareOpen(true);
                   }}
+                  onPoster={setPosterCase}
                 />
               ))}
             </div>
@@ -479,6 +482,7 @@ export default function AestheticAtelier() {
                             setCompareCase(cItem);
                             setCompareOpen(true);
                           }}
+                          onPoster={setPosterCase}
                         />
                       ))}
                     </div>
@@ -843,6 +847,7 @@ export default function AestheticAtelier() {
                         setCompareCase(cItem);
                         setCompareOpen(true);
                       }}
+                      onPoster={setPosterCase}
                     />
                   ))}
                 </div>
@@ -1016,6 +1021,14 @@ export default function AestheticAtelier() {
             setTimerCase(cItem);
             setTimerOpen(true);
           }}
+        />
+      )}
+      {/* 经典展签海报与文献引文导出模态框 */}
+      {posterCase && (
+        <ExhibitionPosterModal
+          c={posterCase}
+          savedNote={state.notes[posterCase.id]}
+          onClose={() => setPosterCase(null)}
         />
       )}
     </div>
