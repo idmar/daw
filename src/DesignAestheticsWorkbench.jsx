@@ -5,6 +5,7 @@ import { getVisual } from "./data/visuals.jsx";
 import { todayKey, dayIndexOf, casesForDay, fmtDate, calculateStats } from "./utils/date.js";
 import { THEMES, getInitialTheme, saveTheme } from "./utils/theme.js";
 import { formatArchivePayload, validateArchive, generateMarkdownReport, downloadFile } from "./utils/archive.js";
+import { DISCIPLINES, MOVEMENTS, filterCuratedCases, getCaseDiscipline } from "./utils/taxonomy.js";
 import { ProgressRing } from "./components/ProgressRing.jsx";
 import { CaseCard } from "./components/CaseCard.jsx";
 
@@ -24,6 +25,8 @@ export default function AestheticAtelier() {
   const [archTheme, setArchTheme] = useState("all"); // 馆藏总览：主题筛选
   const [archStatus, setArchStatus] = useState("all"); // 馆藏总览：状态筛选
   const [archQuery, setArchQuery] = useState(""); // 馆藏总览：关键词
+  const [archDiscipline, setArchDiscipline] = useState("all"); // 馆藏总览：学科专业筛选
+  const [archMovement, setArchMovement] = useState("all"); // 馆藏总览：思潮流派筛选
   const [queued, setQueued] = useState([]); // 手动加入今晚加映队列的案例 id
   const [preview, setPreview] = useState(null); // 馆藏总览中预览的案例
   const prevUnlockedRef = useRef(null);
@@ -429,23 +432,24 @@ export default function AestheticAtelier() {
           (() => {
             const learned = new Set();
             Object.values(state.completed).forEach(list => list.forEach(id => learned.add(id)));
-            const kw = archQuery.trim().toLowerCase();
-            const list = CASES.filter(c => {
-              if (archTheme !== "all" && String(c.day) !== archTheme) return false;
-              if (archStatus === "done" && !learned.has(c.id)) return false;
-              if (archStatus === "todo" && learned.has(c.id)) return false;
-              if (
-                kw &&
-                ![c.title, c.designer, c.movement, c.field, String(c.year)].join(" ").toLowerCase().includes(kw)
-              )
-                return false;
-              return true;
+            const list = filterCuratedCases(CASES, {
+              discipline: archDiscipline,
+              movement: archMovement,
+              theme: archTheme,
+              status: archStatus,
+              query: archQuery,
+              learnedIds: learned,
             });
             const groups = [];
             list.forEach(c => {
               const g = groups.find(x => x.day === c.day);
               if (g) g.items.push(c);
               else groups.push({ day: c.day, items: [c] });
+            });
+            const disciplineCounts = {};
+            DISCIPLINES.forEach(d => {
+              disciplineCounts[d.id] =
+                d.id === "all" ? CASES.length : CASES.filter(c => getCaseDiscipline(c).id === d.id).length;
             });
             return (
               <section className="view" key="archive">
@@ -469,6 +473,22 @@ export default function AestheticAtelier() {
                   </div>
                 </div>
 
+                <div className="discipline-bar" role="tablist" aria-label="按专业学科筛选">
+                  {DISCIPLINES.map(d => (
+                    <button
+                      key={d.id}
+                      className={`discipline-chip ${archDiscipline === d.id ? "on" : ""}`}
+                      onClick={() => setArchDiscipline(d.id)}
+                      role="tab"
+                      aria-selected={archDiscipline === d.id}
+                    >
+                      <span>{d.icon}</span>
+                      <span>{d.name}</span>
+                      <span className="count">{disciplineCounts[d.id] || 0}</span>
+                    </button>
+                  ))}
+                </div>
+
                 <div className="arch-bar">
                   <input
                     className="arch-search"
@@ -477,6 +497,28 @@ export default function AestheticAtelier() {
                     placeholder="搜索作品、设计师、流派或年份…"
                     aria-label="搜索馆藏"
                   />
+                  <select
+                    value={archDiscipline}
+                    onChange={e => setArchDiscipline(e.target.value)}
+                    aria-label="按学科门类筛选"
+                  >
+                    {DISCIPLINES.map(d => (
+                      <option key={d.id} value={d.id}>
+                        {d.icon} {d.name} ({disciplineCounts[d.id] || 0})
+                      </option>
+                    ))}
+                  </select>
+                  <select
+                    value={archMovement}
+                    onChange={e => setArchMovement(e.target.value)}
+                    aria-label="按设计流派筛选"
+                  >
+                    {MOVEMENTS.map(m => (
+                      <option key={m.id} value={m.id}>
+                        {m.name}
+                      </option>
+                    ))}
+                  </select>
                   <select
                     value={archTheme}
                     onChange={e => setArchTheme(e.target.value)}
