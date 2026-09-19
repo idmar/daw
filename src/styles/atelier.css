@@ -1464,7 +1464,7 @@
   margin-top: 8px;
   flex-wrap: wrap;
 }
-.masters-launcher-btn, .focus-launcher-btn, .compare-launcher-btn {
+.masters-launcher-btn, .focus-launcher-btn, .compare-launcher-btn, .shortcuts-launcher-btn {
   appearance: none;
   border: 1px solid var(--blue);
   background: var(--blue-soft);
@@ -2721,6 +2721,139 @@
   padding: 6px 12px;
   border-radius: 2px;
   animation: fadeIn .15s ease;
+}
+
+/* 无障碍跳跃链接 */
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 20px;
+  background: var(--ink);
+  color: #fff;
+  padding: 8px 14px;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 700;
+  z-index: 9999;
+  transition: top .2s;
+  text-decoration: none;
+}
+.skip-link:focus {
+  top: 10px;
+  box-shadow: 0 4px 12px rgba(0,0,0,.3);
+}
+
+/* ---------- 键盘研习工作流快捷键指南模态框 ---------- */
+.shortcuts-mask {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 15, 20, 0.75);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+  animation: fadeIn .2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.shortcuts-modal {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  width: 100%;
+  max-width: 580px;
+  max-height: 85vh;
+  box-shadow: 0 24px 70px rgba(0,0,0,.35);
+  display: flex;
+  flex-direction: column;
+  border-radius: 4px;
+  overflow: hidden;
+}
+.shortcuts-head {
+  padding: 16px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--line);
+  background: var(--wall);
+}
+.shortcuts-eyebrow {
+  font-family: 'Archivo', sans-serif;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: .2em;
+  color: var(--blue);
+}
+.shortcuts-close {
+  appearance: none;
+  border: none;
+  background: none;
+  font-size: 16px;
+  color: var(--muted);
+  cursor: pointer;
+}
+.shortcuts-close:hover { color: var(--ink); }
+
+.shortcuts-body {
+  padding: 24px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.shortcuts-title {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 20px;
+  font-weight: 900;
+  color: var(--ink);
+  margin-bottom: 2px;
+}
+.shortcuts-sub {
+  font-size: 13px;
+  color: var(--muted);
+}
+.shortcuts-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 8px;
+}
+.shortcut-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 8px 12px;
+  background: var(--wall);
+  border: 1px solid var(--line);
+  border-radius: 2px;
+}
+.key-cap {
+  font-family: 'Archivo', monospace, sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  background: var(--panel);
+  color: var(--ink);
+  border: 1px solid var(--line);
+  border-bottom: 2px solid var(--ink);
+  padding: 4px 10px;
+  border-radius: 3px;
+  box-shadow: 0 1px 2px rgba(0,0,0,.08);
+  min-width: 50px;
+  text-align: center;
+}
+.key-desc {
+  font-size: 12.5px;
+  color: var(--ink);
+  line-height: 1.4;
+}
+.shortcuts-tip {
+  margin-top: 8px;
+  background: var(--wall);
+  border: 1px dashed var(--line);
+  padding: 10px 14px;
+  font-size: 11.5px;
+  color: var(--muted);
+  line-height: 1.5;
 }
 
 /* 页脚 */

@@ -15,6 +15,7 @@ import { MasterBioModal } from "./components/MasterBioModal.jsx";
 import { TimelineView } from "./components/TimelineView.jsx";
 import { ComparativeCuratorialModal } from "./components/ComparativeCuratorialModal.jsx";
 import { ExhibitionPosterModal } from "./components/ExhibitionPosterModal.jsx";
+import { ShortcutsModal } from "./components/ShortcutsModal.jsx";
 import { MASTERS } from "./data/masters.js";
 
 const STORAGE_KEY = "aesthetic-atelier-v1";
@@ -33,6 +34,7 @@ export default function AestheticAtelier() {
   const [compareOpen, setCompareOpen] = useState(false); // 双件并置策展台
   const [compareCase, setCompareCase] = useState(null); // 送入策展台的比对案例
   const [posterCase, setPosterCase] = useState(null); // 学术展签海报案例
+  const [shortcutsOpen, setShortcutsOpen] = useState(false); // 键盘研学快捷键指南
   const [extraShown, setExtraShown] = useState(5);
   const [reviewDay, setReviewDay] = useState(null); // 学习足迹 → 点击进入的复习日期
   const [toasts, setToasts] = useState([]); // 徽章解锁提示队列
@@ -236,6 +238,54 @@ export default function AestheticAtelier() {
     });
   }, [unlockedIds, loaded]);
 
+  /* 全局无障碍与键盘研学工作流快捷键 */
+  useEffect(() => {
+    const handleKeyDown = e => {
+      const tag = (e.target.tagName || "").toUpperCase();
+      const isInput = tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT" || e.target.isContentEditable;
+
+      if (e.key === "Escape") {
+        setInspectCase(null);
+        setTimerOpen(false);
+        setInspectMaster(null);
+        setCompareOpen(false);
+        setPosterCase(null);
+        setShortcutsOpen(false);
+        return;
+      }
+
+      if (isInput) return;
+
+      if (e.key === "1") { setTab("today"); setReviewDay(null); }
+      else if (e.key === "2") { setTab("archive"); setReviewDay(null); }
+      else if (e.key === "3") { setTab("timeline"); setReviewDay(null); }
+      else if (e.key === "4") { setTab("flashcard"); setReviewDay(null); }
+      else if (e.key === "5") { setTab("badges"); setReviewDay(null); }
+      else if (e.key === "6") { setTab("history"); setReviewDay(null); }
+      else if (e.key === "t" || e.key === "T") {
+        setTheme(current => {
+          const idx = THEMES.findIndex(t => t.id === current);
+          const next = THEMES[(idx + 1) % THEMES.length].id;
+          saveTheme(next);
+          return next;
+        });
+      } else if (e.key === "f" || e.key === "F") {
+        setTimerCase(null);
+        setTimerOpen(o => !o);
+      } else if (e.key === "m" || e.key === "M") {
+        setInspectMaster(MASTERS[0]);
+      } else if (e.key === "c" || e.key === "C") {
+        setCompareCase(null);
+        setCompareOpen(o => !o);
+      } else if (e.key === "?") {
+        setShortcutsOpen(o => !o);
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, []);
+
   if (!loaded) {
     return (
       <div className="atelier" data-theme={theme}>
@@ -251,6 +301,7 @@ export default function AestheticAtelier() {
   return (
     <div className="atelier" data-theme={theme}>
       <div className="wrap">
+        <a href="#main-tabs" className="skip-link">跳至主展厅导航 (Skip to Navigation)</a>
         <header className="masthead">
           <div className="brand">
             <div className="eyebrow">Daily Aesthetic Atelier · 每日五件经典</div>
@@ -268,7 +319,7 @@ export default function AestheticAtelier() {
                 type="button"
                 className="masters-launcher-btn"
                 onClick={() => setInspectMaster(MASTERS[0])}
-                title="查阅现代设计大师微传记与哲学档案"
+                title="查阅现代设计大师微传记与哲学档案 (快捷键 M)"
               >
                 🏛️ 大师辞典
               </button>
@@ -279,7 +330,7 @@ export default function AestheticAtelier() {
                   setTimerCase(null);
                   setTimerOpen(true);
                 }}
-                title="开启画室沉浸研习时钟"
+                title="开启画室沉浸研习时钟 (快捷键 F)"
               >
                 ⏱️ 沉浸专注
               </button>
@@ -290,9 +341,18 @@ export default function AestheticAtelier() {
                   setCompareCase(null);
                   setCompareOpen(true);
                 }}
-                title="打开双件经典并置策展台"
+                title="打开双件经典并置策展台 (快捷键 C)"
               >
                 ⚖️ 并置对比
+              </button>
+              <button
+                type="button"
+                className="shortcuts-launcher-btn"
+                onClick={() => setShortcutsOpen(true)}
+                title="查看键盘快捷研习工作流指南 (快捷键 ?)"
+                aria-label="键盘研习快捷键指南"
+              >
+                ⌨️
               </button>
               <div className="theme-switch" role="radiogroup" aria-label="展厅光照模式">
                 {THEMES.map(t => (
@@ -316,7 +376,7 @@ export default function AestheticAtelier() {
           </div>
         </header>
 
-        <nav className="tabs" aria-label="主导航">
+        <nav id="main-tabs" className="tabs" aria-label="主导航">
           {[
             ["today", "今日展厅"],
             ["archive", "馆藏总览"],
@@ -1031,6 +1091,11 @@ export default function AestheticAtelier() {
           onClose={() => setPosterCase(null)}
         />
       )}
+      {/* 键盘研习工作流快捷键指南 */}
+      <ShortcutsModal
+        isOpen={shortcutsOpen}
+        onClose={() => setShortcutsOpen(false)}
+      />
     </div>
   );
 }
