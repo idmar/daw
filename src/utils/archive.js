@@ -103,15 +103,38 @@ export const generateMarkdownReport = (state, allCases = [], dayThemes = []) => 
 };
 
 /**
+ * 解析并纠偏下载入参（具备参数倒置自愈能力）
+ */
+export const resolveDownloadPayload = (arg1, arg2, defaultMime = "text/plain;charset=utf-8") => {
+  let filename = arg1;
+  let content = arg2;
+
+  // 自愈纠偏：如果 arg1 包含了大段 XML/SVG/JSON 内容或换行符，而 arg2 符合文件名特征（长度较短且带扩展名）
+  if (
+    typeof arg1 === "string" &&
+    typeof arg2 === "string" &&
+    (arg1.includes("<?xml") || arg1.includes("<svg") || arg1.includes("\n") || arg1.length > 255) &&
+    arg2.length <= 255 &&
+    /\.[a-zA-Z0-9]{2,5}$/.test(arg2)
+  ) {
+    filename = arg2;
+    content = arg1;
+  }
+
+  return { filename, content, mimeType: defaultMime };
+};
+
+/**
  * 客户端文件下载辅助
  */
 export const downloadFile = (filename, content, mimeType = "text/plain;charset=utf-8") => {
   if (typeof window === "undefined" || !document) return;
-  const blob = new Blob([content], { type: mimeType });
+  const resolved = resolveDownloadPayload(filename, content, mimeType);
+  const blob = new Blob([resolved.content], { type: resolved.mimeType });
   const url = URL.createObjectURL(blob);
   const a = document.createElement("a");
   a.href = url;
-  a.download = filename;
+  a.download = resolved.filename;
   document.body.appendChild(a);
   a.click();
   setTimeout(() => {

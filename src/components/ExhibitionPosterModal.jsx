@@ -6,6 +6,7 @@ import { getVisual } from "../data/visuals.jsx";
 export function ExhibitionPosterModal({ c, savedNote, onClose }) {
   const [selectedQuote, setSelectedQuote] = useState(AESTHETIC_QUOTES[0]);
   const [copyStatus, setCopyStatus] = useState("");
+  const [downloadStatus, setDownloadStatus] = useState("");
 
   const todayStr = useMemo(() => new Date().toISOString().slice(0, 10), []);
 
@@ -22,7 +23,9 @@ export function ExhibitionPosterModal({ c, savedNote, onClose }) {
   if (!c) return null;
 
   const handleDownloadSvg = () => {
-    downloadFile(svgContent, `${c.id}-exhibition-poster.svg`, "image/svg+xml;charset=utf-8");
+    downloadFile(`${c.id}-exhibition-poster.svg`, svgContent, "image/svg+xml;charset=utf-8");
+    setDownloadStatus("高分辨率矢量海报已成功生成并开始下载！");
+    setTimeout(() => setDownloadStatus(""), 2800);
   };
 
   const handleCopyAPA = () => {
@@ -119,6 +122,11 @@ export function ExhibitionPosterModal({ c, savedNote, onClose }) {
                 📥 下载高分辨率矢量海报 (SVG)
               </button>
               <span className="tool-hint">SVG 矢量文件支持无损无限放大印刷与 Illustrator / Figma 编辑。</span>
+              {downloadStatus && (
+                <div className="copy-status-tip" role="status">
+                  ✓ {downloadStatus}
+                </div>
+              )}
             </div>
 
             {/* 学术引文导出 */}
