@@ -1,6 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@600;900&family=Noto+Sans+SC:wght@400;500;700&family=Archivo:wght@500;600;700&display=swap');
 
-:root {
+:root,
+.atelier[data-theme="daylight"] {
   --wall: #F2F1EC;        /* 展墙灰白 */
   --panel: #FFFFFF;
   --ink: #17160F;
@@ -13,6 +14,45 @@
   --shadow: 0 1px 2px rgba(23,22,15,.05), 0 10px 30px -18px rgba(23,22,15,.25);
   --dur: .28s;
   --ease: cubic-bezier(.22,1,.36,1);
+  --card-hover: #FAFAF6;
+  --art-bg: #FFFFFF;
+  --code-bg: #EAE8DF;
+}
+
+.atelier[data-theme="midnight"] {
+  --wall: #121316;        /* 黑曜石深色展厅 */
+  --panel: #1A1B20;
+  --ink: #EDEAE2;
+  --muted: #8E8B83;
+  --line: #2D2F36;
+  --blue: #4075FF;        /* 霓虹克莱因蓝 */
+  --blue-soft: #1C2642;
+  --gold: #D6A838;
+  --gold-soft: #2B2516;
+  --shadow: 0 2px 4px rgba(0,0,0,.4), 0 14px 36px -12px rgba(0,0,0,.65);
+  --dur: .28s;
+  --ease: cubic-bezier(.22,1,.36,1);
+  --card-hover: #22242B;
+  --art-bg: #FAF8F4;
+  --code-bg: #26272E;
+}
+
+.atelier[data-theme="sepia"] {
+  --wall: #F4EFE6;        /* 羊皮纸档案色 */
+  --panel: #FAF6EF;
+  --ink: #2C261F;
+  --muted: #7E7364;
+  --line: #DFD7C8;
+  --blue: #1E468A;
+  --blue-soft: #E6ECF5;
+  --gold: #8E6D24;
+  --gold-soft: #EDE4CF;
+  --shadow: 0 1px 3px rgba(44,38,31,.06), 0 10px 24px -16px rgba(44,38,31,.2);
+  --dur: .28s;
+  --ease: cubic-bezier(.22,1,.36,1);
+  --card-hover: #F2ECE0;
+  --art-bg: #FFFFFF;
+  --code-bg: #E7DFCFA0;
 }
 
 /* 尊重系统的减弱动态偏好：统一豁免全部动效 */
@@ -68,7 +108,7 @@
   text-transform: uppercase;
   color: var(--muted);
 }
-.masthead-meta { text-align: right; flex-shrink: 0; }
+.masthead-meta { text-align: right; flex-shrink: 0; display: flex; flex-direction: column; align-items: flex-end; }
 .masthead-meta .date {
   font-family: 'Archivo', sans-serif;
   font-weight: 600;
@@ -81,6 +121,39 @@
   margin-top: 2px;
 }
 .masthead-meta .streak b { color: var(--blue); font-weight: 700; }
+
+/* 主题光照切换器 */
+.theme-switch {
+  display: inline-flex;
+  gap: 2px;
+  background: var(--line);
+  padding: 3px;
+  border-radius: 99px;
+  margin-top: 8px;
+}
+.theme-btn {
+  appearance: none;
+  border: none;
+  background: none;
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 500;
+  padding: 3px 8px;
+  border-radius: 99px;
+  color: var(--muted);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  transition: background .15s, color .15s, transform .09s;
+}
+.theme-btn:hover { color: var(--ink); }
+.theme-btn.on {
+  background: var(--panel);
+  color: var(--ink);
+  font-weight: 700;
+  box-shadow: 0 1px 3px rgba(0,0,0,.15);
+}
 
 /* ---------- 页签 ---------- */
 .tabs {
@@ -200,7 +273,7 @@
   color: inherit;
 }
 .case-row:focus-visible { outline: 2px solid var(--blue); outline-offset: -2px; }
-.case-row:hover { background: #FAFAF6; }
+.case-row:hover { background: var(--card-hover); }
 .case-row:hover .info h3 { color: var(--blue); }
 .case-row .info h3 { transition: color .15s; }
 .case.done .case-row .meta { color: var(--gold); }
@@ -209,7 +282,7 @@
   height: 64px;
   flex-shrink: 0;
   border: 1px solid var(--line);
-  background: #fff;
+  background: var(--art-bg);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -683,7 +756,7 @@
 .arch-card:hover { border-color: var(--blue); transform: translateY(-2px); box-shadow: var(--shadow); }
 .arch-card:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; }
 .arch-card.done { border-left: 4px solid var(--gold); }
-.ac-thumb { width: 46px; height: 46px; flex-shrink: 0; border: 1px solid var(--line); background: #fff; overflow: hidden; }
+.ac-thumb { width: 46px; height: 46px; flex-shrink: 0; border: 1px solid var(--line); background: var(--art-bg); overflow: hidden; }
 .ac-thumb svg { width: 100%; height: 100%; display: block; }
 .ac-tx { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
 .ac-title {
@@ -740,7 +813,7 @@
 .sheet h3 { font-family: 'Noto Serif SC', serif; font-weight: 900; font-size: 21px; margin: 6px 0 4px; }
 .sheet-sub { font-size: 12.5px; color: var(--muted); margin-bottom: 16px; }
 .sheet-art { border: 1px solid var(--line); background: var(--wall); padding: 14px; margin-bottom: 16px; }
-.sheet-art svg { width: 100%; height: auto; display: block; background: #fff; border: 1px solid var(--line); }
+.sheet-art svg { width: 100%; height: auto; display: block; background: var(--art-bg); border: 1px solid var(--line); }
 .sheet-intro { font-size: 13.5px; line-height: 1.85; color: var(--ink); margin-bottom: 18px; }
 .sheet-acts { display: flex; justify-content: flex-end; }
 

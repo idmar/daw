@@ -3,6 +3,7 @@ import "./styles/atelier.css";
 import { CASES, DAY_THEMES, BADGES } from "./data/cases.js";
 import { getVisual } from "./data/visuals.jsx";
 import { todayKey, dayIndexOf, casesForDay, fmtDate, calculateStats } from "./utils/date.js";
+import { THEMES, getInitialTheme, saveTheme } from "./utils/theme.js";
 import { ProgressRing } from "./components/ProgressRing.jsx";
 import { CaseCard } from "./components/CaseCard.jsx";
 
@@ -11,6 +12,7 @@ const STORAGE_KEY = "aesthetic-atelier-v1";
 /* ---------------- 主应用 ---------------- */
 export default function AestheticAtelier() {
   const [loaded, setLoaded] = useState(false);
+  const [theme, setTheme] = useState(getInitialTheme);
   const [state, setState] = useState({ completed: {}, videoLinks: {}, notes: {} });
   const [tab, setTab] = useState("today");
   const [openId, setOpenId] = useState(null);
@@ -59,7 +61,7 @@ export default function AestheticAtelier() {
   }, []);
 
   const todayCases = useMemo(() => casesForDay(tKey, CASES), [tKey]);
-  const theme = DAY_THEMES[dayIndexOf(tKey)];
+  const todayTheme = DAY_THEMES[dayIndexOf(tKey)];
   const doneToday = state.completed[tKey] || [];
   const dayClosed = todayCases.length > 0 && todayCases.every(c => doneToday.includes(c.id));
 
@@ -177,7 +179,7 @@ export default function AestheticAtelier() {
 
   if (!loaded) {
     return (
-      <div className="atelier">
+      <div className="atelier" data-theme={theme}>
         <div className="wrap" style={{ paddingTop: 80, textAlign: "center", color: "var(--muted)" }}>
           正在开馆，载入你的学习档案…
         </div>
@@ -188,7 +190,7 @@ export default function AestheticAtelier() {
   const historyDays = [...stats.days].reverse();
 
   return (
-    <div className="atelier">
+    <div className="atelier" data-theme={theme}>
       <div className="wrap">
         <header className="masthead">
           <div className="brand">
@@ -201,6 +203,24 @@ export default function AestheticAtelier() {
             <div className="date">{fmtDate(tKey)}</div>
             <div className="streak">
               连续研习 <b>{stats.streak}</b> 天 · 累计 <b style={{ color: "var(--ink)" }}>{stats.total}</b> 次
+            </div>
+            <div className="theme-switch" role="radiogroup" aria-label="展厅光照模式">
+              {THEMES.map(t => (
+                <button
+                  key={t.id}
+                  className={`theme-btn ${theme === t.id ? "on" : ""}`}
+                  onClick={() => {
+                    setTheme(t.id);
+                    saveTheme(t.id);
+                  }}
+                  title={t.desc}
+                  aria-checked={theme === t.id}
+                  role="radio"
+                >
+                  <span aria-hidden="true">{t.icon}</span>
+                  <span>{t.name}</span>
+                </button>
+              ))}
             </div>
           </div>
         </header>
@@ -243,8 +263,8 @@ export default function AestheticAtelier() {
                 <div className="eyebrow">
                   今日主题 · Theme {String(dayIndexOf(tKey) + 1).padStart(2, "0")} / {DAY_THEMES.length}
                 </div>
-                <h2>{theme.name}</h2>
-                <p>{theme.desc}</p>
+                <h2>{todayTheme.name}</h2>
+                <p>{todayTheme.desc}</p>
               </div>
               <div className="ring-box">
                 <div className="ring-label">
