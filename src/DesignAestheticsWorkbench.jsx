@@ -12,6 +12,7 @@ import { FlashcardView } from "./components/FlashcardView.jsx";
 import { VisualInspectorModal } from "./components/VisualInspectorModal.jsx";
 import { FocusTimerModal } from "./components/FocusTimerModal.jsx";
 import { MasterBioModal } from "./components/MasterBioModal.jsx";
+import { TimelineView } from "./components/TimelineView.jsx";
 import { MASTERS } from "./data/masters.js";
 
 const STORAGE_KEY = "aesthetic-atelier-v1";
@@ -303,6 +304,7 @@ export default function AestheticAtelier() {
           {[
             ["today", "今日展厅"],
             ["archive", "馆藏总览"],
+            ["timeline", "设计史编年"],
             ["flashcard", "经典闪卡"],
             ["badges", "成就徽章"],
             ["history", "学习足迹"],
@@ -691,6 +693,23 @@ export default function AestheticAtelier() {
               </div>
             );
           })()}
+
+        {/* ============ 设计史百年编年轴 ============ */}
+        {tab === "timeline" && (
+          <TimelineView
+            cases={CASES}
+            onSelectCase={c => {
+              setTab("archive");
+              setArchQuery(c.title);
+              setOpenId(c.id);
+            }}
+            onInspect={setInspectCase}
+            onStartTimer={cItem => {
+              setTimerCase(cItem);
+              setTimerOpen(true);
+            }}
+          />
+        )}
 
         {/* ============ 经典闪卡 ============ */}
         {tab === "flashcard" && (

@@ -1927,6 +1927,245 @@
   font-weight: 600;
 }
 
+/* ---------- 设计史百年编年轴 ---------- */
+.timeline-view {
+  animation: fadeIn .25s ease;
+  padding-bottom: 30px;
+}
+.timeline-header {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  padding: 24px 28px;
+  margin-bottom: 32px;
+  box-shadow: var(--shadow);
+}
+.timeline-titles h2 {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 24px;
+  font-weight: 900;
+  margin: 6px 0 10px;
+  color: var(--ink);
+}
+.timeline-intro {
+  font-size: 13.5px;
+  color: var(--muted);
+  line-height: 1.6;
+  max-width: 800px;
+}
+.epoch-nav {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px dashed var(--line);
+}
+.epoch-chip {
+  appearance: none;
+  border: 1px solid var(--line);
+  background: var(--wall);
+  font-family: inherit;
+  font-size: 11px;
+  padding: 4px 10px;
+  border-radius: 99px;
+  color: var(--muted);
+  cursor: pointer;
+  transition: all .15s;
+}
+.epoch-chip:hover:not(:disabled) {
+  border-color: var(--blue);
+  color: var(--blue);
+}
+.epoch-chip.active {
+  background: var(--blue);
+  border-color: var(--blue);
+  color: #fff;
+  font-weight: 700;
+}
+.epoch-chip.empty {
+  opacity: .35;
+  cursor: not-allowed;
+}
+
+.timeline-stream {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  position: relative;
+}
+.timeline-stream::before {
+  content: "";
+  position: absolute;
+  top: 12px;
+  bottom: 40px;
+  left: 20px;
+  width: 2px;
+  background: var(--line);
+  z-index: 1;
+}
+
+.epoch-section {
+  position: relative;
+  z-index: 2;
+  padding-left: 52px;
+}
+.epoch-pillar {
+  position: relative;
+  margin-bottom: 18px;
+}
+.epoch-marker {
+  position: absolute;
+  left: -52px;
+  top: 0;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.epoch-dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--blue);
+  border: 3px solid var(--panel);
+  box-shadow: 0 0 0 2px var(--blue);
+  margin-left: 14px;
+}
+.epoch-year-badge {
+  font-family: 'Archivo', sans-serif;
+  font-weight: 800;
+  font-size: 15px;
+  color: var(--blue);
+  letter-spacing: .05em;
+  background: var(--panel);
+  border: 1px solid var(--blue);
+  padding: 2px 8px;
+  border-radius: 2px;
+}
+.epoch-meta {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  padding: 14px 18px;
+  border-left: 3px solid var(--ink);
+  margin-top: 4px;
+}
+.epoch-title {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 16px;
+  font-weight: 900;
+  color: var(--ink);
+  margin-bottom: 4px;
+}
+.epoch-milestone {
+  font-size: 12.5px;
+  color: var(--muted);
+  line-height: 1.5;
+}
+.epoch-milestone b { color: var(--ink); }
+
+.epoch-cases-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 16px;
+}
+.timeline-case-card {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow);
+  display: flex;
+  flex-direction: column;
+  transition: transform .15s, border-color .15s;
+}
+.timeline-case-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--blue);
+}
+.timeline-card-visual {
+  height: 140px;
+  background: var(--wall);
+  border-bottom: 1px solid var(--line);
+  overflow: hidden;
+  position: relative;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.timeline-card-visual svg {
+  max-height: 100%;
+  width: auto;
+}
+.timeline-card-year {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  font-family: 'Archivo', sans-serif;
+  font-size: 10.5px;
+  font-weight: 800;
+  background: var(--ink);
+  color: #fff;
+  padding: 2px 6px;
+  border-radius: 2px;
+}
+.timeline-card-body {
+  padding: 14px 14px 12px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+.timeline-card-meta {
+  font-size: 10.5px;
+  color: var(--muted);
+  margin-bottom: 4px;
+}
+.timeline-card-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1.35;
+  cursor: pointer;
+}
+.timeline-card-title:hover { color: var(--blue); }
+.timeline-card-designer {
+  font-size: 11.5px;
+  color: var(--muted);
+  margin-top: 4px;
+  flex: 1;
+}
+.timeline-card-actions {
+  display: flex;
+  gap: 6px;
+  margin-top: 12px;
+  border-top: 1px dashed var(--line);
+  padding-top: 8px;
+}
+.timeline-action-btn {
+  appearance: none;
+  background: var(--wall);
+  border: 1px solid var(--line);
+  font-family: inherit;
+  font-size: 10.5px;
+  padding: 3px 6px;
+  cursor: pointer;
+  border-radius: 2px;
+  color: var(--muted);
+  transition: all .12s;
+}
+.timeline-action-btn:hover {
+  border-color: var(--ink);
+  color: var(--ink);
+}
+.timeline-action-btn.view-btn {
+  margin-left: auto;
+  color: var(--blue);
+  border-color: var(--blue-soft);
+  background: var(--blue-soft);
+  font-weight: 600;
+}
+.timeline-action-btn.view-btn:hover {
+  background: var(--blue);
+  color: #fff;
+}
+
 /* 页脚 */
 .foot {
   margin-top: 56px;
