@@ -2,6 +2,7 @@
 
 :root,
 .atelier[data-theme="daylight"] {
+  color-scheme: light;
   --wall: #F2F1EC;        /* 展墙灰白 */
   --panel: #FFFFFF;
   --ink: #17160F;
@@ -17,13 +18,21 @@
   --card-hover: #FAFAF6;
   --art-bg: #FFFFFF;
   --code-bg: #EAE8DF;
+  --btn-bg: #FFFFFF;
+  --btn-border: #17160F;
+  --btn-text: #17160F;
+  --btn-hover-bg: #17160F;
+  --btn-hover-text: #FFFFFF;
+  --primary-hover-bg: #00227C;
+  --gold-btn-hover-text: #FFFFFF;
 }
 
 .atelier[data-theme="midnight"] {
+  color-scheme: dark;
   --wall: #121316;        /* 黑曜石深色展厅 */
   --panel: #1A1B20;
   --ink: #EDEAE2;
-  --muted: #8E8B83;
+  --muted: #9E9B93;       /* 提升中度文字明度，满足 WCAG AA 5.5:1+ */
   --line: #2D2F36;
   --blue: #4075FF;        /* 霓虹克莱因蓝 */
   --blue-soft: #1C2642;
@@ -35,9 +44,17 @@
   --card-hover: #22242B;
   --art-bg: #FAF8F4;
   --code-bg: #26272E;
+  --btn-bg: #22242B;      /* 深色底杜绝刺眼纯白反光 */
+  --btn-border: #3A3D47;
+  --btn-text: #EDEAE2;
+  --btn-hover-bg: #2D303A;
+  --btn-hover-text: #4075FF;
+  --primary-hover-bg: #5B8AFF;  /* 悬浮发光反馈 */
+  --gold-btn-hover-text: #121316; /* 深墨字在金底上对比度 > 8:1 */
 }
 
 .atelier[data-theme="sepia"] {
+  color-scheme: light;
   --wall: #F4EFE6;        /* 羊皮纸档案色 */
   --panel: #FAF6EF;
   --ink: #2C261F;
@@ -53,6 +70,13 @@
   --card-hover: #F2ECE0;
   --art-bg: #FFFFFF;
   --code-bg: #E7DFCFA0;
+  --btn-bg: #FAF6EF;
+  --btn-border: #2C261F;
+  --btn-text: #2C261F;
+  --btn-hover-bg: #2C261F;
+  --btn-hover-text: #FAF6EF;
+  --primary-hover-bg: #153265;
+  --gold-btn-hover-text: #FAF6EF;
 }
 
 /* 尊重系统的减弱动态偏好：统一豁免全部动效 */
@@ -239,14 +263,14 @@
   align-items: center;
   gap: 12px;
   background: var(--gold-soft);
-  border: 1px solid #E4D5AE;
-  color: #6E5716;
+  border: 1px solid var(--gold);
+  color: var(--ink);
   padding: 14px 18px;
   margin-bottom: 26px;
   font-size: 14px;
   animation: rise .5s ease both;
 }
-.closed-banner b { font-weight: 700; }
+.closed-banner b { font-weight: 700; color: var(--gold); }
 @keyframes rise { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
 
 /* ---------- 案例卡（展签） ---------- */
@@ -385,7 +409,7 @@
   font-family: 'Noto Serif SC', serif;
   font-size: 15px;
   line-height: 1.95;
-  color: #2A2920;
+  color: var(--ink);
   border-left: 2px solid var(--blue);
   padding-left: 16px;
   margin-bottom: 6px;
@@ -421,7 +445,7 @@
 .points { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
 @media (max-width: 720px) { .points { grid-template-columns: 1fr; } }
 .point { background: var(--wall); border: 1px solid var(--line); padding: 16px 18px; }
-.point h4 { font-size: 14px; font-weight: 700; margin-bottom: 6px; }
+.point h4 { font-size: 14px; font-weight: 700; margin-bottom: 6px; color: var(--ink); }
 .point h4::before {
   content: '';
   display: inline-block;
@@ -431,15 +455,16 @@
   margin-right: 8px;
   vertical-align: baseline;
 }
-.point p { font-size: 13.5px; color: #4B4A42; }
+.point p { font-size: 13.5px; color: var(--ink); opacity: 0.9; }
 
 .exercise {
   background: var(--gold-soft);
-  border: 1px solid #E9DCBB;
+  border: 1px solid var(--line);
   border-left: 4px solid var(--gold);
   padding: 16px 18px;
   margin-top: 14px;
   font-size: 13.5px;
+  color: var(--ink);
 }
 .exercise b { color: var(--gold); }
 
@@ -538,7 +563,8 @@
 .video-outline { list-style: none; margin-bottom: 14px; }
 .video-outline li {
   font-size: 13.5px;
-  color: #4B4A42;
+  color: var(--ink);
+  opacity: 0.9;
   padding: 6px 0 6px 18px;
   position: relative;
   border-bottom: 1px dashed var(--line);
@@ -553,22 +579,52 @@
   font-size: 13px;
   font-weight: 700;
   padding: 9px 16px;
-  border: 1.5px solid var(--ink);
-  background: #fff;
-  color: var(--ink);
+  border: 1.5px solid var(--btn-border);
+  background: var(--btn-bg);
+  color: var(--btn-text);
   text-decoration: none;
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  transition: background .15s, color .15s;
+  transition: background .15s, color .15s, border-color .15s;
 }
-.btn:hover { background: var(--ink); color: #fff; }
+.btn:hover:not(:disabled) {
+  background: var(--btn-hover-bg);
+  color: var(--btn-hover-text);
+  border-color: var(--btn-hover-text);
+}
 .btn:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; }
-.btn.primary { background: var(--blue); border-color: var(--blue); color: #fff; }
-.btn.primary:hover { background: #00227C; border-color: #00227C; }
-.btn.primary:disabled { background: var(--gold); border-color: var(--gold); cursor: default; }
-.btn.gold { border-color: var(--gold); color: var(--gold); flex-shrink: 0; }
-.btn.gold:hover { background: var(--gold); color: #fff; }
+.btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+.btn.primary {
+  background: var(--blue);
+  border-color: var(--blue);
+  color: #fff;
+}
+.btn.primary:hover:not(:disabled) {
+  background: var(--primary-hover-bg);
+  border-color: var(--primary-hover-bg);
+  color: #fff;
+}
+.btn.primary:disabled {
+  background: var(--gold);
+  border-color: var(--gold);
+  color: #121316;
+  cursor: default;
+  opacity: 0.92;
+}
+.btn.gold {
+  border-color: var(--gold);
+  color: var(--gold);
+  flex-shrink: 0;
+  background: transparent;
+}
+.btn.gold:hover:not(:disabled) {
+  background: var(--gold);
+  color: var(--gold-btn-hover-text);
+}
 .link-row { display: flex; gap: 8px; flex-wrap: wrap; }
 .link-row input {
   flex: 1;
@@ -577,7 +633,7 @@
   font-size: 13px;
   padding: 9px 12px;
   border: 1px solid var(--line);
-  background: #fff;
+  background: var(--wall);
   color: var(--ink);
 }
 .link-row input:focus { outline: 2px solid var(--blue); outline-offset: -1px; }
@@ -587,13 +643,14 @@
   margin-top: 14px;
   position: relative;
   padding-top: 56.25%;
-  background: #EFEEE8;
+  background: var(--wall);
+  border: 1px solid var(--line);
 }
 .video-frame::before {
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(90deg, #EFEEE8 0%, #F7F6F1 50%, #EFEEE8 100%);
+  background: linear-gradient(90deg, var(--wall) 0%, var(--panel) 50%, var(--wall) 100%);
   background-size: 200% 100%;
   animation: shimmer 1.3s linear infinite;
 }
@@ -615,21 +672,25 @@
 
 .finish-bar { margin-top: 26px; display: flex; justify-content: flex-end; gap: 10px; }
 .btn.reset { color: var(--muted); border-style: dashed; }
-.btn.reset:hover { color: #A0341F; border-color: #A0341F; background: #FBF1EE; }
+.btn.reset:hover:not(:disabled) {
+  color: #E25338;
+  border-color: #E25338;
+  background: rgba(226, 83, 56, 0.12);
+}
 .reset-confirm {
   display: flex;
   align-items: center;
   gap: 10px;
   flex-wrap: wrap;
   justify-content: flex-end;
-  background: #FBF1EE;
-  border: 1px solid #E4C3B8;
+  background: rgba(226, 83, 56, 0.12);
+  border: 1px solid rgba(226, 83, 56, 0.35);
   padding: 8px 12px;
   border-radius: 2px;
 }
-.reset-confirm .note { font-size: 12.5px; color: #A0341F; max-width: 420px; }
-.btn.danger { color: #fff; background: #A0341F; border-color: #A0341F; }
-.btn.danger:hover { background: #8A2B18; }
+.reset-confirm .note { font-size: 12.5px; color: #E25338; max-width: 420px; font-weight: 600; }
+.btn.danger { color: #fff; background: #C83C23; border-color: #C83C23; }
+.btn.danger:hover:not(:disabled) { background: #A0341F; border-color: #A0341F; }
 
 /* ---------- 徽章 ---------- */
 .badges { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 14px; }
@@ -692,7 +753,7 @@
 }
 .day-item .cells { display: flex; gap: 5px; flex-shrink: 0; padding-top: 4px; align-items: center; }
 .cell-extra { font-family: Archivo, sans-serif; font-size: 11px; font-weight: 700; color: var(--gold); margin-left: 2px; }
-.cell { width: 14px; height: 14px; border: 1px solid var(--line); background: #fff; }
+.cell { width: 14px; height: 14px; border: 1px solid var(--line); background: var(--panel); }
 .cell.f { background: var(--blue); border-color: var(--blue); }
 .day-item .names { font-size: 12.5px; color: var(--muted); flex: 1; min-width: 0; }
 .theme-link {
@@ -730,14 +791,15 @@
   margin-top: 20px;
   padding: 18px 22px;
   background: var(--gold-soft);
-  border: 1px solid #E3D3A8;
+  border: 1px solid var(--gold);
   border-left: 6px solid var(--gold);
+  color: var(--ink);
   animation: rise .45s var(--ease) both;
   scroll-margin-top: 64px;
 }
 .closed-inline .seal { font-size: 22px; color: var(--gold); flex-shrink: 0; }
 .closed-inline .txt { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 3px; }
-.closed-inline .txt b { font-family: 'Noto Serif SC', serif; font-weight: 900; font-size: 15px; }
+.closed-inline .txt b { font-family: 'Noto Serif SC', serif; font-weight: 900; font-size: 15px; color: var(--ink); }
 .closed-inline .txt span { font-size: 12.5px; color: var(--muted); }
 
 /* 夜场加映 */
@@ -759,7 +821,7 @@
 .encore .case-row .info h3 { color: #F4F2EA; }
 .encore .case-row:hover .info h3 { color: #E8C877; }
 .encore .case-row .sub, .encore .case-row .meta { color: #A8A497; }
-.encore .case-body { border-top-color: #3A382E; background: #FFFFFF; }
+.encore .case-body { border-top-color: #3A382E; background: var(--panel); }
 .encore .empty { background: #26251E; border-color: #3A382E; color: #A8A497; }
 .encore .more-btn { border-color: #5A5748; color: #E8C877; }
 .encore .more-btn:hover { background: var(--gold); border-color: var(--gold); color: #1D1C16; }
@@ -852,7 +914,7 @@
   transition: background .15s, color .15s;
 }
 .seg button + button { border-left: 1px solid var(--line); }
-.seg button.on { background: var(--ink); color: #fff; }
+.seg button.on { background: var(--blue); color: #fff; font-weight: 700; }
 .queue-note {
   display: flex;
   align-items: center;
@@ -1036,7 +1098,11 @@
   padding: 6px 12px;
   transition: background .15s, color .15s;
 }
-.undo-btn:hover { background: var(--ink); color: #fff; }
+.undo-btn:hover {
+  background: var(--blue-soft);
+  color: var(--blue);
+  border-color: var(--blue);
+}
 
 /* ---------- 3D 翻转闪卡抽认 ---------- */
 .flashcard-controls {
@@ -1438,6 +1504,7 @@
 .art-inspect-btn:hover, .art-timer-btn:hover, .art-master-btn:hover, .art-compare-btn:hover, .art-poster-btn:hover {
   background: var(--blue-soft);
   border-color: var(--blue);
+  color: var(--blue);
 }
 .art-master-btn, .art-compare-btn, .art-poster-btn {
   appearance: none;
@@ -1480,7 +1547,7 @@
   gap: 4px;
   transition: all .15s;
 }
-.masters-launcher-btn:hover, .focus-launcher-btn:hover {
+.masters-launcher-btn:hover, .focus-launcher-btn:hover, .compare-launcher-btn:hover, .shortcuts-launcher-btn:hover {
   background: var(--blue);
   color: #fff;
 }
@@ -1654,14 +1721,15 @@
   transition: all .15s;
 }
 .timer-action-btn.primary {
-  background: var(--ink);
+  background: var(--blue);
+  border-color: var(--blue);
   color: #fff;
   font-weight: 700;
   flex: 2;
 }
 .timer-action-btn.primary:hover {
-  background: var(--blue);
-  border-color: var(--blue);
+  background: var(--primary-hover-bg);
+  border-color: var(--primary-hover-bg);
 }
 .timer-action-btn.primary.pause {
   background: #A0341F;
@@ -1768,10 +1836,10 @@
 }
 .master-chip:hover { color: var(--ink); border-color: var(--ink); }
 .master-chip.active {
-  background: var(--ink);
+  background: var(--blue);
   color: #fff;
-  border-color: var(--ink);
-  font-weight: 600;
+  border-color: var(--blue);
+  font-weight: 700;
 }
 
 .bio-body {
@@ -2101,7 +2169,7 @@
   font-family: 'Archivo', sans-serif;
   font-size: 10.5px;
   font-weight: 800;
-  background: var(--ink);
+  background: var(--blue);
   color: #fff;
   padding: 2px 6px;
   border-radius: 2px;
@@ -2883,6 +2951,33 @@
   .dot-row { display: none; }
   .closed-inline { flex-wrap: wrap; padding: 16px; }
   .case-row .info h3 { white-space: normal; }
-  .status .pill { display: none; }
   .toasts { left: 16px; right: 16px; bottom: 16px; }
+}
+
+/* 自定义极简雅致滚动条 (WCAG & Ergonomics) */
+::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+}
+::-webkit-scrollbar-track {
+  background: var(--wall);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--line);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--muted);
+}
+
+/* 文本选择高亮 */
+::selection {
+  background: var(--blue-soft);
+  color: var(--blue);
+}
+
+/* 深色模式下的聚焦光圈与无障碍增强 */
+.atelier[data-theme="midnight"] :focus-visible {
+  outline: 2px solid var(--blue);
+  outline-offset: 2px;
 }
