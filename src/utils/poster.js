@@ -90,7 +90,7 @@ export function generatePosterSvgMarkup({ c, quote, note, dateStr, visualSvg }) 
       /^<svg\b([^>]*)>/i,
       (match, existingAttrs) => {
         const cleanedAttrs = existingAttrs
-          .replace(/\b(x|y|width|height)\s*=\s*"[^"]*"/gi, "")
+          .replace(/\b(x|y|width|height|preserveAspectRatio)\s*=\s*(?:"[^"]*"|'[^']*'|\S+)/gi, "")
           .trim();
         return `<svg x="76" y="155" width="648" height="430" preserveAspectRatio="xMidYMid meet" ${cleanedAttrs}>`;
       }
@@ -117,8 +117,8 @@ export function generatePosterSvgMarkup({ c, quote, note, dateStr, visualSvg }) 
   return `<?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 1130" width="800" height="1130">
   <defs>
-    <style>
-      @import url('https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;700;900&amp;family=Noto+Serif+SC:wght@400;700;900&amp;display=swap');
+    <style type="text/css"><![CDATA[
+      @import url('https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;700;900&family=Noto+Serif+SC:wght@400;700;900&display=swap');
       .bg { fill: #F7F5EE; }
       .border-line { stroke: #17160F; stroke-width: 2; fill: none; }
       .thin-line { stroke: #C9C7BE; stroke-width: 1; fill: none; }
@@ -127,7 +127,7 @@ export function generatePosterSvgMarkup({ c, quote, note, dateStr, visualSvg }) 
       .muted-fill { fill: #727068; }
       .font-sans { font-family: 'Archivo', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif; }
       .font-serif { font-family: 'Noto Serif SC', 'Source Han Serif SC', 'Songti SC', SimSun, 'STSong', serif; }
-    </style>
+    ]]></style>
   </defs>
 
   <!-- 纸本底色 -->
@@ -140,9 +140,9 @@ export function generatePosterSvgMarkup({ c, quote, note, dateStr, visualSvg }) 
   <line x1="36" y1="1020" x2="764" y2="1020" class="thin-line" />
 
   <!-- 顶部馆藏标头 -->
-  <text x="56" y="74" class="font-sans" font-size="11" font-weight="700" letter-spacing="3" fill="#002FA7">DAILY AESTHETIC ATELIER · 美术馆学术档案</text>
-  <text x="56" y="98" class="font-serif" font-size="16" font-weight="700" class="ink-fill">经典设计审美启蒙研习专刊</text>
-  <text x="744" y="86" text-anchor="end" class="font-sans" font-size="12" font-weight="600" class="muted-fill">${escapeXml(dateStr || "ARCHIVE EDITION")}</text>
+  <text x="56" y="74" class="font-sans blue-fill" font-size="11" font-weight="700" letter-spacing="3">DAILY AESTHETIC ATELIER · 美术馆学术档案</text>
+  <text x="56" y="98" class="font-serif ink-fill" font-size="16" font-weight="700">经典设计审美启蒙研习专刊</text>
+  <text x="744" y="86" text-anchor="end" class="font-sans muted-fill" font-size="12" font-weight="600">${escapeXml(dateStr || "ARCHIVE EDITION")}</text>
 
   <!-- 中部展签主图框 -->
   <rect x="56" y="140" width="688" height="480" fill="#FFFFFF" stroke="#C9C7BE" stroke-width="1" />
@@ -152,26 +152,26 @@ export function generatePosterSvgMarkup({ c, quote, note, dateStr, visualSvg }) 
   ${artworkSvg}
   <!-- 展框角注 -->
   <text x="76" y="608" class="font-sans" font-size="9.5" font-weight="600" letter-spacing="1.5" fill="#C9C7BE">FIG. ${safeCaseId}</text>
-  <text x="724" y="608" text-anchor="end" class="font-sans" font-size="10.5" font-weight="700" letter-spacing="1.5" fill="#727068">${escapeXml(String(c.year || ""))}</text>
+  <text x="724" y="608" text-anchor="end" class="font-sans muted-fill" font-size="10.5" font-weight="700" letter-spacing="1.5">${escapeXml(String(c.year || ""))}</text>
 
   <!-- 作品题签区 -->
-  <text x="56" y="658" class="font-sans" font-size="12" font-weight="700" letter-spacing="2" fill="#002FA7">NO. ${safeCaseId}</text>
-  <text x="56" y="700" class="font-serif" font-size="${titleFontSize}" font-weight="900" class="ink-fill">${safeTitle}</text>
-  <text x="56" y="736" class="font-sans" font-size="15" font-weight="600" class="muted-fill">${safeDesigner} · ${escapeXml(String(c.year || ""))} · ${safeMovement}</text>
+  <text x="56" y="658" class="font-sans blue-fill" font-size="12" font-weight="700" letter-spacing="2">NO. ${safeCaseId}</text>
+  <text x="56" y="700" class="font-serif ink-fill" font-size="${titleFontSize}" font-weight="900">${safeTitle}</text>
+  <text x="56" y="736" class="font-sans muted-fill" font-size="15" font-weight="600">${safeDesigner} · ${escapeXml(String(c.year || ""))} · ${safeMovement}</text>
 
   <!-- 格言引用 -->
   <rect x="56" y="764" width="688" height="48" fill="#F0EDE1" />
   <line x1="56" y1="764" x2="56" y2="812" stroke="#002FA7" stroke-width="4" />
-  <text x="76" y="794" class="font-serif" font-size="13" font-style="italic" class="ink-fill">“${escapeXml(qText)}”</text>
+  <text x="76" y="794" class="font-serif ink-fill" font-size="13" font-style="italic">“${escapeXml(qText)}”</text>
 
   <!-- 学术手记与研习批注 -->
-  <text x="56" y="868" class="font-sans" font-size="11" font-weight="700" letter-spacing="2" fill="#002FA7">CURATORIAL NOTES · 导览研读手记</text>
-  <text x="56" y="898" class="font-serif" font-size="14" class="ink-fill">
+  <text x="56" y="868" class="font-sans blue-fill" font-size="11" font-weight="700" letter-spacing="2">CURATORIAL NOTES · 导览研读手记</text>
+  <text x="56" y="898" class="font-serif ink-fill" font-size="14">
     ${noteLines.map((line, idx) => `<tspan x="56" dy="${idx === 0 ? 0 : 22}">${line}${idx === noteLines.length - 1 && rawNote.length > 160 ? "…" : ""}</tspan>`).join("\n    ")}
   </text>
 
   <!-- 底部防伪印签 -->
-  <text x="56" y="1054" class="font-sans" font-size="10.5" class="muted-fill">DESIGN EDUCATION ATELIER · FACULTY OF ART &amp; DESIGN</text>
-  <text x="744" y="1054" text-anchor="end" class="font-sans" font-size="10.5" font-weight="700" fill="#002FA7">OFFICIAL STUDY PLATE ✦ 100 CLASSICS</text>
+  <text x="56" y="1054" class="font-sans muted-fill" font-size="10.5">DESIGN EDUCATION ATELIER · FACULTY OF ART &amp; DESIGN</text>
+  <text x="744" y="1054" text-anchor="end" class="font-sans blue-fill" font-size="10.5" font-weight="700">OFFICIAL STUDY PLATE ✦ 100 CLASSICS</text>
 </svg>`;
 }

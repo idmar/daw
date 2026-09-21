@@ -81,9 +81,56 @@ describe("Exhibition Poster & Academic Citation 海报生成与文献引文工�
     expect(normal.content).toBe(dummySvg);
   });
 
+  it("海报 SVG 绝无任何重复属性（杜绝 Chrome 报错 Attribute class redefined）", () => {
+    function findDuplicateAttributes(svg) {
+      const cleanSvg = svg
+        .replace(/<!--[\s\S]*?-->/g, "")
+        .replace(/<!\[CDATA\[[\s\S]*?\]\]>/g, "");
+
+      const tagRegex = /<([a-zA-Z0-9:-]+)((?:\s+[^=>/]+(?:\s*=\s*(?:"[^"]*"|'[^']*'|[^\s>]+))?)*)\s*(\/?)>/g;
+      const errors = [];
+      let match;
+
+      while ((match = tagRegex.exec(cleanSvg)) !== null) {
+        const tagName = match[1];
+        const attrsString = match[2];
+        if (!attrsString.trim()) continue;
+
+        const attrRegex = /\b([a-zA-Z0-9:-]+)\s*=/g;
+        const seenAttrs = new Set();
+        let attrMatch;
+
+        while ((attrMatch = attrRegex.exec(attrsString)) !== null) {
+          const attrName = attrMatch[1];
+          if (seenAttrs.has(attrName)) {
+            errors.push(`Tag <${tagName}> 重复定义了属性 "${attrName}": ${match[0]}`);
+          }
+          seenAttrs.add(attrName);
+        }
+      }
+      return errors;
+    }
+
+    // 验证所有 CASES 全量样本的海报 SVG
+    for (const c of CASES) {
+      const svg = generatePosterSvgMarkup({
+        c,
+        quote: AESTHETIC_QUOTES[0],
+        note: "严格验证 XML 规范度，不得含有属性重定义。",
+        dateStr: "2026-09-21",
+      });
+      const errors = findDuplicateAttributes(svg);
+      expect(errors, `Case ${c.id} 生成的 SVG 存在重复属性: ${errors.join("; ")}`).toEqual([]);
+      // 样式应安全包裹在 CDATA 中以保护 & 等 XML 敏感实体
+      expect(svg).toContain("<![CDATA[");
+      expect(svg).toContain("]]>");
+    }
+  });
+
   it("空入参情况下能够安全降级而不抛出异常", () => {
     expect(generateAPAReference(null)).toBe("");
     expect(generateBibTeX(null)).toBe("");
     expect(generatePosterSvgMarkup({})).toBe("");
   });
 });
+
