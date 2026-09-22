@@ -1065,6 +1065,7 @@ export default function AestheticAtelier() {
             setTab("archive");
             setArchQuery(targetCase.title);
             setOpenId(targetCase.id);
+            setPreview(targetCase);
           }}
         />
       )}

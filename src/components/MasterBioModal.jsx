@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { MASTERS } from "../data/masters.js";
+import { MASTERS, findMasterForCase } from "../data/masters.js";
 import { CASES } from "../data/cases.js";
 
 export function MasterBioModal({ initialMasterId, master, onClose, onSelectCase }) {
@@ -11,10 +11,11 @@ export function MasterBioModal({ initialMasterId, master, onClose, onSelectCase 
 
   const activeMaster = MASTERS.find(m => m.id === currentId) || master || MASTERS[0];
 
-  // 查找馆藏中此大师的相关案例
+  // 查找馆藏中此大师的精准相关案例
   const relatedCases = CASES.filter(c => {
-    const text = `${c.designer || ""} ${c.title || ""} ${c.intro || ""}`.toLowerCase();
-    return activeMaster.caseKeywords.some(kw => text.includes(kw.toLowerCase()));
+    if (activeMaster.caseIds && activeMaster.caseIds.includes(c.id)) return true;
+    const m = findMasterForCase(c);
+    return m && m.id === activeMaster.id;
   });
 
   return (

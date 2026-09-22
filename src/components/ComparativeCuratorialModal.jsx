@@ -214,6 +214,17 @@ export function ComparativeCuratorialModal({ initialCase, onClose, onInspect, on
                 <span className="sec-eyebrow">ACADEMIC MATRIX · 多维学术对照矩阵</span>
                 <h4>{activeDuo?.theme || "深度对立统一分析"}</h4>
               </div>
+              <div className="analysis-cols-header">
+                <div className="analysis-col-th dim-th">对比维度</div>
+                <div className="analysis-col-th case-th left-th">
+                  <span className="th-tag">展件 A</span>
+                  <span className="th-title">{caseA.title}</span>
+                </div>
+                <div className="analysis-col-th case-th right-th">
+                  <span className="th-tag">展件 B</span>
+                  <span className="th-title">{caseB.title}</span>
+                </div>
+              </div>
               <div className="analysis-rows">
                 {currentAnalysis.map((item, idx) => (
                   <div key={idx} className="analysis-row">

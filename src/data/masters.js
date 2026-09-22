@@ -13,6 +13,8 @@ export const MASTERS = [
     quote: "艺术与技术：一种新的统一。（Art and technology: a new unity.）",
     bio: "包豪斯公立设计学院创立者与首任校长。倡导打破纯艺术与实用工艺之间的森严壁垒，建立适应大工业生产的现代设计教育范式。奠定了现代设计教育三大构成体系。",
     roles: ["建筑师", "设计教育先驱", "包豪斯创始人"],
+    caseIds: ["bauhaus-dessau"],
+    designerKeywords: ["格罗皮乌斯", "Gropius"],
     caseKeywords: ["格罗皮乌斯", "Gropius", "包豪斯德绍"],
   },
   {
@@ -25,6 +27,8 @@ export const MASTERS = [
     quote: "好的设计是尽可能少的设计。（Good design is as little design as possible.）",
     bio: "博朗（Braun）设计总监逾三十年，乌尔姆设计学院精神践行者。提出享誉全球的「设计十诫（Ten Principles for Good Design）」，对现代工业设计与极简消费电子产品产生了不可估量的深远影响。",
     roles: ["工业设计师", "功能主义领袖", "设计哲学家"],
+    caseIds: ["braun-sk4", "braun-t3"],
+    designerKeywords: ["迪特·拉姆斯", "Dieter Rams", "拉姆斯"],
     caseKeywords: ["迪特·拉姆斯", "Dieter Rams", "博朗", "Braun"],
   },
   {
@@ -37,6 +41,8 @@ export const MASTERS = [
     quote: "网格不仅是一种视觉次序，更是一种对待信息与文明的谦逊态度。",
     bio: "苏黎世学派领军人物，《平面设计中的网格系统》作者。将严密数学比例与客观无衬线排版推向极致，确立了理性、中立、普世的现代视觉传达典范。",
     roles: ["平面设计师", "网格系统理论奠基人", "教育家"],
+    caseIds: ["beethoven-poster"],
+    designerKeywords: ["穆勒-布罗克曼", "Müller-Brockmann", "Muller-Brockmann"],
     caseKeywords: ["穆勒-布罗克曼", "Müller-Brockmann", "苏黎世音乐厅", "网格系统"],
   },
   {
@@ -49,6 +55,8 @@ export const MASTERS = [
     quote: "少即是多。（Less is more.）",
     bio: "二十世纪现代建筑四大师之一，包豪斯第三任校长。开创了以钢框架与通透玻璃幕墙为核心的「精练骨架」美学，其巴塞罗那椅与范斯沃斯住宅成为结构纯粹主义的永恒丰碑。",
     roles: ["建筑师", "家具设计师", "包豪斯校长"],
+    caseIds: ["barcelona-pavilion"],
+    designerKeywords: ["密斯·凡·德·罗", "密斯", "Mies van der Rohe"],
     caseKeywords: ["密斯·凡·德·罗", "Mies", "巴塞罗那", "范斯沃斯"],
   },
   {
@@ -61,6 +69,8 @@ export const MASTERS = [
     quote: "金属管的轻巧弹性，彻底解放了传统实木家具的厚重拘束。",
     bio: "包豪斯木工坊大师，受阿德勒自行车把手启发，世界首创弯折无缝镀铬钢管家具（瓦西里椅、塞斯卡椅），彻底改写了二十世纪室内人机工程与家具工业生产历史。",
     roles: ["建筑师", "家具设计先驱", "工业造型大师"],
+    caseIds: ["wassily-chair"],
+    designerKeywords: ["马塞尔·布劳耶", "马歇尔·布劳耶", "布劳耶", "Marcel Breuer"],
     caseKeywords: ["马塞尔·布劳耶", "Marcel Breuer", "瓦西里椅", "塞斯卡椅"],
   },
   {
@@ -73,7 +83,9 @@ export const MASTERS = [
     quote: "设计不是纯粹的装饰，设计是秩序与惊喜的精妙平衡。",
     bio: "美国企业形象（CI）设计之父。为 IBM、ABC、UPS、NeXT 等创造了极具时代穿透力的标志体系。将欧洲先锋派构成主义与达达拼贴精髓引入商业视觉设计。",
     roles: ["平面设计师", "品牌形象大师", "耶鲁大学教授"],
-    caseKeywords: ["保罗·兰德", "Paul Rand", "IBM", "标志"],
+    caseIds: ["ibm-rand"],
+    designerKeywords: ["保罗·兰德", "Paul Rand"],
+    caseKeywords: ["保罗·兰德", "Paul Rand", "IBM"],
   },
   {
     id: "massimo-vignelli",
@@ -85,6 +97,8 @@ export const MASTERS = [
     quote: "如果你能设计一样东西，你就能设计一切。（If you can design one thing, you can design everything.）",
     bio: "设计界全能巨人。主持设计纽约地铁导航图、美国国家公园标识系统及圣彼得教堂全套内装。坚信设计师的道德责任是消灭视觉垃圾与混乱。",
     roles: ["平面设计师", "空间设计师", "工业设计师"],
+    caseIds: [],
+    designerKeywords: ["马西莫·维涅里", "维涅里", "Massimo Vignelli"],
     caseKeywords: ["维涅里", "Massimo Vignelli", "纽约地铁", "Vignelli"],
   },
   {
@@ -97,7 +111,9 @@ export const MASTERS = [
     quote: "优秀的字体是完全隐形的，读者能自如呼吸而感受不到纸张的存在。",
     bio: "二十世纪最杰出的字体设计巨擘之一。创造了 Univers、Frutiger、Avenir 等世界级经典字族。建立了以两位数字编码粗细与宽窄的现代字体度量体系。",
     roles: ["字体设计师", "造型学者", "巴黎戴高乐机场导示设计师"],
-    caseKeywords: ["弗鲁提格", "Frutiger", "Univers", "戴高乐"],
+    caseIds: ["univers"],
+    designerKeywords: ["阿德里安·弗鲁提格", "弗鲁提格", "Adrian Frutiger"],
+    caseKeywords: ["弗鲁提格", "Frutiger", "Univers"],
   },
   {
     id: "le-corbusier",
@@ -109,7 +125,9 @@ export const MASTERS = [
     quote: "住宅是居住的机器。（The house is a machine for living in.）",
     bio: "现代建筑五要素（底层架空、屋顶花园、自由平面、横向长窗、自由立面）创立者。创立基于黄金分割与人体尺度的「模度（Modulor）」比例体系，彻底重塑现代空间秩序。",
     roles: ["建筑师", "城市规划理论家", "画家", "作家"],
-    caseKeywords: ["柯布西耶", "Le Corbusier", "萨伏伊", "模度", "朗香"],
+    caseIds: ["villa-savoye", "ronchamp"],
+    designerKeywords: ["勒·柯布西耶", "柯布西耶", "Le Corbusier"],
+    caseKeywords: ["柯布西耶", "Le Corbusier", "萨伏伊", "朗香"],
   },
   {
     id: "kenya-hara",
@@ -121,7 +139,9 @@ export const MASTERS = [
     quote: "设计不是制作一件物品，而是探寻人与环境之间的敏感连接。",
     bio: "无印良品（MUJI）艺术总监，武藏野美术大学教授。提出「RE-DESIGN（日常的未知化）」与「白（White）」之哲学，用极度的虚空容器唤起使用者丰富的心灵感知。",
     roles: ["平面设计师", "策展人", "艺术指导", "作家"],
-    caseKeywords: ["原研哉", "Kenya Hara", "无印良品", "白"],
+    caseIds: ["muji-horizon"],
+    designerKeywords: ["原研哉", "Kenya Hara"],
+    caseKeywords: ["原研哉", "Kenya Hara"],
   },
   {
     id: "jony-ive",
@@ -133,17 +153,30 @@ export const MASTERS = [
     quote: "不仅要关注它看起来如何，更要理解它为何如此运作。",
     bio: "前苹果公司首席设计官（CDO）。主导设计了 iMac、iPod、iPhone、iPad 与 Apple Watch 等跨时代工业硬件，将博朗功能主义哲学在数字精密电子时代发扬光大。",
     roles: ["工业设计师", "皇家工业设计师 (RDI)"],
-    caseKeywords: ["乔纳森·伊夫", "Jony Ive", "苹果", "iPod", "iPhone"],
+    caseIds: ["iphone-2007", "ios7"],
+    designerKeywords: ["乔纳森·伊夫", "乔纳森·艾维", "Jony Ive", "Jonathan Ive"],
+    caseKeywords: ["乔纳森·伊夫", "乔纳森·艾维", "Jony Ive"],
   },
 ];
 
 /**
- * 依据案例设计师或标题文本模糊匹配对应的大师传记
+ * 依据案例ID或设计师精准匹配对应的大师传记
  */
 export function findMasterForCase(c) {
   if (!c) return null;
-  const text = `${c.designer || ""} ${c.title || ""} ${c.intro || ""}`.toLowerCase();
-  return MASTERS.find(m => {
-    return m.caseKeywords.some(kw => text.includes(kw.toLowerCase()));
-  }) || null;
+  // 1. 优先通过显式 caseId 匹配
+  if (c.id) {
+    const directMatch = MASTERS.find(m => Array.isArray(m.caseIds) && m.caseIds.includes(c.id));
+    if (directMatch) return directMatch;
+  }
+  // 2. 匹配设计师字段 (避免因 intro、title 或通用词产生跨界误伤)
+  const designerText = (c.designer || "").toLowerCase();
+  if (designerText) {
+    const designerMatch = MASTERS.find(m => {
+      const kws = m.designerKeywords || [];
+      return kws.some(kw => designerText.includes(kw.toLowerCase()));
+    });
+    if (designerMatch) return designerMatch;
+  }
+  return null;
 }

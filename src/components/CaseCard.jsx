@@ -105,14 +105,15 @@ export function CaseCard({
               <span className="plate-t">{c.title}</span>
               <span className="cat-yr">{c.year}</span>
             </figcaption>
-            <div className="art-tools-bar">
+            <div className="art-tools-bar" role="toolbar" aria-label="案例研读工具栏">
               <button
                 type="button"
                 className="art-inspect-btn"
                 onClick={() => onInspect && onInspect(c)}
                 title="在构图检视镜中放大并拆解图层"
               >
-                🔍 构图解剖与图层拆解
+                <span className="tool-ico" aria-hidden="true">🔍</span>
+                <span className="tool-lbl">构图解剖与图层拆解</span>
               </button>
               <button
                 type="button"
@@ -120,7 +121,8 @@ export function CaseCard({
                 onClick={() => onStartTimer && onStartTimer(c)}
                 title="开启画室专注钟深入精读此案例"
               >
-                ⏱️ 沉浸研习钟
+                <span className="tool-ico" aria-hidden="true">⏱️</span>
+                <span className="tool-lbl">沉浸研习钟</span>
               </button>
               {master && (
                 <button
@@ -129,7 +131,8 @@ export function CaseCard({
                   onClick={() => onInspectMaster && onInspectMaster(master)}
                   title={`查阅 ${master.nameZh} 大师生平与设计哲学`}
                 >
-                  🏛️ {master.nameZh}
+                  <span className="tool-ico" aria-hidden="true">🏛️</span>
+                  <span className="tool-lbl">{master.nameZh}</span>
                 </button>
               )}
               <button
@@ -138,7 +141,8 @@ export function CaseCard({
                 onClick={() => onCompare && onCompare(c)}
                 title="在并置策展台中进行横向学术比较"
               >
-                ⚖️ 并置对比
+                <span className="tool-ico" aria-hidden="true">⚖️</span>
+                <span className="tool-lbl">并置对比</span>
               </button>
               <button
                 type="button"
@@ -146,7 +150,8 @@ export function CaseCard({
                 onClick={() => onPoster && onPoster(c)}
                 title="生成并下载学术收藏展签海报与文献引文"
               >
-                🖼️ 展签海报
+                <span className="tool-ico" aria-hidden="true">🖼️</span>
+                <span className="tool-lbl">展签海报</span>
               </button>
             </div>
           </figure>
