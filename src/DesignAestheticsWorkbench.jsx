@@ -111,19 +111,10 @@ export default function AestheticAtelier() {
     persist({ ...state, completed: { ...state.completed, [tKey]: [...doneToday, id] } });
   };
 
-  /* 完成后自动折叠当前卡，展开并滚动到列表中的下一件待研习案例 */
-  const finishAndNext = (id, list) => {
+  /* 完成研习打卡（不自动展开或跳转至下一个案例） */
+  const finishAndNext = id => {
     if (doneToday.includes(id)) return;
     finishCase(id);
-    const doneNow = [...doneToday, id];
-    const next = list.find(c => c.id !== id && !doneNow.includes(c.id));
-    setOpenId(next ? next.id : null);
-    requestAnimationFrame(() =>
-      requestAnimationFrame(() => {
-        const el = document.getElementById(next ? `case-${next.id}` : "closed-inline");
-        el && el.scrollIntoView({ behavior: "smooth", block: "start" });
-      })
-    );
   };
 
   const saveLink = (id, url) => {
@@ -196,6 +187,51 @@ export default function AestheticAtelier() {
     setTimeout(() => setToasts(t => t.filter(x => x.key !== key)), 5200);
   };
 
+  /* 全局模态卡片互斥调度：打开任一卡片时，自动干净清理其他所有卡片，杜绝层叠遮挡 */
+  const closeAllModals = useCallback(() => {
+    setInspectCase(null);
+    setTimerOpen(false);
+    setTimerCase(null);
+    setInspectMaster(null);
+    setCompareOpen(false);
+    setCompareCase(null);
+    setPosterCase(null);
+    setShortcutsOpen(false);
+    setPreview(null);
+  }, []);
+
+  const openInspector = useCallback((cItem) => {
+    closeAllModals();
+    setInspectCase(cItem);
+  }, [closeAllModals]);
+
+  const openTimer = useCallback((cItem = null) => {
+    closeAllModals();
+    setTimerCase(cItem);
+    setTimerOpen(true);
+  }, [closeAllModals]);
+
+  const openMaster = useCallback((master = MASTERS[0]) => {
+    closeAllModals();
+    setInspectMaster(master);
+  }, [closeAllModals]);
+
+  const openCompare = useCallback((cItem = null) => {
+    closeAllModals();
+    setCompareCase(cItem);
+    setCompareOpen(true);
+  }, [closeAllModals]);
+
+  const openPoster = useCallback((cItem) => {
+    closeAllModals();
+    setPosterCase(cItem);
+  }, [closeAllModals]);
+
+  const openShortcuts = useCallback(() => {
+    closeAllModals();
+    setShortcutsOpen(true);
+  }, [closeAllModals]);
+
   /* 复习页：滚动定位到指定案例并短暂高亮 */
   useEffect(() => {
     if (!focusId) return;
@@ -241,16 +277,11 @@ export default function AestheticAtelier() {
   /* 全局无障碍与键盘研学工作流快捷键 */
   useEffect(() => {
     const handleKeyDown = e => {
-      const tag = (e.target.tagName || "").toUpperCase();
-      const isInput = tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT" || e.target.isContentEditable;
+      const tag = (e.target?.tagName || "").toUpperCase();
+      const isInput = tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT" || !!e.target?.isContentEditable;
 
       if (e.key === "Escape") {
-        setInspectCase(null);
-        setTimerOpen(false);
-        setInspectMaster(null);
-        setCompareOpen(false);
-        setPosterCase(null);
-        setShortcutsOpen(false);
+        closeAllModals();
         return;
       }
 
@@ -270,21 +301,23 @@ export default function AestheticAtelier() {
           return next;
         });
       } else if (e.key === "f" || e.key === "F") {
-        setTimerCase(null);
-        setTimerOpen(o => !o);
+        if (timerOpen) closeAllModals();
+        else openTimer(null);
       } else if (e.key === "m" || e.key === "M") {
-        setInspectMaster(MASTERS[0]);
+        if (inspectMaster) closeAllModals();
+        else openMaster(MASTERS[0]);
       } else if (e.key === "c" || e.key === "C") {
-        setCompareCase(null);
-        setCompareOpen(o => !o);
+        if (compareOpen) closeAllModals();
+        else openCompare(null);
       } else if (e.key === "?") {
-        setShortcutsOpen(o => !o);
+        if (shortcutsOpen) closeAllModals();
+        else openShortcuts();
       }
     };
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, []);
+  }, [timerOpen, inspectMaster, compareOpen, shortcutsOpen, closeAllModals, openTimer, openMaster, openCompare, openShortcuts]);
 
   if (!loaded) {
     return (
@@ -318,7 +351,7 @@ export default function AestheticAtelier() {
               <button
                 type="button"
                 className="masters-launcher-btn"
-                onClick={() => setInspectMaster(MASTERS[0])}
+                onClick={() => openMaster(MASTERS[0])}
                 title="查阅现代设计大师微传记与哲学档案 (快捷键 M)"
               >
                 🏛️ 大师辞典
@@ -326,10 +359,7 @@ export default function AestheticAtelier() {
               <button
                 type="button"
                 className="focus-launcher-btn"
-                onClick={() => {
-                  setTimerCase(null);
-                  setTimerOpen(true);
-                }}
+                onClick={() => openTimer(null)}
                 title="开启画室沉浸研习时钟 (快捷键 F)"
               >
                 ⏱️ 沉浸专注
@@ -337,10 +367,7 @@ export default function AestheticAtelier() {
               <button
                 type="button"
                 className="compare-launcher-btn"
-                onClick={() => {
-                  setCompareCase(null);
-                  setCompareOpen(true);
-                }}
+                onClick={() => openCompare(null)}
                 title="打开双件经典并置策展台 (快捷键 C)"
               >
                 ⚖️ 并置对比
@@ -348,7 +375,7 @@ export default function AestheticAtelier() {
               <button
                 type="button"
                 className="shortcuts-launcher-btn"
-                onClick={() => setShortcutsOpen(true)}
+                onClick={openShortcuts}
                 title="查看键盘快捷研习工作流指南 (快捷键 ?)"
                 aria-label="键盘研习快捷键指南"
               >
@@ -453,24 +480,18 @@ export default function AestheticAtelier() {
                   done={doneToday.includes(c.id)}
                   open={openId === c.id}
                   onToggle={() => setOpenId(openId === c.id ? null : c.id)}
-                  onFinish={() => finishAndNext(c.id, todayCases)}
+                  onFinish={() => finishAndNext(c.id)}
                   onReset={() => resetCase(c.id, tKey)}
                   resetNote="将从今日记录中移除，可重新学习。"
                   savedLink={state.videoLinks[c.id]}
                   onSaveLink={url => saveLink(c.id, url)}
                   savedNote={state.notes[c.id]}
                   onSaveNote={note => saveNote(c.id, note)}
-                  onInspect={setInspectCase}
-                  onStartTimer={cItem => {
-                    setTimerCase(cItem);
-                    setTimerOpen(true);
-                  }}
-                  onInspectMaster={setInspectMaster}
-                  onCompare={cItem => {
-                    setCompareCase(cItem);
-                    setCompareOpen(true);
-                  }}
-                  onPoster={setPosterCase}
+                  onInspect={openInspector}
+                  onStartTimer={openTimer}
+                  onInspectMaster={openMaster}
+                  onCompare={openCompare}
+                  onPoster={openPoster}
                 />
               ))}
             </div>
@@ -525,24 +546,18 @@ export default function AestheticAtelier() {
                           done={doneToday.includes(c.id)}
                           open={openId === c.id}
                           onToggle={() => setOpenId(openId === c.id ? null : c.id)}
-                          onFinish={() => finishAndNext(c.id, extraPool.slice(0, extraShown))}
+                          onFinish={() => finishAndNext(c.id)}
                           onReset={() => resetCase(c.id, tKey)}
                           resetNote="将从今日记录中移除，可重新学习。"
                           savedLink={state.videoLinks[c.id]}
                           onSaveLink={url => saveLink(c.id, url)}
                           savedNote={state.notes[c.id]}
                           onSaveNote={note => saveNote(c.id, note)}
-                          onInspect={setInspectCase}
-                          onStartTimer={cItem => {
-                            setTimerCase(cItem);
-                            setTimerOpen(true);
-                          }}
-                          onInspectMaster={setInspectMaster}
-                          onCompare={cItem => {
-                            setCompareCase(cItem);
-                            setCompareOpen(true);
-                          }}
-                          onPoster={setPosterCase}
+                          onInspect={openInspector}
+                          onStartTimer={openTimer}
+                          onInspectMaster={openMaster}
+                          onCompare={openCompare}
+                          onPoster={openPoster}
                         />
                       ))}
                     </div>
@@ -621,13 +636,26 @@ export default function AestheticAtelier() {
                 </div>
 
                 <div className="arch-bar">
-                  <input
-                    className="arch-search"
-                    value={archQuery}
-                    onChange={e => setArchQuery(e.target.value)}
-                    placeholder="搜索作品、设计师、流派或年份…"
-                    aria-label="搜索馆藏"
-                  />
+                  <div className="arch-search-wrap">
+                    <input
+                      className="arch-search"
+                      value={archQuery}
+                      onChange={e => setArchQuery(e.target.value)}
+                      placeholder="搜索作品、设计师、流派或年份…"
+                      aria-label="搜索馆藏"
+                    />
+                    {archQuery && (
+                      <button
+                        type="button"
+                        className="arch-search-clear"
+                        onClick={() => setArchQuery("")}
+                        title="清空当前搜索"
+                        aria-label="清空当前搜索"
+                      >
+                        ✕
+                      </button>
+                    )}
+                  </div>
                   <select
                     value={archDiscipline}
                     onChange={e => setArchDiscipline(e.target.value)}
@@ -789,11 +817,8 @@ export default function AestheticAtelier() {
               setArchQuery(c.title);
               setOpenId(c.id);
             }}
-            onInspect={setInspectCase}
-            onStartTimer={cItem => {
-              setTimerCase(cItem);
-              setTimerOpen(true);
-            }}
+            onInspect={openInspector}
+            onStartTimer={openTimer}
           />
         )}
 
@@ -897,17 +922,11 @@ export default function AestheticAtelier() {
                       onSaveLink={url => saveLink(c.id, url)}
                       savedNote={state.notes[c.id]}
                       onSaveNote={note => saveNote(c.id, note)}
-                      onInspect={setInspectCase}
-                      onStartTimer={cItem => {
-                        setTimerCase(cItem);
-                        setTimerOpen(true);
-                      }}
-                      onInspectMaster={setInspectMaster}
-                      onCompare={cItem => {
-                        setCompareCase(cItem);
-                        setCompareOpen(true);
-                      }}
-                      onPoster={setPosterCase}
+                      onInspect={openInspector}
+                      onStartTimer={openTimer}
+                      onInspectMaster={openMaster}
+                      onCompare={openCompare}
+                      onPoster={openPoster}
                     />
                   ))}
                 </div>
@@ -1059,9 +1078,9 @@ export default function AestheticAtelier() {
       {inspectMaster && (
         <MasterBioModal
           master={inspectMaster}
-          onClose={() => setInspectMaster(null)}
+          onClose={closeAllModals}
           onSelectCase={(targetCase) => {
-            setInspectMaster(null);
+            closeAllModals();
             setTab("archive");
             setArchQuery(targetCase.title);
             setOpenId(targetCase.id);
@@ -1073,15 +1092,9 @@ export default function AestheticAtelier() {
       {compareOpen && (
         <ComparativeCuratorialModal
           initialCase={compareCase}
-          onClose={() => {
-            setCompareOpen(false);
-            setCompareCase(null);
-          }}
-          onInspect={setInspectCase}
-          onStartTimer={cItem => {
-            setTimerCase(cItem);
-            setTimerOpen(true);
-          }}
+          onClose={closeAllModals}
+          onInspect={openInspector}
+          onStartTimer={openTimer}
         />
       )}
       {/* 经典展签海报与文献引文导出模态框 */}
@@ -1089,13 +1102,13 @@ export default function AestheticAtelier() {
         <ExhibitionPosterModal
           c={posterCase}
           savedNote={state.notes[posterCase.id]}
-          onClose={() => setPosterCase(null)}
+          onClose={closeAllModals}
         />
       )}
       {/* 键盘研习工作流快捷键指南 */}
       <ShortcutsModal
         isOpen={shortcutsOpen}
-        onClose={() => setShortcutsOpen(false)}
+        onClose={closeAllModals}
       />
     </div>
   );

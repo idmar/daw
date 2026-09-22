@@ -27,14 +27,46 @@ export const MOVEMENTS = [
  * 确定案例所属的学科门类
  */
 export const getCaseDiscipline = c => {
+  if (!c) return DISCIPLINES[1];
+
+  // 1. 东方设计美学：第3日（东方美学与当代经典）、第17日（日本设计 II）、第20日（中国设计与东方回响）或流派/导览明确为东方美学之作
+  const mov = c.movement || "";
+  const isOrientalTheme = (c.day === 2 && c.id !== "iphone-2007" && c.id !== "i-love-ny") || c.day === 16 || c.day === 19;
+  const isOrientalMov = mov.includes("东方") || mov.includes("日本") || mov.includes("中国") || (c.intro && c.intro.includes("东方美学"));
+  if (isOrientalTheme || isOrientalMov) {
+    return DISCIPLINES.find(d => d.id === "oriental");
+  }
+
+  const field = c.field || "";
+  // 2. 空间与建筑
+  if (field.includes("建筑") || field.includes("空间") || (c.title && c.title.includes("建筑"))) {
+    return DISCIPLINES.find(d => d.id === "spatial");
+  }
+  // 3. 字体与排版
+  if (field.includes("字体") || field.includes("书籍") || field.includes("排版")) {
+    return DISCIPLINES.find(d => d.id === "typography");
+  }
+  // 4. 信息与界面
+  if (field.includes("信息") || field.includes("界面") || field.includes("交互")) {
+    return DISCIPLINES.find(d => d.id === "interaction");
+  }
+  // 5. 视觉与海报
+  if (field.includes("海报") || field.includes("标志") || field.includes("品牌") || field.includes("包装") || field.includes("广告")) {
+    return DISCIPLINES.find(d => d.id === "visual");
+  }
+  // 6. 工业与器物
+  if (field.includes("家具") || field.includes("产品") || field.includes("灯具") || field.includes("交通") || field.includes("图案") || field.includes("服装")) {
+    return DISCIPLINES.find(d => d.id === "industrial");
+  }
+
   const text = `${c.field || ""} ${c.title || ""} ${c.intro || ""}`;
   for (const d of DISCIPLINES) {
     if (d.id === "all") continue;
-    if (d.keywords.some(kw => text.includes(kw))) {
+    if (d.keywords && d.keywords.some(kw => text.includes(kw))) {
       return d;
     }
   }
-  return DISCIPLINES[1]; // 默认工业器物
+  return DISCIPLINES[2]; // 默认工业器物
 };
 
 /**

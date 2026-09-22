@@ -61,12 +61,12 @@ export function TimelineView({ cases, onSelectCase, onInspect, onStartTimer }) {
         {displayedGroups.map((group) => (
           <section key={group.id} id={`epoch-${group.id}`} className="epoch-section">
             <div className="epoch-pillar">
-              <div className="epoch-marker">
-                <span className="epoch-dot" />
-                <span className="epoch-year-badge">{group.label}</span>
-              </div>
+              <span className="epoch-dot" aria-hidden="true" />
               <div className="epoch-meta">
-                <h3 className="epoch-title">{group.sub}</h3>
+                <div className="epoch-header-line">
+                  <span className="epoch-year-badge">{group.label}</span>
+                  <h3 className="epoch-title">{group.sub}</h3>
+                </div>
                 <p className="epoch-milestone">
                   <b>历史里程碑：</b>{group.milestone}
                 </p>

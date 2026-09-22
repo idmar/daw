@@ -155,13 +155,22 @@ export function CaseCard({
               </button>
             </div>
           </figure>
-          <p className="artwork-note">
-            上图为原创几何示意研究图。建议同时检索原作高清图对照观看：
-            <a href={`https://www.google.com/search?tbm=isch&q=${q}`} target="_blank" rel="noreferrer">
-              {" "}
-              搜索原作图片 ↗
+          <div className="artwork-note">
+            <span className="artwork-note-icon" aria-hidden="true">💡</span>
+            <span className="artwork-note-text">
+              上图为原创几何示意研究图。建议同时检索原作高清图对照观看：
+            </span>
+            <a
+              className="artwork-search-link"
+              href={`https://www.google.com/search?tbm=isch&q=${q}`}
+              target="_blank"
+              rel="noreferrer"
+              title="在 Google 图片中检索该案例的高清原作摄影与馆藏档案"
+            >
+              <span>搜索原作图片</span>
+              <span className="arrow" aria-hidden="true">↗</span>
             </a>
-          </p>
+          </div>
 
           <p className="lede">
             <b>导览</b>
@@ -300,9 +309,9 @@ export function CaseCard({
                     title={`${c.title} 讲解视频`}
                     scrolling="no"
                     frameBorder="0"
-                    referrerPolicy="no-referrer"
-                    sandbox="allow-scripts allow-same-origin allow-popups allow-presentation"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"
+                    referrerPolicy={embed.site === "youtube" ? "strict-origin-when-cross-origin" : "no-referrer"}
+                    sandbox="allow-scripts allow-same-origin allow-popups allow-presentation allow-forms"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen"
                     allowFullScreen
                   />
                 </div>
@@ -360,7 +369,7 @@ export function CaseCard({
               </div>
             )}
             {!(done && onReset && confirmReset) && (
-              <button className="btn primary" disabled={done} onClick={onFinish}>
+              <button className="btn primary finish-btn" disabled={done} onClick={onFinish}>
                 {done ? "✓ 本案例已完成" : "完成本案例学习"}
               </button>
             )}

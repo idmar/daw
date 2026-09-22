@@ -26,6 +26,17 @@ describe("taxonomy 馆藏学科分类与多维策展过滤测试", () => {
     expect(d.id).toBe("industrial");
   });
 
+  it("getCaseDiscipline 正确归类东方美学与当代经典案例为东方设计美学门类", () => {
+    const muji = CASES.find(c => c.id === "muji-horizon");
+    expect(muji).toBeDefined();
+    const dMuji = getCaseDiscipline(muji);
+    expect(dMuji.id).toBe("oriental");
+    expect(dMuji.name).toBe("东方设计美学");
+
+    const orientalCases = filterCuratedCases(CASES, { discipline: "oriental" });
+    expect(orientalCases.length).toBeGreaterThanOrEqual(5);
+  });
+
   it("filterCuratedCases 按学科筛选生效", () => {
     const spatialCases = filterCuratedCases(CASES, { discipline: "spatial" });
     expect(spatialCases.length).toBeGreaterThan(0);
