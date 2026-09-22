@@ -396,6 +396,7 @@
   border: 1px solid var(--line);
   box-shadow: var(--shadow);
   transition: border-color .15s;
+  scroll-margin-top: 48px;
 }
 
 .case.done {

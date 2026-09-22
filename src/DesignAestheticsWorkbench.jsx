@@ -111,10 +111,11 @@ export default function AestheticAtelier() {
     persist({ ...state, completed: { ...state.completed, [tKey]: [...doneToday, id] } });
   };
 
-  /* 完成研习打卡（不自动展开或跳转至下一个案例） */
+  /* 完成研习打卡（折叠当前案例卡片，不自动展开或跳转至下一个案例） */
   const finishAndNext = id => {
     if (doneToday.includes(id)) return;
     finishCase(id);
+    setOpenId(null);
   };
 
   const saveLink = (id, url) => {
@@ -231,6 +232,55 @@ export default function AestheticAtelier() {
     closeAllModals();
     setShortcutsOpen(true);
   }, [closeAllModals]);
+
+  /* 点击展开案例时，平滑滚动至卡片顶部，使其顶部正好与主导航标签（main-tabs）底部对齐 */
+  const toggleCase = useCallback((id) => {
+    if (openId === id) {
+      setOpenId(null);
+      return;
+    }
+
+    const prevOpenId = openId;
+    setOpenId(id);
+
+    requestAnimationFrame(() => {
+      const tabsEl = document.getElementById("main-tabs");
+      const targetEl = document.getElementById(`case-${id}`);
+      if (!targetEl || !tabsEl) return;
+
+      const tabsHeight = tabsEl.getBoundingClientRect().height;
+      const currentScroll = window.scrollY || document.documentElement.scrollTop;
+      let targetElTop = currentScroll + targetEl.getBoundingClientRect().top;
+
+      // 若先前展开的卡片位于当前目标卡片上方，需抵扣先前卡片折叠时释放的高度
+      if (prevOpenId && prevOpenId !== id) {
+        const prevEl = document.getElementById(`case-${prevOpenId}`);
+        if (prevEl && (prevEl.compareDocumentPosition(targetEl) & Node.DOCUMENT_POSITION_FOLLOWING)) {
+          const prevRow = prevEl.querySelector(".case-row");
+          const collapsedHeight = prevRow ? prevRow.offsetHeight : 96;
+          const heightLost = Math.max(0, prevEl.offsetHeight - collapsedHeight);
+          targetElTop -= heightLost;
+        }
+      }
+
+      const targetScrollY = Math.max(0, targetElTop - tabsHeight);
+      window.scrollTo({ top: targetScrollY, behavior: "smooth" });
+
+      // 过渡动画完成后再次校准，确保卡片顶部与 main-tabs 底部绝对对齐
+      setTimeout(() => {
+        const tEl = document.getElementById(`case-${id}`);
+        const tTabs = document.getElementById("main-tabs");
+        if (!tEl || !tTabs) return;
+        const h = tTabs.getBoundingClientRect().height;
+        const nowScroll = window.scrollY || document.documentElement.scrollTop;
+        const finalTop = nowScroll + tEl.getBoundingClientRect().top;
+        const finalTargetY = Math.max(0, finalTop - h);
+        if (Math.abs(nowScroll - finalTargetY) > 2) {
+          window.scrollTo({ top: finalTargetY, behavior: "smooth" });
+        }
+      }, 320);
+    });
+  }, [openId]);
 
   /* 复习页：滚动定位到指定案例并短暂高亮 */
   useEffect(() => {
@@ -479,7 +529,7 @@ export default function AestheticAtelier() {
                   catalogIndex={CASES.indexOf(c)}
                   done={doneToday.includes(c.id)}
                   open={openId === c.id}
-                  onToggle={() => setOpenId(openId === c.id ? null : c.id)}
+                  onToggle={() => toggleCase(c.id)}
                   onFinish={() => finishAndNext(c.id)}
                   onReset={() => resetCase(c.id, tKey)}
                   resetNote="将从今日记录中移除，可重新学习。"
@@ -545,7 +595,7 @@ export default function AestheticAtelier() {
                           catalogIndex={CASES.indexOf(c)}
                           done={doneToday.includes(c.id)}
                           open={openId === c.id}
-                          onToggle={() => setOpenId(openId === c.id ? null : c.id)}
+                          onToggle={() => toggleCase(c.id)}
                           onFinish={() => finishAndNext(c.id)}
                           onReset={() => resetCase(c.id, tKey)}
                           resetNote="将从今日记录中移除，可重新学习。"
@@ -914,7 +964,7 @@ export default function AestheticAtelier() {
                       catalogIndex={CASES.indexOf(c)}
                       done={true}
                       open={openId === c.id}
-                      onToggle={() => setOpenId(openId === c.id ? null : c.id)}
+                      onToggle={() => toggleCase(c.id)}
                       onFinish={() => {}}
                       onReset={() => resetCase(c.id, reviewDay)}
                       resetNote={`将从 ${reviewDay} 的记录中移除；若该日因此不足 5 件，「闭馆」与连续天数会相应变化。`}
