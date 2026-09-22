@@ -335,7 +335,9 @@ export default function AestheticAtelier() {
         return;
       }
 
+      // 输入框内打字，或按下了修饰键 (Cmd / Ctrl / Alt)，不触发全局单键快捷操作
       if (isInput) return;
+      if (e.metaKey || e.ctrlKey || e.altKey) return;
 
       if (e.key === "1") { setTab("today"); setReviewDay(null); }
       else if (e.key === "2") { setTab("archive"); setReviewDay(null); }

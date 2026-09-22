@@ -20,4 +20,10 @@ describe("Keyboard Shortcuts & A11y 键盘快捷操作与无障碍测试", () =>
     expect(keys).toContain("?");
     expect(keys).toContain("Esc");
   });
+
+  it("键盘快捷键处理函数对 metaKey / ctrlKey / altKey 组合键做了过滤拦截，避免与复制 (Cmd+C) 等原生功能冲突", async () => {
+    const fs = await import("fs");
+    const code = fs.readFileSync(new URL("../src/DesignAestheticsWorkbench.jsx", import.meta.url), "utf-8");
+    expect(code).toContain("if (e.metaKey || e.ctrlKey || e.altKey) return;");
+  });
 });
